@@ -1,4 +1,4 @@
-package ru.main;
+package ru.contract;
 
 import java.util.List;
 

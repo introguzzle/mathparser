@@ -1,6 +1,4 @@
-package ru.main;
-
-import ru.tokens.Token;
+package ru.tokens;
 
 import java.util.ArrayList;
 import java.util.List;

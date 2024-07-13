@@ -1,11 +1,11 @@
-package ru.implementation;
+package ru.impl;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import ru.main.Expression;
-import ru.main.Parser;
-import ru.main.Tokenizer;
+import ru.contract.Expression;
+import ru.contract.Parser;
+import ru.contract.Tokenizer;
 import ru.variable.Variable;
 import ru.variable.Variables;
 

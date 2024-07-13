@@ -1,11 +1,11 @@
-package ru.implementation;
+package ru.impl;
 
 import org.junit.Before;
 import org.junit.Test;
 import ru.exceptions.TokenizeException;
-import ru.main.Expression;
-import ru.main.TokenType;
-import ru.main.Tokens;
+import ru.contract.Expression;
+import ru.tokens.TokenType;
+import ru.tokens.Tokens;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;

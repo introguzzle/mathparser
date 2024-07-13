@@ -4,7 +4,34 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="79a95465-1031-4eea-b760-ac48f6778d10" name="Changes" comment="" />
+    <list default="true" id="79a95465-1031-4eea-b760-ac48f6778d10" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/function/Absolute.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/function/ArcCosine.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/function/ArcSine.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/function/CubicRoot.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/function/Factorial.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/function/NaturalRoot.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/function/Power.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/function/variadic/Average.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/constant/Constant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/constant/Constant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/constant/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/constant/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/implementation/MathExpression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/impl/MathExpression.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/implementation/MathParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/impl/MathParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/implementation/MathTokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/impl/MathTokenizer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/implementation/SymbolProcessor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/main/Expression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/contract/Expression.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/main/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/contract/Parser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/main/Symbol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/contract/Symbol.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/main/TokenType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/tokens/TokenType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/main/Tokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/contract/Tokenizer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/main/Tokens.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/tokens/Tokens.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/tokens/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/tokens/Token.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/variable/Variable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/variable/Variable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/ru/implementation/MathParserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ru/impl/MathParserTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/ru/implementation/MathTokenizerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ru/impl/MathTokenizerTest.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -45,13 +72,19 @@
     "JUnit.MathParserTest.executor": "Run",
     "JUnit.MathTokenizerTest.executor": "Run",
     "JUnit.MathTokenizerTest.test_multiple_arguments_in_functions.executor": "Run",
+    "Maven.mathparser [deploy].executor": "Run",
+    "Maven.mathparser [install].executor": "Run",
+    "Maven.mathparser [org.apache.maven.plugins:maven-clean-plugin:3.2.0:clean].executor": "Run",
+    "Maven.mathparser [org.apache.maven.plugins:maven-deploy-plugin:3.1.1:deploy].executor": "Run",
+    "Maven.mathparser [org.apache.maven.plugins:maven-install-plugin:3.1.1:install].executor": "Run",
+    "Maven.mathparser [org.apache.maven.plugins:maven-jar-plugin:3.3.0:jar].executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit4",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit4": "",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_directory_selection": "C:/Users/666/IdeaProjects/mathparser/src/test/java/ru/implementation",
     "last_opened_file_path": "C:/Users/666/IdeaProjects/mathparser",
@@ -88,7 +121,7 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="ru.implementation" />
-      <option name="MAIN_CLASS_NAME" value="ru.implementation.MathTokenizerTest" />
+      <option name="MAIN_CLASS_NAME" value="ru.impl.MathTokenizerTest" />
       <option name="METHOD_NAME" value="test_multiple_arguments_in_functions" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
@@ -118,7 +151,7 @@
       <updated>1720807879201</updated>
       <workItem from="1720807880258" duration="6751000" />
       <workItem from="1720814648627" duration="4795000" />
-      <workItem from="1720853616789" duration="14555000" />
+      <workItem from="1720853616789" duration="19843000" />
     </task>
     <servers />
   </component>

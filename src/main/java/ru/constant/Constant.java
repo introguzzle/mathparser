@@ -1,6 +1,6 @@
 package ru.constant;
 
-import ru.main.Symbol;
+import ru.contract.Symbol;
 
 public abstract class Constant implements Symbol {
     private final String representation;

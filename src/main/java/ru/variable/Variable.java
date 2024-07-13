@@ -1,6 +1,6 @@
 package ru.variable;
 
-import ru.main.Symbol;
+import ru.contract.Symbol;
 
 public class Variable implements Symbol {
     private final String representation;

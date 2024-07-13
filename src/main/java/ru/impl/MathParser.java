@@ -1,16 +1,17 @@
-package ru.implementation;
+package ru.impl;
 
-import ru.constant.Constants;
 import ru.exceptions.MathSyntaxException;
 import ru.exceptions.ParseException;
 import ru.function.Function;
-import ru.function.Functions;
-import ru.main.*;
+import ru.contract.*;
 import ru.tokens.Token;
+import ru.tokens.TokenType;
+import ru.tokens.Tokens;
 import ru.variable.Variables;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class MathParser implements Parser<Double> {
 
@@ -153,8 +154,13 @@ public class MathParser implements Parser<Double> {
                 return Double.parseDouble(token.getData());
 
             case CONSTANT:
-                var optionalSymbol = Constants.find(token.getData());
-                return optionalSymbol.orElseThrow().getValue();
+                Token finalToken = token;
+                Optional<Symbol> symbol = this.tokenizer.getConstants()
+                        .stream()
+                        .filter(s -> s.getRepresentation().equals(finalToken.getData()))
+                        .findFirst();
+
+                return symbol.orElseThrow().getValue();
 
             case VARIABLE:
                 return variables.find(token.getData()).orElseThrow().getValue();
@@ -197,7 +203,7 @@ public class MathParser implements Parser<Double> {
             } while (token.getTokenType() == TokenType.COMMA);
         }
 
-        Function function = Functions.get().get(name);
+        Function function = this.tokenizer.getFunctions().get(name);
         int given = args.size();
 
         if (function.isVariadic()) {

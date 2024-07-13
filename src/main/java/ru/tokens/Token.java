@@ -1,7 +1,5 @@
 package ru.tokens;
 
-import ru.main.TokenType;
-
 public class Token {
     private TokenType tokenType;
     private String data;

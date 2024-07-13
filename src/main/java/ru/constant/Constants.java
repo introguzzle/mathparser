@@ -2,15 +2,15 @@ package ru.constant;
 
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
-import ru.main.Symbol;
+import ru.contract.Symbol;
 
 import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class Constants {
-    private static List<? extends Symbol> constants;
+    private static List<Symbol> constants;
     @NotNull
-    private static List<? extends Symbol> load() {
+    private static List<Symbol> load() {
         List<Symbol> list = new ArrayList<>();
 
         Reflections reflections = new Reflections("ru.constant");
@@ -32,15 +32,7 @@ public class Constants {
         return list;
     }
 
-    public static Optional<? extends Symbol> find(String string) {
-        return Constants
-                .get()
-                .stream()
-                .filter(symbol -> symbol.getRepresentation().equals(string))
-                .findFirst();
-    }
-
-    public static List<? extends Symbol> get() {
+    public static List<Symbol> get() {
         if (Constants.constants == null) {
             Constants.constants = Constants.load();
         }

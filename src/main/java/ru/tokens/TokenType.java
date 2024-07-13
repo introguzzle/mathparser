@@ -1,4 +1,4 @@
-package ru.main;
+package ru.tokens;
 
 import java.util.List;
 

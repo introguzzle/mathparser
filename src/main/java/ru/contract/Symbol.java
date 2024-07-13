@@ -1,4 +1,4 @@
-package ru.main;
+package ru.contract;
 
 public interface Symbol {
     String getRepresentation();

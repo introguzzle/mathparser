@@ -1,7 +1,7 @@
-package ru.implementation;
+package ru.impl;
 
 import org.jetbrains.annotations.NotNull;
-import ru.main.Expression;
+import ru.contract.Expression;
 import ru.variable.Variable;
 
 import java.util.ArrayList;

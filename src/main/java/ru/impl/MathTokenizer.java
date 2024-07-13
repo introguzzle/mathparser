@@ -1,21 +1,41 @@
-package ru.implementation;
+package ru.impl;
 
 import ru.constant.Constant;
 import ru.constant.Constants;
-import ru.exceptions.MathSyntaxException;
 import ru.exceptions.TokenizeException;
+import ru.function.Function;
 import ru.function.Functions;
-import ru.main.*;
+import ru.contract.*;
 import ru.tokens.Token;
-import ru.variable.Variable;
-import ru.variable.Variables;
+import ru.tokens.TokenType;
+import ru.tokens.Tokens;
 
-import java.util.ArrayList;
-import java.util.Stack;
+import java.util.*;
 
 public class MathTokenizer implements Tokenizer {
 
     private final Tokens currentTokens = new Tokens();
+    private Map<String, Function> functions = new HashMap<>();
+    private List<Symbol> constants = new ArrayList<>();
+
+    public MathTokenizer() {
+        this.functions = Functions.get();
+        this.constants = Constants.get();
+    }
+
+    public MathTokenizer(Map<String, ? extends Function> functions) {
+        this.functions.putAll(functions);
+    }
+
+    public MathTokenizer withFunctions(Map<String, Function> functions) {
+        this.functions.putAll(functions);
+        return this;
+    }
+
+    public MathTokenizer withConstants(Collection<? extends Symbol> constants) {
+        this.constants.addAll(constants);
+        return this;
+    }
 
     @Override
     public synchronized Tokens tokenize(Expression expression) throws TokenizeException {
@@ -82,6 +102,16 @@ public class MathTokenizer implements Tokenizer {
         return out;
     }
 
+    @Override
+    public List<Symbol> getConstants() {
+        return this.constants;
+    }
+
+    @Override
+    public Map<String, Function> getFunctions() {
+        return this.functions;
+    }
+
     private void handleNumber(Expression expression) {
         StringBuilder number = new StringBuilder();
         char current = expression.current();
@@ -124,7 +154,7 @@ public class MathTokenizer implements Tokenizer {
     private void handleSymbols(Expression expression) throws TokenizeException {
         char current = expression.current();
 
-        for (Symbol symbol: Constants.get()) {
+        for (Symbol symbol: this.constants) {
             if (symbol instanceof Constant constant) {
                 if (constant.getRepresentation().equals(Character.toString(current))) {
                     currentTokens.add(TokenType.CONSTANT, current);
@@ -153,12 +183,12 @@ public class MathTokenizer implements Tokenizer {
 
         boolean match = false;
 
-        if (Functions.get().containsKey(symbols.toString())) {
+        if (functions.containsKey(symbols.toString())) {
             currentTokens.add(TokenType.FUNCTION_NAME, symbols);
             match = true;
         }
 
-        for (Symbol symbol: Constants.get()) {
+        for (Symbol symbol: this.constants) {
             if (symbol instanceof Constant constant) {
                if (constant.getRepresentation().contentEquals(symbols)) {
                    currentTokens.add(TokenType.CONSTANT, symbols);
@@ -171,30 +201,5 @@ public class MathTokenizer implements Tokenizer {
         if (!match) {
             throw new TokenizeException("Unexpected function: " + symbols);
         }
-    }
-
-    public static void main(String[] args) throws MathSyntaxException {
-        Expression expression = new MathExpression("max(a, b, c)");
-
-        Variable a = new Variable("a", 2.0);
-        Variable b = new Variable("b", 3.0);
-        Variable c = new Variable("c", 444.0);
-        Variables variables = new Variables(a, b, c);
-        variables.find("c");
-
-
-        MathParser parser = new MathParser(new MathTokenizer());
-        Double result = parser.parse(expression, variables);
-        System.out.println(result);
-
-        variables.find("c").orElseThrow().setValue(666.0);
-
-        result = parser.parse(expression, variables);
-        System.out.println(result);
-
-        Expression e = new MathExpression("1 ^ 333333333333333333333333333333333333333333");
-        System.out.println(parser.parse(e));
-
-
     }
 }
