@@ -1,31 +1,41 @@
 package ru.variable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
+import ru.exceptions.NotUniqueVariableException;
+
+import java.util.*;
 
 public class Variables {
-    private List<Variable> variables = new ArrayList<>();
+    private final List<Variable> variables = new ArrayList<>();
+    private final Set<String> representations = new HashSet<>();
+
     public Variables() {
-
     }
 
-    public Variables(Variable... variables) {
-        Collections.addAll(this.variables, variables);
+    public Variables(Variable @NotNull ... variables) {
+        for (Variable variable : variables) {
+            this.add(variable);
+        }
     }
 
-    public Variables(List<Variable> variables) {
-        this.variables = variables;
+    public Variables(@NotNull List<Variable> variables) {
+        for (Variable variable : variables) {
+            this.add(variable);
+        }
+    }
+
+    private void checkUnique(@NotNull Variable variable) {
+        if (representations.contains(variable.getRepresentation())) {
+            throw new NotUniqueVariableException(variable);
+        }
     }
 
     public Optional<Variable> find(String representation) {
-        for (var variable: this.variables) {
+        for (Variable variable : variables) {
             if (variable.getRepresentation().equals(representation)) {
                 return Optional.of(variable);
             }
         }
-
         return Optional.empty();
     }
 
@@ -34,19 +44,21 @@ public class Variables {
     }
 
     public void add(String representation, double value) {
-        this.variables.add(new Variable(representation, value));
+        this.add(new Variable(representation, value));
     }
 
     public void add(Variable variable) {
-        this.variables.add(variable);
+        this.checkUnique(variable);
+        variables.add(variable);
+        representations.add(variable.getRepresentation());
     }
 
     @Override
     public String toString() {
-        return this.variables.toString();
+        return variables.toString();
     }
 
     public int size() {
-        return this.variables.size();
+        return variables.size();
     }
 }

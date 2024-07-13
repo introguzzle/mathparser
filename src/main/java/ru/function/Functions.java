@@ -40,9 +40,4 @@ public class Functions {
 
         return Functions.functionMap;
     }
-
-    public static void main(String[] args) {
-        Map<String, Function> functions = load();
-        functions.forEach((name, function) -> System.out.println("Function name: " + name));
-    }
 }

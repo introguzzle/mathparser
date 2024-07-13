@@ -25,6 +25,10 @@ public class MathParser implements Parser<Double> {
         return new ParseException("Unexpected token: '" + token.getTokenType() + "' at pos " + tokens.getPosition() + " in expression");
     }
 
+    public Tokenizer getTokenizer() {
+        return tokenizer;
+    }
+
     @Override
     public Double parse(Expression expression) throws MathSyntaxException {
         return this.parse(expression, new Variables());
@@ -65,7 +69,7 @@ public class MathParser implements Parser<Double> {
         }
     }
 
-    public double addSubtract(Tokens tokens, Variables variables) throws MathSyntaxException {
+    private double addSubtract(Tokens tokens, Variables variables) throws MathSyntaxException {
         double value = this.multiplyDivide(tokens, variables);
         while (true) {
             Token token = tokens.getNextToken();
@@ -88,7 +92,7 @@ public class MathParser implements Parser<Double> {
         }
     }
 
-    public double multiplyDivide(Tokens tokens, Variables variables) throws MathSyntaxException {
+    private double multiplyDivide(Tokens tokens, Variables variables) throws MathSyntaxException {
         double value = this.exp(tokens, variables);
         while (true) {
             Token token = tokens.getNextToken();
@@ -113,7 +117,7 @@ public class MathParser implements Parser<Double> {
         }
     }
 
-    public double exp(Tokens tokens, Variables variables) throws MathSyntaxException {
+    private double exp(Tokens tokens, Variables variables) throws MathSyntaxException {
         double value = this.factor(tokens, variables);
         while (true) {
             Token token = tokens.getNextToken();
@@ -139,7 +143,7 @@ public class MathParser implements Parser<Double> {
         }
     }
 
-    public double factor(Tokens tokens, Variables variables) throws MathSyntaxException {
+    private double factor(Tokens tokens, Variables variables) throws MathSyntaxException {
         Token token = tokens.getNextToken();
 
         switch (token.getTokenType()) {
@@ -179,7 +183,7 @@ public class MathParser implements Parser<Double> {
         }
     }
 
-    public double function(Tokens tokens, Variables variables) throws MathSyntaxException {
+    private double function(Tokens tokens, Variables variables) throws MathSyntaxException {
         String name = tokens.getNextToken().getData();
         Token token = tokens.getNextToken();
 

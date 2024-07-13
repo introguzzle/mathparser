@@ -80,4 +80,17 @@ public class Tokens {
     public Token get(int index) {
         return this.tokens.get(index);
     }
+
+    @Override
+    public String toString() {
+        return this.tokens.toString();
+    }
+
+    public void setConstantCount(int constantCount) {
+        this.constantCount = constantCount;
+    }
+
+    public void setVariableCount(int variableCount) {
+        this.variableCount = variableCount;
+    }
 }

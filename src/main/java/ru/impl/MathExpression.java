@@ -10,6 +10,12 @@ import java.util.List;
 
 public class MathExpression implements Expression {
 
+    private static class Char {
+        private static boolean isAllowed(char c) {
+            return Character.isLetter(c) || c == '_';
+        }
+    }
+
     private final String string;
     private int position;
     private final List<Variable> variables;
@@ -47,7 +53,7 @@ public class MathExpression implements Expression {
 
     @Override
     public boolean isCurrentLetter() {
-        return Character.isLetter(this.current());
+        return Char.isAllowed(this.current());
     }
 
     @Override
@@ -57,7 +63,7 @@ public class MathExpression implements Expression {
 
     @Override
     public boolean isNextLetter() {
-        return this.hasAhead() && Character.isLetter(this.peekNext());
+        return this.hasAhead() && Char.isAllowed(this.peekNext());
     }
 
     public boolean hasAhead() {

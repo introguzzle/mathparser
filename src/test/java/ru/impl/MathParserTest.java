@@ -6,6 +6,7 @@ import org.junit.Test;
 import ru.contract.Expression;
 import ru.contract.Parser;
 import ru.contract.Tokenizer;
+import ru.exceptions.NotUniqueVariableException;
 import ru.variable.Variable;
 import ru.variable.Variables;
 
@@ -13,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 
 public class MathParserTest {
 
-    private Parser<Double> parser;
+    private MathParser parser;
 
     @Before
     public void setUp() {
@@ -36,6 +37,14 @@ public class MathParserTest {
     }
 
     @Test
+    public void test_subtraction() throws Exception {
+        Expression expression = new MathExpression("-1 - 1");
+        Double result = parser.parse(expression);
+        assertEquals(Double.valueOf(-2.0), result);
+    }
+
+
+    @Test
     public void test_variadic_functions_and_changing_variables() throws Exception {
         Expression expression = new MathExpression("max(a, b, c)");
 
@@ -51,6 +60,10 @@ public class MathParserTest {
 
         result = parser.parse(expression, variables);
         assertEquals(Double.valueOf(666.0), result);
+
+        c.setValue(1000.0);
+        result = parser.parse(expression, variables);
+        assertEquals(Double.valueOf(1000.0), result);
     }
 
     @Test
@@ -113,5 +126,33 @@ public class MathParserTest {
         Expression expression = new MathExpression("3 + 4 * 2 / (1 - 5) ^ 2 ^ 3 + sin(pi / 2)");
         Double result = parser.parse(expression);
         assertEquals(Double.valueOf(3.0001220703125 + 1.0), result);
+    }
+
+    @Test
+    public void test_unique_variables() throws Exception {
+        Variables variables = new Variables();
+        variables.add("a", 1.43);
+        variables.add("b", 21221);
+
+        variables = new Variables(
+                new Variable("a", 9),
+                new Variable("b", 4)
+        );
+    }
+
+    @Test(expected = NotUniqueVariableException.class)
+    public void test_not_unique_variables_throws1() throws Exception {
+        Variables variables = new Variables(
+            new Variable("a", 3),
+            new Variable("a", 3)
+        );
+    }
+
+    @Test(expected = NotUniqueVariableException.class)
+    public void test_not_unique_variables_throws2() throws Exception {
+        Variables variables = new Variables();
+
+        variables.add(new Variable("a", 3));
+        variables.add(new Variable("a", 4));
     }
 }

@@ -4,8 +4,11 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.exceptions.TokenizeException;
 import ru.contract.Expression;
+import ru.function.AbstractFunction;
 import ru.tokens.TokenType;
 import ru.tokens.Tokens;
+
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -204,5 +207,35 @@ public class MathTokenizerTest {
         assertEquals("*", tokens.get(1).getData());
 
         assertEquals(TokenType.EOF, tokens.get(2).getTokenType());
+    }
+
+    @Test
+    public void test_count() throws Exception {
+        Expression expression = new MathExpression("pi + 3 + e + a + b / c ** d");
+        Tokens tokens = tokenizer.tokenize(expression);
+
+        assertEquals(tokens.getConstantCount(), 2);
+        assertEquals(tokens.getVariableCount(), 4);
+    }
+
+    @Test
+    public void test_custom_function() throws Exception {
+        tokenizer.addFunction(new AbstractFunction("test_function", 1) {
+            @Override
+            public Double apply(List<Double> arguments) {
+                return 0.0;
+            }
+
+            @Override
+            public boolean isVariadic() {
+                return false;
+            }
+        });
+
+        Expression expression = new MathExpression("test_function(3) ^ test_function(4)");
+        Tokens tokens = tokenizer.tokenize(expression);
+
+        assertEquals(TokenType.FUNCTION_NAME, tokens.get(0).getTokenType());
+        assertEquals("test_function", tokens.get(0).getData());
     }
 }

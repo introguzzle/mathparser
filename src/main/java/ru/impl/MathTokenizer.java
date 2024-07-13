@@ -27,13 +27,28 @@ public class MathTokenizer implements Tokenizer {
         this.functions.putAll(functions);
     }
 
-    public MathTokenizer withFunctions(Map<String, Function> functions) {
+    public MathTokenizer withFunctions(Map<String, ? extends Function> functions) {
         this.functions.putAll(functions);
         return this;
     }
 
     public MathTokenizer withConstants(Collection<? extends Symbol> constants) {
         this.constants.addAll(constants);
+        return this;
+    }
+
+    public MathTokenizer overrideFunction(String name, Function replace) {
+        this.functions.replace(name, replace);
+        return this;
+    }
+
+    public MathTokenizer addFunction(Function function) {
+        this.functions.put(function.getName(), function);
+        return this;
+    }
+
+    public MathTokenizer addConstant(Constant constant) {
+        this.constants.add(constant);
         return this;
     }
 
@@ -95,10 +110,14 @@ public class MathTokenizer implements Tokenizer {
         currentTokens.add(TokenType.EOF, "");
 
         Tokens out = new Tokens(new ArrayList<>(this.currentTokens.getTokens()));
+        out.setConstantCount(currentTokens.getConstantCount());
+        out.setVariableCount(currentTokens.getVariableCount());
 
         currentTokens.reset();
         currentTokens.clear();
+
         expression.reset();
+
         return out;
     }
 
