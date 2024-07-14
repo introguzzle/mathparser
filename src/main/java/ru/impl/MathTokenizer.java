@@ -47,6 +47,12 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return this;
     }
 
+    public MathTokenizer overrideConstant(String representation, double value) {
+        this.constants.removeIf(symbol -> symbol.getRepresentation().equals(representation));
+        this.constants.add(new Constant(representation, value) {});
+        return this;
+    }
+
     public MathTokenizer addFunction(Function function) {
         this.functions.put(function.getName(), function);
         return this;
@@ -54,6 +60,16 @@ public class MathTokenizer implements Tokenizer, Serializable {
 
     public MathTokenizer addConstant(Constant constant) {
         this.constants.add(constant);
+        return this;
+    }
+
+    public MathTokenizer clearFunctions() {
+        this.functions.clear();
+        return this;
+    }
+
+    public MathTokenizer clearConstants() {
+        this.constants.clear();
         return this;
     }
 

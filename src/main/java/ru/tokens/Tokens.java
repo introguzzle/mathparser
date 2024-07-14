@@ -1,5 +1,8 @@
 package ru.tokens;
 
+import ru.variable.Variable;
+import ru.variable.Variables;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -68,6 +71,20 @@ public class Tokens implements Serializable {
 
     public int getConstantCount() {
         return this.constantCount == null ? this.computeConstantCount() : this.constantCount;
+    }
+
+    public List<Variable> getVariableList() {
+        final List<Variable> variables = new ArrayList<>();
+
+        tokens.stream()
+                .filter(token -> token.getTokenType() == TokenType.VARIABLE)
+                .forEach(token -> variables.add(new Variable(token.getData(), 0)));
+
+        return variables;
+    }
+
+    public Variables getVariables() {
+        return new Variables(getVariableList());
     }
 
     private int computeVariableCount() {

@@ -45,13 +45,15 @@ public class MathExpression implements Expression, Serializable {
     private final List<Variable> variables;
 
     public MathExpression(@NotNull String string) {
-        this.string = string.strip().replace(" ", "");
-        this.position = 0;
-        this.variables = new ArrayList<>();
+        this(string, new ArrayList<>(), true);
     }
 
     public MathExpression(@NotNull String string, List<Variable> variables) {
-        this.string = string.strip().replace(" ", "");
+        this(string, variables, true);
+    }
+
+    public MathExpression(String string, List<Variable> variables, boolean strip) {
+        this.string = strip ? string.strip().replace(" ", "") : string;
         this.position = 0;
         this.variables = variables;
     }

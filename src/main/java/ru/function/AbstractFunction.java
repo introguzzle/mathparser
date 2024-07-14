@@ -24,4 +24,13 @@ public abstract class AbstractFunction implements Function {
 
     @Override
     public abstract Double apply(List<Double> arguments);
+
+    @Override
+    public String toString() {
+        return "AbstractFunction{" +
+                "name='" + name + '\'' +
+                ", requiredArguments=" + requiredArguments + '\'' +
+                ", variadic='" + isVariadic() + '\'' +
+                '}';
+    }
 }

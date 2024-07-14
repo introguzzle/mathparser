@@ -5,15 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="79a95465-1031-4eea-b760-ac48f6778d10" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/contract/generator/Distribution.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/contract/generator/Generator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/contract/generator/GeneratorOptions.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/exceptions/NoSuchVariableException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/exceptions/generator/EmptyConstantListException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/exceptions/generator/EmptyFunctionListException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/exceptions/generator/GeneratorException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/impl/ExpressionGenerator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/constant/Constant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/constant/Constant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/contract/Expression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/contract/Expression.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/exceptions/VariableMismatchException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/exceptions/VariableMismatchException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/function/AbstractFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/function/AbstractFunction.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/impl/MathExpression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/impl/MathExpression.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/impl/MathParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/impl/MathParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/impl/MathTokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/impl/MathTokenizer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/tokens/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/tokens/Token.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/tokens/Tokens.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/tokens/Tokens.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/variable/Variable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/variable/Variable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/variable/Variables.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/variable/Variables.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,8 +58,10 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.Constants.executor": "Run",
+    "Application.ExpressionGenerator.executor": "Run",
     "Application.Functions.executor": "Run",
     "Application.MathTokenizer.executor": "Run",
+    "Application.P.executor": "Run",
     "Application.Variable.executor": "Run",
     "Application.Variables.executor": "Run",
     "JUnit.MathParserTest.executor": "Run",
@@ -73,7 +82,7 @@
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_directory_selection": "C:/Users/666/IdeaProjects/mathparser/src/test/java/ru/implementation",
-    "last_opened_file_path": "C:/Users/666/IdeaProjects/plotter",
+    "last_opened_file_path": "C:/Users/666/IdeaProjects/mathparser",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -88,6 +97,9 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
+      <recent name="ru.contract" />
+      <recent name="ru.exceptions.generator" />
+      <recent name="ru.impl" />
       <recent name="ru.implementation" />
     </key>
     <key name="CreateTestDialog.Recents.Supers">
@@ -142,7 +154,8 @@
       <workItem from="1720881125282" duration="18000" />
       <workItem from="1720899361163" duration="9490000" />
       <workItem from="1720946727308" duration="2302000" />
-      <workItem from="1720949184041" duration="7340000" />
+      <workItem from="1720949184041" duration="13669000" />
+      <workItem from="1720980337062" duration="11434000" />
     </task>
     <servers />
   </component>

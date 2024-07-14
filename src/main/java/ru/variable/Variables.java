@@ -1,9 +1,11 @@
 package ru.variable;
 
 import org.jetbrains.annotations.NotNull;
+import ru.exceptions.NoSuchVariableException;
 import ru.exceptions.NotUniqueVariableException;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 public class Variables {
     private final List<Variable> variables = new ArrayList<>();
@@ -30,17 +32,20 @@ public class Variables {
         }
     }
 
-    public Optional<Variable> find(String representation) {
+    public Optional<Variable> find(@NotNull String representation) {
         for (Variable variable : variables) {
             if (variable.getRepresentation().equals(representation)) {
                 return Optional.of(variable);
             }
         }
+
         return Optional.empty();
     }
 
     public void setValue(String representation, double value) {
-        find(representation).orElseThrow().setValue(value);
+        find(representation)
+                .orElseThrow(() -> new NoSuchVariableException(representation, representations))
+                .setValue(value);
     }
 
     public void add(String representation, double value) {

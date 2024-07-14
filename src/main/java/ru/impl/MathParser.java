@@ -27,6 +27,10 @@ public record MathParser(Tokenizer tokenizer) implements Parser<Double>, Seriali
         return new ParseException("Unexpected token: '" + token.getTokenType() + "' at pos " + tokens.getPosition() + " in expression");
     }
 
+    private Tokens tokenize(Expression expression) throws MathSyntaxException {
+        return this.tokenizer.tokenize(expression);
+    }
+
     @Override
     public Double parse(Expression expression) throws MathSyntaxException {
         return this.parse(expression, new Variables());
