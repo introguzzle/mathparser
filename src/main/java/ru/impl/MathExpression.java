@@ -4,11 +4,35 @@ import org.jetbrains.annotations.NotNull;
 import ru.contract.Expression;
 import ru.variable.Variable;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
-public class MathExpression implements Expression {
+public class MathExpression implements Expression, Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -121848309212132L;
+
+    @Override
+    public int compareTo(@NotNull Expression o) {
+        return this.getString().compareTo(o.getString());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MathExpression that = (MathExpression) o;
+        return position == that.position && Objects.equals(string, that.string) && Objects.equals(variables, that.variables);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(string, position, variables);
+    }
 
     private static class Char {
         private static boolean isAllowed(char c) {

@@ -10,13 +10,17 @@ import ru.tokens.Token;
 import ru.tokens.TokenType;
 import ru.tokens.Tokens;
 
-import java.math.BigDecimal;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.*;
 
-public class MathTokenizer implements Tokenizer {
+public class MathTokenizer implements Tokenizer, Serializable {
 
-    private final Tokens currentTokens = new Tokens();
-    private Map<String, Function> functions = new HashMap<>();
+    @Serial
+    private static final long serialVersionUID = -54943912839L;
+
+    private transient final Tokens currentTokens = new Tokens();
+    private transient Map<String, Function> functions = new HashMap<>();
     private List<Symbol> constants = new ArrayList<>();
 
     public MathTokenizer() {
@@ -267,17 +271,5 @@ public class MathTokenizer implements Tokenizer {
         if (!match) {
             throw new TokenizeException("Unexpected function: " + symbols);
         }
-    }
-
-    public static void main(String[] args) throws Exception {
-        Expression expression = new MathExpression("2 ** (3 | 33)");
-
-        MathTokenizer tokenizer = new MathTokenizer();
-        tokenizer.tokenize(expression).getTokens().forEach(System.out::println);
-        var parser = new MathParser(tokenizer);
-        double result = parser.parse(expression);
-
-        System.out.println(3 | 33);
-        System.out.println(BigDecimal.valueOf(result).toString());
     }
 }

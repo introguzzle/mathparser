@@ -1,13 +1,18 @@
 package ru.tokens;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tokens {
+public class Tokens implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 48984394839L;
     private int position;
     private final List<Token> tokens;
-    private Integer constantCount;
-    private Integer variableCount;
+    private transient Integer constantCount;
+    private transient Integer variableCount;
 
     public Tokens() {
         this.tokens = new ArrayList<>();
@@ -66,15 +71,19 @@ public class Tokens {
     }
 
     private int computeVariableCount() {
-        return (int) tokens.stream()
+        this.variableCount = (int) tokens.stream()
                 .filter(token -> token.getTokenType() == TokenType.VARIABLE)
                 .count();
+
+        return this.variableCount;
     }
 
     private int computeConstantCount() {
-        return (int) tokens.stream()
+        this.constantCount = (int) tokens.stream()
                 .filter(token -> token.getTokenType() == TokenType.CONSTANT)
                 .count();
+
+        return this.constantCount;
     }
 
     public int size() {

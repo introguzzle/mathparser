@@ -4,7 +4,7 @@ import ru.contract.Symbol;
 
 public class Variable implements Symbol {
     private final String representation;
-    private double value;
+    private transient double value;
 
     public Variable(String representation, double value) {
         this.representation = representation;

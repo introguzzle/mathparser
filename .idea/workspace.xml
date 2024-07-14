@@ -5,7 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="79a95465-1031-4eea-b760-ac48f6778d10" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/constant/Constant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/constant/Constant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/contract/Expression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/contract/Expression.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/impl/MathExpression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/impl/MathExpression.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/impl/MathParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/impl/MathParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/impl/MathTokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/impl/MathTokenizer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/tokens/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/tokens/Token.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/tokens/Tokens.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/tokens/Tokens.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/variable/Variable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/variable/Variable.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,7 +142,7 @@
       <workItem from="1720881125282" duration="18000" />
       <workItem from="1720899361163" duration="9490000" />
       <workItem from="1720946727308" duration="2302000" />
-      <workItem from="1720949184041" duration="5908000" />
+      <workItem from="1720949184041" duration="7340000" />
     </task>
     <servers />
   </component>

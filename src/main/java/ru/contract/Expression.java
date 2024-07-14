@@ -2,7 +2,7 @@ package ru.contract;
 
 import java.util.List;
 
-public interface Expression extends Iterable<Character> {
+public interface Expression extends Iterable<Character>, Comparable<Expression> {
     int getLength();
     int getPosition();
     String getString();

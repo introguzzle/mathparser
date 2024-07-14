@@ -1,8 +1,17 @@
 package ru.tokens;
 
-public class Token {
-    private TokenType tokenType;
-    private String data;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.Objects;
+
+public class Token implements Serializable, Comparable<Token> {
+
+    @Serial
+    private static final long serialVersionUID = -54892981192L;
+    private final TokenType tokenType;
+    private final String data;
 
     public Token(TokenType tokenType, String data) {
         this.tokenType = tokenType;
@@ -27,16 +36,35 @@ public class Token {
         return data;
     }
 
-    public void setTokenType(TokenType tokenType) {
-        this.tokenType = tokenType;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
-
     @Override
     public String toString() {
         return "Token{" + "type=" + getTokenType() + ", data= '" + getData() + "'}";
+    }
+
+    @Override
+    public int compareTo(@NotNull Token o) {
+        return this.data.compareTo(o.data);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.data, this.tokenType);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Token token = (Token) o;
+        return tokenType == token.tokenType && data.equals(token.data);
+    }
+
+    public boolean equalsType(Token anotherToken) {
+        return this.tokenType == anotherToken.tokenType;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

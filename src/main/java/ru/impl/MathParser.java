@@ -10,13 +10,18 @@ import ru.tokens.TokenType;
 import ru.tokens.Tokens;
 import ru.variable.Variables;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public record MathParser(Tokenizer tokenizer) implements Parser<Double> {
+public record MathParser(Tokenizer tokenizer) implements Parser<Double>, Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -2443784738437783L;
 
     private ParseException createUnexpectedTokenException(Tokens tokens, Token token) {
         return new ParseException("Unexpected token: '" + token.getTokenType() + "' at pos " + tokens.getPosition() + " in expression");
