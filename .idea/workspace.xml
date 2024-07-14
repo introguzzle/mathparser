@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="79a95465-1031-4eea-b760-ac48f6778d10" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/contract/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/contract/Parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/impl/MathParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/impl/MathParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +65,7 @@
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_directory_selection": "C:/Users/666/IdeaProjects/mathparser/src/test/java/ru/implementation",
-    "last_opened_file_path": "C:/Users/666/IdeaProjects/Project1",
+    "last_opened_file_path": "C:/Users/666/IdeaProjects/plotter",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -136,7 +134,7 @@
       <workItem from="1720881125282" duration="18000" />
       <workItem from="1720899361163" duration="9490000" />
       <workItem from="1720946727308" duration="2302000" />
-      <workItem from="1720949184041" duration="5452000" />
+      <workItem from="1720949184041" duration="5908000" />
     </task>
     <servers />
   </component>

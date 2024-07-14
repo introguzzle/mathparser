@@ -10,7 +10,8 @@ Math Parser is a Java library for parsing and evaluating mathematical expression
 
 - Parse and evaluate mathematical expressions
 - Support for variables
-- Support for functions (e.g., `sin`, `cos`, etc.)
+- Support for functions (e.g., `sin`, `cos`, `sqrt`, `pow`, etc.)
+- Support for binary operations (e.g., `&`, `|`, `^`, `~`, etc.)
 - Configurable constants (e.g., `PI`, `E`, etc.)
 - Customizable function definitions
 
@@ -20,7 +21,7 @@ To use Math Parser in your project, add the following dependency to your `pom.xm
 
 ```xml
 <dependency>
-    <groupId>com.example</groupId>
-    <artifactId>math-parser</artifactId>
-    <version>1.0.0</version>
+    <groupId>ru.introguzzle</groupId>
+    <artifactId>mathparser</artifactId>
+    <version>1.0-SNAPSHOT</version>
 </dependency>
