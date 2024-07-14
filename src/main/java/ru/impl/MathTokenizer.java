@@ -10,6 +10,7 @@ import ru.tokens.Token;
 import ru.tokens.TokenType;
 import ru.tokens.Tokens;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 public class MathTokenizer implements Tokenizer {
@@ -66,10 +67,12 @@ public class MathTokenizer implements Tokenizer {
                     continue;
                 case ')':
                     currentTokens.add(TokenType.RIGHT_BRACKET, current);
-                    if (bracketStack.isEmpty())
+                    if (bracketStack.isEmpty()) {
                         throw new TokenizeException("Illegal brackets");
-                    else
+                    } else {
                         bracketStack.pop();
+                    }
+
                     expression.next();
                     continue;
                 case '+':
@@ -77,6 +80,13 @@ public class MathTokenizer implements Tokenizer {
                 case '*':
                 case '/':
                 case '^':
+                case '>':
+                case '<':
+                case '=':
+                case '!':
+                case '&':
+                case '|':
+                case '~':
                     handleOperator(expression);
                     expression.next();
                     continue;
@@ -110,8 +120,6 @@ public class MathTokenizer implements Tokenizer {
         currentTokens.add(TokenType.EOF, "");
 
         Tokens out = new Tokens(new ArrayList<>(this.currentTokens.getTokens()));
-        out.setConstantCount(currentTokens.getConstantCount());
-        out.setVariableCount(currentTokens.getVariableCount());
 
         currentTokens.reset();
         currentTokens.clear();
@@ -163,7 +171,49 @@ public class MathTokenizer implements Tokenizer {
                 yield new Token(TokenType.OPERATOR_MUL, current);
             }
             case '/' -> new Token(TokenType.OPERATOR_DIV, current);
-            case '^' -> new Token(TokenType.OPERATOR_EXP, current);
+            case '^' -> new Token(TokenType.OPERATOR_XOR, current);
+            case '&' -> new Token(TokenType.OPERATOR_AND, current);
+            case '|' -> new Token(TokenType.OPERATOR_OR, current);
+            case '~' -> new Token(TokenType.OPERATOR_BITWISE_NOT, current);
+            case '<' -> {
+                if (expression.getPosition() + 1 < expression.getLength() && expression.peekNext() == '<') {
+                    expression.next();
+                    yield new Token(TokenType.OPERATOR_LEFT_SHIFT, "<<");
+                } else if (expression.peekNext() == '=') {
+                    expression.next();
+                    yield new Token(TokenType.OPERATOR_LESS_OR_EQUALS, "<=");
+                }
+
+                yield new Token(TokenType.OPERATOR_LESS, current);
+            }
+            case '>' -> {
+                if (expression.getPosition() + 1 < expression.getLength() && expression.peekNext() == '>') {
+                    expression.next();
+                    yield new Token(TokenType.OPERATOR_RIGHT_SHIFT, ">>");
+                } else if (expression.peekNext() == '=') {
+                    expression.next();
+                    yield new Token(TokenType.OPERATOR_GREATER_OR_EQUALS, ">=");
+                }
+
+                yield new Token(TokenType.OPERATOR_GREATER, current);
+            }
+            case '=' -> {
+                if (expression.getPosition() + 1 < expression.getLength() && expression.peekNext() == '=') {
+                    expression.next();
+                    yield new Token(TokenType.OPERATOR_EQUALS, "==");
+                }
+
+                throw new IllegalArgumentException("Invalid operator: " + current);
+            }
+            case '!' -> {
+                if (expression.getPosition() + 1 < expression.getLength() && expression.peekNext() == '=') {
+                    expression.next();
+                    yield new Token(TokenType.OPERATOR_NOT_EQUALS, "!=");
+                }
+
+                yield new Token(TokenType.OPERATOR_NOT, "!");
+            }
+
             default -> throw new IllegalArgumentException("Unknown operator: " + current);
         };
 
@@ -177,7 +227,6 @@ public class MathTokenizer implements Tokenizer {
             if (symbol instanceof Constant constant) {
                 if (constant.getRepresentation().equals(Character.toString(current))) {
                     currentTokens.add(TokenType.CONSTANT, current);
-                    currentTokens.incrementConstantCount();
                     expression.next();
                     return;
                 }
@@ -186,7 +235,6 @@ public class MathTokenizer implements Tokenizer {
 
         if (!expression.isNextLetter()) {
             currentTokens.add(TokenType.VARIABLE, current);
-            currentTokens.incrementVariableCount();
             expression.next();
             return;
         }
@@ -211,7 +259,6 @@ public class MathTokenizer implements Tokenizer {
             if (symbol instanceof Constant constant) {
                if (constant.getRepresentation().contentEquals(symbols)) {
                    currentTokens.add(TokenType.CONSTANT, symbols);
-                   currentTokens.incrementConstantCount();
                    match = true;
                }
             }
@@ -220,5 +267,17 @@ public class MathTokenizer implements Tokenizer {
         if (!match) {
             throw new TokenizeException("Unexpected function: " + symbols);
         }
+    }
+
+    public static void main(String[] args) throws Exception {
+        Expression expression = new MathExpression("2 ** (3 | 33)");
+
+        MathTokenizer tokenizer = new MathTokenizer();
+        tokenizer.tokenize(expression).getTokens().forEach(System.out::println);
+        var parser = new MathParser(tokenizer);
+        double result = parser.parse(expression);
+
+        System.out.println(3 | 33);
+        System.out.println(BigDecimal.valueOf(result).toString());
     }
 }

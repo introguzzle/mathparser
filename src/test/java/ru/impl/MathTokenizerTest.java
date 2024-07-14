@@ -188,7 +188,7 @@ public class MathTokenizerTest {
     }
 
     @Test
-    public void test_strip_delete_spaces() throws Exception {
+    public void test_strip_delete_spaces() {
         Expression expression = new MathExpression(" 2 / 3 .4 5");
         assertEquals(expression.getString(), "2/3.45");
     }
@@ -237,5 +237,81 @@ public class MathTokenizerTest {
 
         assertEquals(TokenType.FUNCTION_NAME, tokens.get(0).getTokenType());
         assertEquals("test_function", tokens.get(0).getData());
+    }
+
+    @Test
+    public void test_binary_operators() throws Exception {
+        Expression expression = new MathExpression("1 >> 2 | 3 & 4 << 5");
+
+        Tokens tokens = tokenizer.tokenize(expression);
+
+        assertEquals(tokens.size(), 10);
+
+        assertEquals(TokenType.NUMBER, tokens.get(0).getTokenType());
+        assertEquals("1", tokens.get(0).getData());
+
+        assertEquals(TokenType.OPERATOR_RIGHT_SHIFT, tokens.get(1).getTokenType());
+        assertEquals(">>", tokens.get(1).getData());
+
+        assertEquals(TokenType.NUMBER, tokens.get(2).getTokenType());
+        assertEquals("2", tokens.get(2).getData());
+
+        assertEquals(TokenType.OPERATOR_OR, tokens.get(3).getTokenType());
+        assertEquals("|", tokens.get(3).getData());
+
+        assertEquals(TokenType.NUMBER, tokens.get(4).getTokenType());
+        assertEquals("3", tokens.get(4).getData());
+
+        assertEquals(TokenType.OPERATOR_AND, tokens.get(5).getTokenType());
+        assertEquals("&", tokens.get(5).getData());
+
+        assertEquals(TokenType.NUMBER, tokens.get(6).getTokenType());
+        assertEquals("4", tokens.get(6).getData());
+
+        assertEquals(TokenType.OPERATOR_LEFT_SHIFT, tokens.get(7).getTokenType());
+        assertEquals("<<", tokens.get(7).getData());
+
+        assertEquals(TokenType.NUMBER, tokens.get(8).getTokenType());
+        assertEquals("5", tokens.get(8).getData());
+
+        assertEquals(TokenType.EOF, tokens.get(9).getTokenType());
+    }
+
+    @Test
+    public void test_comparison_operators() throws Exception {
+        Expression expression = new MathExpression("0 < 1 <= 2 >= 3 > 4");
+
+        Tokens tokens = tokenizer.tokenize(expression);
+
+        assertEquals(tokens.size(), 10);
+
+        assertEquals(TokenType.NUMBER, tokens.get(0).getTokenType());
+        assertEquals("0", tokens.get(0).getData());
+
+        assertEquals(TokenType.OPERATOR_LESS, tokens.get(1).getTokenType());
+        assertEquals("<", tokens.get(1).getData());
+
+        assertEquals(TokenType.NUMBER, tokens.get(2).getTokenType());
+        assertEquals("1", tokens.get(2).getData());
+
+        assertEquals(TokenType.OPERATOR_LESS_OR_EQUALS, tokens.get(3).getTokenType());
+        assertEquals("<=", tokens.get(3).getData());
+
+        assertEquals(TokenType.NUMBER, tokens.get(4).getTokenType());
+        assertEquals("2", tokens.get(4).getData());
+
+        assertEquals(TokenType.OPERATOR_GREATER_OR_EQUALS, tokens.get(5).getTokenType());
+        assertEquals(">=", tokens.get(5).getData());
+
+        assertEquals(TokenType.NUMBER, tokens.get(6).getTokenType());
+        assertEquals("3", tokens.get(6).getData());
+
+        assertEquals(TokenType.OPERATOR_GREATER, tokens.get(7).getTokenType());
+        assertEquals(">", tokens.get(7).getData());
+
+        assertEquals(TokenType.NUMBER, tokens.get(8).getTokenType());
+        assertEquals("4", tokens.get(8).getData());
+
+        assertEquals(TokenType.EOF, tokens.get(9).getTokenType());
     }
 }

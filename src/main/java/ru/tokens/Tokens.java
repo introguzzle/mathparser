@@ -6,8 +6,8 @@ import java.util.List;
 public class Tokens {
     private int position;
     private final List<Token> tokens;
-    private int constantCount = 0;
-    private int variableCount = 0;
+    private Integer constantCount;
+    private Integer variableCount;
 
     public Tokens() {
         this.tokens = new ArrayList<>();
@@ -57,20 +57,24 @@ public class Tokens {
         return this.tokens;
     }
 
-    public void incrementVariableCount() {
-        this.variableCount++;
-    }
-
-    public void incrementConstantCount() {
-        this.constantCount++;
-    }
-
     public int getVariableCount() {
-        return this.variableCount;
+        return this.variableCount == null ? this.computeVariableCount() : this.variableCount;
     }
 
     public int getConstantCount() {
-        return this.constantCount;
+        return this.constantCount == null ? this.computeConstantCount() : this.constantCount;
+    }
+
+    private int computeVariableCount() {
+        return (int) tokens.stream()
+                .filter(token -> token.getTokenType() == TokenType.VARIABLE)
+                .count();
+    }
+
+    private int computeConstantCount() {
+        return (int) tokens.stream()
+                .filter(token -> token.getTokenType() == TokenType.CONSTANT)
+                .count();
     }
 
     public int size() {
@@ -84,13 +88,5 @@ public class Tokens {
     @Override
     public String toString() {
         return this.tokens.toString();
-    }
-
-    public void setConstantCount(int constantCount) {
-        this.constantCount = constantCount;
-    }
-
-    public void setVariableCount(int variableCount) {
-        this.variableCount = variableCount;
     }
 }

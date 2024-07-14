@@ -7,6 +7,7 @@ import ru.contract.Expression;
 import ru.contract.Parser;
 import ru.contract.Tokenizer;
 import ru.exceptions.NotUniqueVariableException;
+import ru.exceptions.VariableMismatchException;
 import ru.variable.Variable;
 import ru.variable.Variables;
 
@@ -24,7 +25,7 @@ public class MathParserTest {
 
     @Test
     public void test_simple_expression1() throws Exception {
-        Expression expression = new MathExpression("3 + 4 * 2 / (1 - 5) ^ 2 ^ 3");
+        Expression expression = new MathExpression("3 + 4 * 2 / (1 - 5) ** 2 ** 3");
         Double result = parser.parse(expression);
         assertEquals(Double.valueOf(3.0001220703125), result);
     }
@@ -43,6 +44,15 @@ public class MathParserTest {
         assertEquals(Double.valueOf(-2.0), result);
     }
 
+    @Test(expected = VariableMismatchException.class)
+    public void test_illegal_variables() throws Exception {
+        Expression expression = new MathExpression("max(a, b, c)");
+
+        Variables variables = new Variables();
+        variables.add("a", 2);
+
+        parser.parse(expression, variables);
+    }
 
     @Test
     public void test_variadic_functions_and_changing_variables() throws Exception {
@@ -67,6 +77,36 @@ public class MathParserTest {
     }
 
     @Test
+    public void test_operator_precedence() throws Exception {
+        assertEquals(Double.valueOf(111 << (2 + 3 * 4)), parser.parse(new MathExpression("111 << 2 + 3 * 4")));
+        assertEquals(Double.valueOf((2 + 3 * 4) << 1), parser.parse(new MathExpression("2 + 3 * 4 << 1")));
+        assertEquals(Double.valueOf(2 * 3 + 4 / 2), parser.parse(new MathExpression("2 * 3 + 4 / 2")));
+        assertEquals(Double.valueOf(7 / 2.0 + 1), parser.parse(new MathExpression("7 / 2 + 1")));
+        assertEquals(Double.valueOf(3 * 2 + 3), parser.parse(new MathExpression("3 * 2 + 3")));
+        assertEquals(Double.valueOf(2 + 3 * 2), parser.parse(new MathExpression("2 + 3 * 2")));
+        assertEquals(Double.valueOf(1 / 2.0 * 1), parser.parse(new MathExpression("1 / 2 * 1")));
+        assertEquals(Double.valueOf(5 / 2.0 * 1), parser.parse(new MathExpression("5 / 2 * 1")));
+        assertEquals(Double.valueOf(1.0), parser.parse(new MathExpression("1 + 2 == 3")));
+        assertEquals(Double.valueOf(4 << 2), parser.parse(new MathExpression("4 << 2")));
+        assertEquals(Double.valueOf(5 >> 2), parser.parse(new MathExpression("5 >> 2")));
+        assertEquals(Double.valueOf(4 * Math.pow(2, 2)), parser.parse(new MathExpression("4 * 2 ** 2")));
+        assertEquals(Double.valueOf(Math.pow(2, 2)), parser.parse(new MathExpression("2 ** 2")));
+        assertEquals(Double.valueOf(1.0), parser.parse(new MathExpression("5 < 6")));
+        assertEquals(Double.valueOf(0.0), parser.parse(new MathExpression("5 > 6")));
+        assertEquals(Double.valueOf(1.0), parser.parse(new MathExpression("5 == 5")));
+        assertEquals(Double.valueOf(0.0), parser.parse(new MathExpression("5 != 5")));
+        assertEquals(Double.valueOf(3 | 4), parser.parse(new MathExpression("3 | 4")));
+        assertEquals(Double.valueOf(4 & 5), parser.parse(new MathExpression("4 & 5")));
+        assertEquals(Double.valueOf(5 ^ 4), parser.parse(new MathExpression("5 ^ 4")));
+        assertEquals(Double.valueOf(3 & 6 | 2), parser.parse(new MathExpression("3 & 6 | 2")));
+        assertEquals(Double.valueOf(5 & 3 | 4), parser.parse(new MathExpression("5 & 3 | 4")));
+        assertEquals(Double.valueOf(1 & 3 | 2), parser.parse(new MathExpression("1 & 3 | 2")));
+        assertEquals(Double.valueOf(3 & 2 | 4), parser.parse(new MathExpression("3 & 2 | 4")));
+        assertEquals(Double.valueOf(12 | 5 & 7), parser.parse(new MathExpression("12 | 5 & 7")));
+        assertEquals(Double.valueOf(8 & 2 | 1), parser.parse(new MathExpression("8 & 2 | 1")));
+    }
+
+    @Test
     public void test_division_by_zero() throws Exception {
         Expression positiveInfinity = new MathExpression("1 / 0");
         Expression negativeInfinity = new MathExpression("-1 / 0");
@@ -80,7 +120,7 @@ public class MathParserTest {
 
     @Test
     public void test_negative_number_to_real_power() throws Exception {
-        Expression expression = new MathExpression("-1 ^ 0.33");
+        Expression expression = new MathExpression("-1 ** 0.33");
 
         assertEquals(parser.parse(expression), (Double) Double.NaN);
     }
@@ -123,7 +163,7 @@ public class MathParserTest {
 
     @Test
     public void test_complex_expression() throws Exception {
-        Expression expression = new MathExpression("3 + 4 * 2 / (1 - 5) ^ 2 ^ 3 + sin(pi / 2)");
+        Expression expression = new MathExpression("3 + 4 * 2 / (1 - 5) ** 2 ** 3 + sin(pi / 2)");
         Double result = parser.parse(expression);
         assertEquals(Double.valueOf(3.0001220703125 + 1.0), result);
     }
