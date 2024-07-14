@@ -10,6 +10,8 @@ import ru.tokens.TokenType;
 import ru.tokens.Tokens;
 import ru.variable.Variables;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -37,20 +39,47 @@ public record MathParser(Tokenizer tokenizer) implements Parser<Double> {
     }
 
     @Override
-    public Double parseOrNull(Expression expression) {
+    public
+    BigDecimal parseBigDecimal(Expression expression)
+            throws MathSyntaxException {
+        return BigDecimal.valueOf(this.parse(expression));
+    }
+
+    @Override
+    public
+    BigDecimal parseBigDecimal(Expression expression, Variables variables)
+            throws MathSyntaxException {
+        return BigDecimal.valueOf(this.parse(expression, variables));
+    }
+
+    @Override
+    public
+    BigInteger parseBigInteger(Expression expression)
+            throws MathSyntaxException {
+        return BigInteger.valueOf(this.parse(expression).longValue());
+    }
+
+    @Override
+    public BigInteger parseBigInteger(Expression expression, Variables variables)
+            throws MathSyntaxException {
+        return BigInteger.valueOf(this.parse(expression, variables).longValue());
+    }
+
+    @Override
+    public Optional<Double> parseOptional(Expression expression) {
         try {
-            return this.parse(expression);
+            return Optional.of(this.parse(expression));
         } catch (MathSyntaxException e) {
-            return null;
+            return Optional.empty();
         }
     }
 
     @Override
-    public Double parseOrNull(Expression expression, Variables variables) {
+    public Optional<Double> parseOptional(Expression expression, Variables variables) {
         try {
-            return this.parse(expression, variables);
+            return Optional.of(this.parse(expression, variables));
         } catch (MathSyntaxException e) {
-            return null;
+            return Optional.empty();
         }
     }
 
