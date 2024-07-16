@@ -1,12 +1,8 @@
 package ru.expression;
 
-import ru.symbol.Symbol;
-
-import java.util.List;
-
 public interface Expression extends Iterable<Character>, Comparable<Expression> {
     int getLength();
-    int getPosition();
+    int getCursor();
     String getString();
 
     char current();
@@ -24,4 +20,6 @@ public interface Expression extends Iterable<Character>, Comparable<Expression> 
     char peekNext();
 
     Expression reset();
+
+    void setCursor(int cursor);
 }

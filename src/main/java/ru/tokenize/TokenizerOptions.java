@@ -5,6 +5,10 @@ import ru.common.Options;
 public class TokenizerOptions implements Options {
     private int flags;
 
+    /**
+     * If false, tokenizer will not check strict match of mutable symbols used in context
+     * and actual mutable symbols in expression
+     */
     public boolean strictMode = false;
 
     public TokenizerOptions() {

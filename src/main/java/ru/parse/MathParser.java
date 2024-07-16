@@ -6,10 +6,7 @@ import ru.common.MathSyntaxException;
 import ru.expression.Expression;
 import ru.function.Function;
 import ru.symbol.ImmutableSymbol;
-import ru.tokenize.Token;
-import ru.tokenize.TokenType;
-import ru.tokenize.Tokenizer;
-import ru.tokenize.Tokens;
+import ru.tokenize.*;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -18,6 +15,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.DoubleStream;
 
 public class MathParser implements Parser<Double>, Serializable {
 
@@ -30,11 +28,7 @@ public class MathParser implements Parser<Double>, Serializable {
     @Serial
     private static final long serialVersionUID = -2443784738437783L;
 
-    private ParseException createUnexpectedTokenException(Tokens tokens, Token token) {
-        return new ParseException("Unexpected token: '" + token.getTokenType() + "' at pos " + tokens.getPosition() + " in expression");
-    }
-
-    private Tokens tokenize(Expression expression, Context context) throws MathSyntaxException {
+    private Tokens tokenize(Expression expression, Context context) throws TokenizeException {
         return this.tokenizer.tokenize(expression, context);
     }
 
@@ -46,7 +40,7 @@ public class MathParser implements Parser<Double>, Serializable {
     @Override
     public Double parse(Expression expression, Context context) throws MathSyntaxException {
         Tokens tokens = this.tokenize(expression, context);
-        return this.parseExpression(tokens, context);
+        return this.parse(tokens, context);
     }
 
     @Override
@@ -94,8 +88,10 @@ public class MathParser implements Parser<Double>, Serializable {
         }
     }
 
-    private Double parseExpression(Tokens tokens, Context context) throws MathSyntaxException {
+    private Double parse(Tokens tokens, Context context) throws MathSyntaxException {
+        tokens.skip();
         Token token = tokens.getNextToken();
+
         if (token.getTokenType() == TokenType.EOF) {
             return 0.0;
         }
@@ -145,7 +141,7 @@ public class MathParser implements Parser<Double>, Serializable {
 
                     return value;
                 default:
-                    throw this.createUnexpectedTokenException(tokens, token);
+                    throw new UnexpectedTokenException(tokens, token);
             }
         }
     }
@@ -171,7 +167,7 @@ public class MathParser implements Parser<Double>, Serializable {
 
                     return value;
                 default:
-                    throw this.createUnexpectedTokenException(tokens, token);
+                    throw new UnexpectedTokenException(tokens, token);
             }
         }
     }
@@ -198,7 +194,7 @@ public class MathParser implements Parser<Double>, Serializable {
 
                     return value;
                 default:
-                    throw this.createUnexpectedTokenException(tokens, token);
+                    throw new UnexpectedTokenException(tokens, token);
             }
         }
     }
@@ -226,7 +222,7 @@ public class MathParser implements Parser<Double>, Serializable {
 
                     return value;
                 default:
-                    throw this.createUnexpectedTokenException(tokens, token);
+                    throw new UnexpectedTokenException(tokens, token);
             }
         }
     }
@@ -260,7 +256,7 @@ public class MathParser implements Parser<Double>, Serializable {
 
                     return value;
                 default:
-                    throw this.createUnexpectedTokenException(tokens, token);
+                    throw new UnexpectedTokenException(tokens, token);
             }
         }
     }
@@ -294,7 +290,7 @@ public class MathParser implements Parser<Double>, Serializable {
 
                     return value;
                 default:
-                    throw this.createUnexpectedTokenException(tokens, token);
+                    throw new UnexpectedTokenException(tokens, token);
             }
         }
     }
@@ -330,7 +326,7 @@ public class MathParser implements Parser<Double>, Serializable {
 
                     return value;
                 default:
-                    throw this.createUnexpectedTokenException(tokens, token);
+                    throw new UnexpectedTokenException(tokens, token);
             }
         }
     }
@@ -367,7 +363,7 @@ public class MathParser implements Parser<Double>, Serializable {
                     return value;
 
                 default:
-                    throw this.createUnexpectedTokenException(tokens, token);
+                    throw new UnexpectedTokenException(tokens, token);
             }
         }
     }
@@ -387,8 +383,7 @@ public class MathParser implements Parser<Double>, Serializable {
                 return parseFactor(tokens, context);
 
             case OPERATOR_BITWISE_NOT:
-                long x = (long) parseFactor(tokens, context);
-                return ~x;
+                return ~((long) parseFactor(tokens, context));
 
             case NUMBER:
                 return Double.parseDouble(token.getData());
@@ -406,16 +401,16 @@ public class MathParser implements Parser<Double>, Serializable {
                 return context.getVariables().find(token.getData()).orElseThrow().getValue();
 
             case LEFT_BRACKET:
-                double value = this.parseExpression(tokens, context);
+                double value = this.parse(tokens, context);
                 token = tokens.getNextToken();
                 if (token.getTokenType() != TokenType.RIGHT_BRACKET) {
-                    throw this.createUnexpectedTokenException(tokens, token);
+                    throw new UnexpectedTokenException(tokens, token);
                 }
 
                 return value;
 
             default:
-                throw this.createUnexpectedTokenException(tokens, token);
+                throw new UnexpectedTokenException(tokens, token);
         }
     }
 
@@ -433,7 +428,7 @@ public class MathParser implements Parser<Double>, Serializable {
         if (token.getTokenType() != TokenType.RIGHT_BRACKET) {
             tokens.returnBack();
             do {
-                args.add(parseExpression(tokens, context));
+                args.add(parse(tokens, context));
                 token = tokens.getNextToken();
 
                 if ((token.getTokenType() != TokenType.COMMA) && (token.getTokenType() != TokenType.RIGHT_BRACKET)) {

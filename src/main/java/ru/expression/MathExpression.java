@@ -16,7 +16,7 @@ public class MathExpression implements Expression, Serializable {
     }
 
     private final String string;
-    private int position;
+    private int cursor;
 
     public MathExpression(@NotNull String string) {
         this(string, true);
@@ -32,7 +32,7 @@ public class MathExpression implements Expression, Serializable {
 
     @Override
     public char current() {
-        return this.string.charAt(this.position);
+        return this.string.charAt(this.cursor);
     }
 
     @Override
@@ -56,28 +56,33 @@ public class MathExpression implements Expression, Serializable {
     }
 
     public boolean hasAhead() {
-        return this.position + 1 < this.getLength();
+        return this.cursor + 1 < this.getLength();
     }
 
     @Override
     public char next() {
-        return this.string.charAt(this.position++);
+        return this.string.charAt(this.cursor++);
     }
 
     @Override
     public boolean hasNext() {
-        return this.position < this.getLength();
+        return this.cursor < this.getLength();
     }
 
     @Override
     public Expression reset() {
-        this.position = 0;
+        this.cursor = 0;
         return this;
     }
 
     @Override
-    public int getPosition() {
-        return this.position;
+    public void setCursor(int cursor) {
+        this.cursor = cursor;
+    }
+
+    @Override
+    public int getCursor() {
+        return this.cursor;
     }
 
     @Override
@@ -87,7 +92,7 @@ public class MathExpression implements Expression, Serializable {
 
     @Override
     public char peekNext() {
-        return this.string.charAt(this.position + 1);
+        return this.string.charAt(this.cursor + 1);
     }
 
     @Override
@@ -124,11 +129,11 @@ public class MathExpression implements Expression, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MathExpression that = (MathExpression) o;
-        return position == that.position && Objects.equals(string, that.string);
+        return cursor == that.cursor && Objects.equals(string, that.string);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(string, position);
+        return Objects.hash(string, cursor);
     }
 }

@@ -210,7 +210,7 @@ public class MathTokenizerTest {
         Context context = new EvaluationContext();
         tokenizer.tokenize(expression, context);
 
-        assertEquals(expression.getPosition(), 0);
+        assertEquals(expression.getCursor(), 0);
     }
 
     @Test
@@ -355,8 +355,6 @@ public class MathTokenizerTest {
         tokenizer.addConstant(new Constant("theta", 3) {});
 
         Context parent = new EvaluationContext();
-        parent.addVariable(new Variable("theta", 3));
-        parent.addCoefficient(new Coefficient("theta", 3));
 
         Context context = new EvaluationContext(parent);
         tokenizer.tokenize(expression, context);
@@ -369,8 +367,8 @@ public class MathTokenizerTest {
         tokenizer.getOptions().strictMode = true;
 
         Context parent = new EvaluationContext();
-        parent.addVariable(new Variable("theta", 3));
-        parent.addCoefficient(new Coefficient("theta", 3));
+        parent.getVariables().add(new Variable("theta", 3));
+        parent.getCoefficients().add(new Coefficient("theta", 3));
 
         Context context = new EvaluationContext(parent);
         tokenizer.tokenize(expression, context);

@@ -1,5 +1,10 @@
 package ru.tokenize;
 
+import ru.common.EvaluationContext;
+import ru.common.MathSyntaxException;
+import ru.definition.FunctionDefinition;
+import ru.expression.MathExpression;
+import ru.parse.MathParser;
 import ru.symbol.*;
 import ru.common.Context;
 import ru.constant.Constant;
@@ -16,6 +21,18 @@ import java.util.function.Predicate;
 
 public class MathTokenizer implements Tokenizer, Serializable {
 
+    public static void main(String[] args) throws MathSyntaxException {
+        Context context = new EvaluationContext();
+
+        context.addVariable(new Variable("x", 3));
+        context.addCoefficient(new Coefficient("x", 3));
+
+        var p = new MathParser(new MathTokenizer());
+        System.out.println(new MathTokenizer().tokenize(new MathExpression("x"), context));
+        p.parse(new MathExpression("x"), context);
+
+    }
+
     private TokenizerOptions options = new TokenizerOptions() {};
 
     @Override
@@ -28,12 +45,12 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return options;
     }
 
-    private static class Carrier {
-        Expression expression;
-        Tokens tokens;
-        Context context;
+    public static class Carrier {
+        public Expression expression;
+        public Tokens tokens;
+        public Context context;
 
-        Carrier(Expression expression, Tokens tokens, Context context) {
+        public Carrier(Expression expression, Tokens tokens, Context context) {
             this.expression = expression;
             this.tokens = tokens;
             this.context = context;
@@ -101,6 +118,17 @@ public class MathTokenizer implements Tokenizer, Serializable {
         Tokens tokens = new Tokens();
         Carrier carrier = new Carrier(expression, tokens, context);
 
+        if (expression instanceof FunctionDefinition definition) {
+            int split = definition.getDefinitionSpliterator();
+
+            String declaration = expression.getString().substring(0, split);
+            Token declarationToken = new Token(TokenType.DECLARATION, declaration);
+            handleDeclaration(carrier, declarationToken);
+            tokens.add(declarationToken);
+
+            expression.setCursor(split);
+        }
+
         while (expression.hasNext()) {
             char current = expression.current();
             switch (current) {
@@ -152,7 +180,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
                         continue;
                     }
 
-                    throw new TokenizeException("Unexpected character: '" + current + "' at pos " + expression.getPosition() + " in expression");
+                    throw new TokenizeException("Unexpected character: '" + current + "' at pos " + expression.getCursor() + " in expression");
 
             }
         }
@@ -188,7 +216,22 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return this.functions;
     }
 
-    private void handleNumber(Carrier carrier) {
+    protected void handleDeclaration(Carrier carrier, Token declarationToken) throws UnknownSymbolTokenizeException {
+        String s = declarationToken.getData();
+
+        int left = s.indexOf("(");
+        int right = s.indexOf(")");
+
+        String variable = s.substring(left + 1, right).strip().replace(" ", "");
+        Optional<? extends MutableSymbol> optional =
+                carrier.context.getVariables().find(variable);
+
+        if (optional.isEmpty()) {
+            throw new UnknownSymbolTokenizeException(variable);
+        }
+    }
+
+    protected void handleNumber(Carrier carrier) {
         StringBuilder number = new StringBuilder();
 
         Expression expression = carrier.expression;
@@ -207,7 +250,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
         carrier.tokens.add(TokenType.NUMBER, number.toString());
     }
 
-    private void handleOperator(Carrier carrier) {
+    protected void handleOperator(Carrier carrier) {
         Expression expression = carrier.expression;
         char current = expression.current();
 
@@ -215,7 +258,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
             case '+' -> new Token(TokenType.OPERATOR_ADD, current);
             case '-' -> new Token(TokenType.OPERATOR_SUB, current);
             case '*' -> {
-                if (expression.getPosition() + 1 < expression.getLength() && expression.peekNext() == '*') {
+                if (expression.getCursor() + 1 < expression.getLength() && expression.peekNext() == '*') {
                     expression.next();
                     yield new Token(TokenType.OPERATOR_EXP, "**");
                 }
@@ -228,7 +271,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
             case '|' -> new Token(TokenType.OPERATOR_OR, current);
             case '~' -> new Token(TokenType.OPERATOR_BITWISE_NOT, current);
             case '<' -> {
-                if (expression.getPosition() + 1 < expression.getLength() && expression.peekNext() == '<') {
+                if (expression.getCursor() + 1 < expression.getLength() && expression.peekNext() == '<') {
                     expression.next();
                     yield new Token(TokenType.OPERATOR_LEFT_SHIFT, "<<");
                 } else if (expression.peekNext() == '=') {
@@ -239,7 +282,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
                 yield new Token(TokenType.OPERATOR_LESS, current);
             }
             case '>' -> {
-                if (expression.getPosition() + 1 < expression.getLength() && expression.peekNext() == '>') {
+                if (expression.getCursor() + 1 < expression.getLength() && expression.peekNext() == '>') {
                     expression.next();
                     yield new Token(TokenType.OPERATOR_RIGHT_SHIFT, ">>");
                 } else if (expression.peekNext() == '=') {
@@ -250,15 +293,15 @@ public class MathTokenizer implements Tokenizer, Serializable {
                 yield new Token(TokenType.OPERATOR_GREATER, current);
             }
             case '=' -> {
-                if (expression.getPosition() + 1 < expression.getLength() && expression.peekNext() == '=') {
+                if (expression.getCursor() + 1 < expression.getLength() && expression.peekNext() == '=') {
                     expression.next();
                     yield new Token(TokenType.OPERATOR_EQUALS, "==");
                 }
 
-                throw new IllegalArgumentException("Invalid operator: " + current);
+                yield new Token(TokenType.DECLARATION_END, current);
             }
             case '!' -> {
-                if (expression.getPosition() + 1 < expression.getLength() && expression.peekNext() == '=') {
+                if (expression.getCursor() + 1 < expression.getLength() && expression.peekNext() == '=') {
                     expression.next();
                     yield new Token(TokenType.OPERATOR_NOT_EQUALS, "!=");
                 }
@@ -272,7 +315,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
         carrier.tokens.add(token);
     }
 
-    private void handleSymbols(Carrier carrier) throws TokenizeException {
+    protected void handleSymbols(Carrier carrier) throws TokenizeException {
         Expression expression = carrier.expression;
         boolean match;
 
@@ -294,7 +337,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
         }
     }
 
-    private boolean handleFunction(Carrier carrier, CharSequence sequence) {
+    protected boolean handleFunction(Carrier carrier, CharSequence sequence) {
         AtomicBoolean match = new AtomicBoolean(false);
         this.functions.keySet().stream()
                 .filter(s -> s.contentEquals(sequence))
@@ -307,7 +350,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return match.get();
     }
 
-    private boolean handleConstant(Carrier carrier, CharSequence sequence) {
+    protected boolean handleConstant(Carrier carrier, CharSequence sequence) {
         AtomicBoolean match = new AtomicBoolean(false);
         Predicate<ImmutableSymbol> isConstant = s -> s instanceof Constant;
         this.constants
@@ -323,7 +366,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return match.get();
     }
 
-    private boolean handleMutableList(Carrier carrier, CharSequence sequence) {
+    protected boolean handleMutableList(Carrier carrier, CharSequence sequence) {
         AtomicBoolean match = new AtomicBoolean(false);
         carrier.context.getVariables()
                 .stream()

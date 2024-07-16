@@ -55,6 +55,14 @@ public abstract class MutableSymbolList<T extends MutableSymbol>
         names.add(item.getName());
     }
 
+    public boolean remove(T item) {
+        return items.remove(item) && names.remove(item.getName());
+    }
+
+    public boolean remove(String name) {
+        return items.removeIf(Symbol.match(name)) && names.remove(name);
+    }
+
     public List<T> getItems() {
         return items;
     }

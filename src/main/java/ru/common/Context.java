@@ -6,6 +6,7 @@ import ru.symbol.Variable;
 import ru.symbol.Variables;
 
 import java.util.Optional;
+import java.util.Set;
 
 public interface Context {
     Variables getVariables();
@@ -18,9 +19,19 @@ public interface Context {
 
     void addCoefficient(Coefficient coefficient);
 
+    boolean removeVariable(Variable variable);
+
+    boolean removeCoefficient(Coefficient coefficient);
+
+    boolean removeVariable(String name);
+
+    boolean removeCoefficient(String name);
+
     Optional<? extends Variable> getVariable(String name);
 
     Optional<? extends Coefficient> getCoefficient(String name);
+
+    Set<String> getNames();
 
     void setParent(Context parent);
 

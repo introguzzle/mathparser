@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class Tokens implements Serializable, Iterable<Token> {
 
@@ -72,6 +73,24 @@ public class Tokens implements Serializable, Iterable<Token> {
 
     public int getCoefficientCount() {
         return coefficientCount == null ? computeCoefficientCount() : coefficientCount;
+    }
+
+    public void skip() {
+        for (int i = 0; i < tokens.size(); i++) {
+            if (tokens.get(i).getTokenType() == TokenType.DECLARATION_END) {
+                this.position = i + 1;
+                break;
+            }
+        }
+    }
+
+    public boolean isFunctionDefinition() {
+        Predicate<Token> predicate = token -> token.getTokenType() == TokenType.DECLARATION;
+
+        return tokens.stream()
+                .filter(predicate.or(token -> token.getTokenType() == TokenType.DECLARATION_END))
+                .count() == 2;
+
     }
 
     private int computeVariableCount() {

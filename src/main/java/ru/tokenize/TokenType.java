@@ -9,6 +9,9 @@ public enum TokenType {
 
     COMMA(Category.SPECIAL),
 
+    DECLARATION(Category.DECLARATION),
+    DECLARATION_END(Category.DECLARATION),
+
     CONSTANT(Category.SYMBOL),
     VARIABLE(Category.SYMBOL),
     COEFFICIENT(Category.SYMBOL),
@@ -32,7 +35,7 @@ public enum TokenType {
     OPERATOR_GREATER(Category.OPERATOR),  // >
     OPERATOR_LESS(Category.OPERATOR),  // <
     OPERATOR_GREATER_OR_EQUALS(Category.OPERATOR), // >=
-    OPERATOR_LESS_OR_EQUALS(Category.OPERATOR);  // <=
+    OPERATOR_LESS_OR_EQUALS(Category.OPERATOR);   // <=
 
     private final Category category;
 
@@ -50,6 +53,6 @@ public enum TokenType {
         NUMBER,
         SPECIAL,
         FUNCTION,
-        SYMBOL
+        DECLARATION, SYMBOL
     }
 }

@@ -1,11 +1,10 @@
 package ru.common;
 
-import ru.symbol.Coefficient;
-import ru.symbol.Coefficients;
-import ru.symbol.Variable;
-import ru.symbol.Variables;
+import ru.symbol.*;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  *
@@ -15,6 +14,8 @@ public class EvaluationContext implements Context {
     private Coefficients coefficients = new Coefficients();
 
     private Context parent;
+
+    private final Set<String> names = new HashSet<>();
 
     public EvaluationContext() {
 
@@ -50,12 +51,48 @@ public class EvaluationContext implements Context {
 
     @Override
     public void addVariable(Variable variable) {
-        this.variables.add(variable);
+        String name;
+        boolean added = names.add(name = variable.getName());
+        if (!added) {
+            throw new NotUniqueNameContextException(name, names);
+        }
+
+        variables.add(variable);
     }
 
     @Override
     public void addCoefficient(Coefficient coefficient) {
-        this.coefficients.add(coefficient);
+        String name;
+        boolean added = names.add(name = coefficient.getName());
+        if (!added) {
+            throw new NotUniqueNameContextException(name, names);
+        }
+
+        coefficients.add(coefficient);
+    }
+
+    @Override
+    public boolean removeVariable(Variable variable) {
+        names.remove(variable.getName());
+        return variables.remove(variable);
+    }
+
+    @Override
+    public boolean removeCoefficient(Coefficient coefficient) {
+        names.remove(coefficient.getName());
+        return coefficients.remove(coefficient);
+    }
+
+    @Override
+    public boolean removeVariable(String name) {
+        names.remove(name);
+        return variables.remove(name);
+    }
+
+    @Override
+    public boolean removeCoefficient(String name) {
+        names.remove(name);
+        return coefficients.remove(name);
     }
 
     @Override
@@ -64,7 +101,7 @@ public class EvaluationContext implements Context {
             return parent.getVariable(name);
         }
 
-        return this.variables.find(name);
+        return variables.find(name);
     }
 
     @Override
@@ -73,7 +110,12 @@ public class EvaluationContext implements Context {
             return parent.getCoefficient(name);
         }
 
-        return this.coefficients.find(name);
+        return coefficients.find(name);
+    }
+
+    @Override
+    public Set<String> getNames() {
+        return new HashSet<>(names);
     }
 
     @Override

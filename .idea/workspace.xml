@@ -5,71 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="79a95465-1031-4eea-b760-ac48f6778d10" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/common/Context.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/common/EvaluationContext.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/common/Optionable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/common/Options.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/common/primitive/BooleanReference.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/common/primitive/DoubleReference.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/common/primitive/IntegerReference.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/common/primitive/LongReference.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/common/primitive/PrimitiveReference.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/constant/ConstantReflector.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/generate/CachedExpressionGenerator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/generate/ExpressionStorage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/generate/Random.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/symbol/Coefficient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/symbol/Coefficients.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/symbol/ImmutableSymbol.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/symbol/MutableSymbol.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/symbol/MutableSymbolList.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/symbol/MutableSymbolListException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/symbol/NoSuchCoefficientException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/symbol/NoSuchVariableException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/symbol/NotUniqueCoefficientException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/symbol/Symbol.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/symbol/Variable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/symbol/Variables.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/tokenize/BracketException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/tokenize/BracketMismatchException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/tokenize/CoefficientMismatchException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/tokenize/IllegalBracketStartException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/tokenize/Operator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/tokenize/TokenizerOptions.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/tokenize/UnknownSymbolTokenizeException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/LICENSE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/common/ContextException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/common/NotUniqueNameContextException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/definition/FunctionDefinition.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/definition/FunctionDefinitionType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/parse/UnexpectedTokenException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/ru/impl/ContextTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/constant/Constant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/constant/Constant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/constant/Constants.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/contract/Expression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/expression/Expression.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/contract/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/parse/Parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/contract/Symbol.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/contract/Tokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/tokenize/Tokenizer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/contract/generator/Distribution.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/generate/Distribution.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/contract/generator/Generator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/generate/Generator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/contract/generator/GeneratorOptions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/generate/GeneratorOptions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/exceptions/IllegalFunctionInvocationException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/function/IllegalFunctionInvocationException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/exceptions/MathSyntaxException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/common/MathSyntaxException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/exceptions/NoSuchVariableException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/exceptions/NotUniqueVariableException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/symbol/NotUniqueVariableException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/exceptions/ParseException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/parse/ParseException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/exceptions/TokenizeException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/tokenize/TokenizeException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/exceptions/VariableMismatchException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/tokenize/VariableMismatchException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/exceptions/generator/EmptyConstantListException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/generate/EmptyConstantListException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/exceptions/generator/EmptyFunctionListException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/generate/EmptyFunctionListException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/exceptions/generator/GeneratorException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/generate/GeneratorException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/function/Function.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/function/Function.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/function/FunctionUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/function/FunctionUtilities.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/function/Functions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/function/FunctionReflector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/impl/ExpressionGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/generate/ExpressionGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/impl/MathExpression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/expression/MathExpression.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/impl/MathParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/parse/MathParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/impl/MathTokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/tokenize/MathTokenizer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/tokens/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/tokenize/Token.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/tokens/TokenType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/tokenize/TokenType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/tokens/Tokens.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/tokenize/Tokens.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/variable/Variable.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/variable/Variables.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/ru/impl/MathParserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ru/impl/MathParserTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/common/Context.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/common/Context.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/common/EvaluationContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/common/EvaluationContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/common/primitive/IntegerReference.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/common/primitive/IntegerReference.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/common/primitive/LongReference.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/common/primitive/LongReference.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/expression/Expression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/expression/Expression.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/expression/MathExpression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/expression/MathExpression.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/parse/MathParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/parse/MathParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/symbol/MutableSymbolList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/symbol/MutableSymbolList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/tokenize/MathTokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/tokenize/MathTokenizer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/tokenize/TokenType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/tokenize/TokenType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/tokenize/TokenizerOptions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/tokenize/TokenizerOptions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/tokenize/Tokens.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/tokenize/Tokens.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/ru/impl/MathTokenizerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ru/impl/MathTokenizerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -118,9 +73,10 @@
     "Application.Variable.executor": "Run",
     "Application.VariableMismatchException.executor": "Run",
     "Application.Variables.executor": "Run",
+    "JUnit.ContextTest.executor": "Run",
     "JUnit.MathParserTest.executor": "Run",
     "JUnit.MathTokenizerTest.executor": "Run",
-    "JUnit.MathTokenizerTest.test_long_symbols.executor": "Run",
+    "JUnit.MathTokenizerTest.test_long_symbols.executor": "Debug",
     "JUnit.MathTokenizerTest.test_multiple_arguments_in_functions.executor": "Run",
     "Maven.mathparser [deploy].executor": "Run",
     "Maven.mathparser [install].executor": "Run",
@@ -236,7 +192,8 @@
       <workItem from="1721027526393" duration="3969000" />
       <workItem from="1721038884151" duration="797000" />
       <workItem from="1721067139152" duration="11128000" />
-      <workItem from="1721117979721" duration="8985000" />
+      <workItem from="1721117979721" duration="10290000" />
+      <workItem from="1721135533453" duration="10496000" />
     </task>
     <servers />
   </component>
