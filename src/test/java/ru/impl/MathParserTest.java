@@ -3,19 +3,23 @@ package ru.impl;
 import org.junit.Before;
 import org.junit.Test;
 
-import ru.contract.Expression;
-import ru.contract.Parser;
-import ru.contract.Tokenizer;
-import ru.exceptions.NotUniqueVariableException;
-import ru.exceptions.VariableMismatchException;
-import ru.variable.Variable;
-import ru.variable.Variables;
+import ru.expression.Expression;
+import ru.parse.Parser;
+import ru.tokenize.Tokenizer;
+import ru.symbol.NotUniqueVariableException;
+import ru.expression.MathExpression;
+import ru.parse.MathParser;
+import ru.common.EvaluationContext;
+import ru.tokenize.MathTokenizer;
+import ru.tokenize.UnknownSymbolTokenizeException;
+import ru.symbol.Variable;
+import ru.symbol.Variables;
 
 import static org.junit.Assert.assertEquals;
 
 public class MathParserTest {
 
-    private MathParser parser;
+    private Parser<Double> parser;
 
     @Before
     public void setUp() {
@@ -44,14 +48,14 @@ public class MathParserTest {
         assertEquals(Double.valueOf(-2.0), result);
     }
 
-    @Test(expected = VariableMismatchException.class)
+    @Test(expected = UnknownSymbolTokenizeException.class)
     public void test_illegal_variables() throws Exception {
         Expression expression = new MathExpression("max(a, b, c)");
 
         Variables variables = new Variables();
         variables.add("a", 2);
 
-        parser.parse(expression, variables);
+        parser.parse(expression, new EvaluationContext(variables, null));
     }
 
     @Test
@@ -63,16 +67,18 @@ public class MathParserTest {
         Variable c = new Variable("c", 444.0);
         Variables variables = new Variables(a, b, c);
 
-        Double result = parser.parse(expression, variables);
+        EvaluationContext context = new EvaluationContext(variables, null);
+
+        Double result = parser.parse(expression, context);
         assertEquals(Double.valueOf(444.0), result);
 
         variables.setValue("a", 666.0);
 
-        result = parser.parse(expression, variables);
+        result = parser.parse(expression, context);
         assertEquals(Double.valueOf(666.0), result);
 
         c.setValue(1000.0);
-        result = parser.parse(expression, variables);
+        result = parser.parse(expression, context);
         assertEquals(Double.valueOf(1000.0), result);
     }
 
@@ -80,7 +86,7 @@ public class MathParserTest {
     public void test_operator_precedence() throws Exception {
         assertEquals(Double.valueOf(111 << (2 + 3 * 4)), parser.parse(new MathExpression("111 << 2 + 3 * 4")));
         assertEquals(Double.valueOf((2 + 3 * 4) << 1), parser.parse(new MathExpression("2 + 3 * 4 << 1")));
-        assertEquals(Double.valueOf(2 * 3 + 4 / 2), parser.parse(new MathExpression("2 * 3 + 4 / 2")));
+        assertEquals(Double.valueOf(2 * 3 + 2), parser.parse(new MathExpression("2 * 3 + 4 / 2")));
         assertEquals(Double.valueOf(7 / 2.0 + 1), parser.parse(new MathExpression("7 / 2 + 1")));
         assertEquals(Double.valueOf(3 * 2 + 3), parser.parse(new MathExpression("3 * 2 + 3")));
         assertEquals(Double.valueOf(2 + 3 * 2), parser.parse(new MathExpression("2 + 3 * 2")));
@@ -143,7 +149,7 @@ public class MathParserTest {
         variables.add("c", 10.0);
         variables.add("d", 2.0);
 
-        Double result = parser.parse(expression, variables);
+        Double result = parser.parse(expression, new EvaluationContext(variables, null));
         assertEquals(Double.valueOf(5.0 + 10.0 / (2.0 + Math.E)), result);
     }
 
@@ -169,7 +175,8 @@ public class MathParserTest {
     }
 
     @Test
-    public void test_unique_variables() throws Exception {
+    @SuppressWarnings("unused")
+    public void test_unique_variables() {
         Variables variables = new Variables();
         variables.add("a", 1.43);
         variables.add("b", 21221);
@@ -178,18 +185,22 @@ public class MathParserTest {
                 new Variable("a", 9),
                 new Variable("b", 4)
         );
+
+        variables.size();
     }
 
     @Test(expected = NotUniqueVariableException.class)
-    public void test_not_unique_variables_throws1() throws Exception {
+    public void test_not_unique_variables_throws1() {
         Variables variables = new Variables(
             new Variable("a", 3),
             new Variable("a", 3)
         );
+
+        variables.size();
     }
 
     @Test(expected = NotUniqueVariableException.class)
-    public void test_not_unique_variables_throws2() throws Exception {
+    public void test_not_unique_variables_throws2() {
         Variables variables = new Variables();
 
         variables.add(new Variable("a", 3));

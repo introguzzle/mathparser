@@ -1,7 +1,5 @@
 package ru.function;
 
-import ru.exceptions.IllegalFunctionInvocationException;
-
 import java.util.List;
 
 public interface Function extends java.util.function.Function<List<Double>, Double> {
@@ -11,6 +9,6 @@ public interface Function extends java.util.function.Function<List<Double>, Doub
     boolean isVariadic();
 
     default IllegalFunctionInvocationException createException(int given) {
-        return new IllegalFunctionInvocationException(FunctionUtilities.message(given, this));
+        return new IllegalFunctionInvocationException(FunctionUtilities.createExceptionMessage(given, this));
     }
 }
