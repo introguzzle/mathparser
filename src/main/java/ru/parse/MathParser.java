@@ -15,7 +15,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.DoubleStream;
 
 public class MathParser implements Parser<Double>, Serializable {
 
@@ -418,39 +417,35 @@ public class MathParser implements Parser<Double>, Serializable {
         String name = tokens.getNextToken().getData();
         Token token = tokens.getNextToken();
 
-        if (token.getTokenType() != TokenType.LEFT_BRACKET) {
-            throw new ParseException();
-        }
-
-        List<Double> args = new ArrayList<>();
+        List<Double> arguments = new ArrayList<>();
         token = tokens.getNextToken();
 
         if (token.getTokenType() != TokenType.RIGHT_BRACKET) {
             tokens.returnBack();
             do {
-                args.add(parse(tokens, context));
+                arguments.add(parse(tokens, context));
                 token = tokens.getNextToken();
 
                 if ((token.getTokenType() != TokenType.COMMA) && (token.getTokenType() != TokenType.RIGHT_BRACKET)) {
-                    throw new ParseException();
+                    throw new RuntimeException();
                 }
 
             } while (token.getTokenType() == TokenType.COMMA);
         }
 
         Function function = this.tokenizer.getFunctions().get(name);
-        int given = args.size();
+        int given = arguments.size();
 
         if (function.isVariadic()) {
             if (function.getRequiredArguments() > given) {
                 throw function.createException(given);
             } else {
-                return function.apply(args);
+                return function.apply(arguments);
             }
         }
 
         if (function.getRequiredArguments() == given) {
-            return function.apply(args);
+            return function.apply(arguments);
         }
 
         throw function.createException(given);

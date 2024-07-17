@@ -180,8 +180,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
                         continue;
                     }
 
-                    throw new TokenizeException("Unexpected character: '" + current + "' at pos " + expression.getCursor() + " in expression");
-
+                    throw new UnknownCharacterException(expression, current);
             }
         }
 

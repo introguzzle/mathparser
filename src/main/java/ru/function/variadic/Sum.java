@@ -4,9 +4,9 @@ import ru.function.AbstractFunction;
 
 import java.util.List;
 
-public class Average extends AbstractFunction {
-    public Average() {
-        super("avg", 1);
+public class Sum extends AbstractFunction {
+    public Sum() {
+        super("sum", 1);
     }
 
     @Override
@@ -14,8 +14,7 @@ public class Average extends AbstractFunction {
         return arguments
                 .stream()
                 .reduce(Double::sum)
-                .orElseThrow(RuntimeException::new)
-                / arguments.size();
+                .orElseThrow(RuntimeException::new);
     }
 
     @Override
