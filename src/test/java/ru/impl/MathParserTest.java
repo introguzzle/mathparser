@@ -3,17 +3,17 @@ package ru.impl;
 import org.junit.Before;
 import org.junit.Test;
 
-import ru.expression.Expression;
-import ru.parse.Parser;
-import ru.tokenize.Tokenizer;
-import ru.symbol.NotUniqueVariableException;
-import ru.expression.MathExpression;
-import ru.parse.MathParser;
-import ru.common.EvaluationContext;
-import ru.tokenize.MathTokenizer;
-import ru.tokenize.UnknownSymbolTokenizeException;
-import ru.symbol.Variable;
-import ru.symbol.Variables;
+import ru.introguzzle.expression.Expression;
+import ru.introguzzle.parse.Parser;
+import ru.introguzzle.tokenize.Tokenizer;
+import ru.introguzzle.symbol.NotUniqueVariableException;
+import ru.introguzzle.expression.MathExpression;
+import ru.introguzzle.parse.MathParser;
+import ru.introguzzle.common.EvaluationContext;
+import ru.introguzzle.tokenize.MathTokenizer;
+import ru.introguzzle.tokenize.UnknownSymbolTokenizeException;
+import ru.introguzzle.symbol.Variable;
+import ru.introguzzle.symbol.Variables;
 
 import static org.junit.Assert.assertEquals;
 

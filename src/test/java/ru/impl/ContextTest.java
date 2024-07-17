@@ -1,12 +1,11 @@
 package ru.impl;
 
 import org.junit.Test;
-import ru.common.Context;
-import ru.common.EvaluationContext;
-import ru.common.NotUniqueNameContextException;
-import ru.symbol.Coefficient;
-import ru.symbol.NotUniqueVariableException;
-import ru.symbol.Variable;
+import ru.introguzzle.common.Context;
+import ru.introguzzle.common.EvaluationContext;
+import ru.introguzzle.common.NotUniqueNameContextException;
+import ru.introguzzle.symbol.Coefficient;
+import ru.introguzzle.symbol.Variable;
 
 import static org.junit.Assert.*;
 

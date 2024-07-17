@@ -2,15 +2,15 @@ package ru.impl;
 
 import org.junit.Before;
 import org.junit.Test;
-import ru.common.Context;
-import ru.constant.Constant;
-import ru.symbol.Coefficient;
-import ru.tokenize.*;
-import ru.expression.Expression;
-import ru.expression.MathExpression;
-import ru.function.AbstractFunction;
-import ru.common.EvaluationContext;
-import ru.symbol.Variable;
+import ru.introguzzle.common.Context;
+import ru.introguzzle.constant.Constant;
+import ru.introguzzle.symbol.Coefficient;
+import ru.introguzzle.tokenize.*;
+import ru.introguzzle.expression.Expression;
+import ru.introguzzle.expression.MathExpression;
+import ru.introguzzle.function.AbstractFunction;
+import ru.introguzzle.common.EvaluationContext;
+import ru.introguzzle.symbol.Variable;
 
 import java.util.List;
 
