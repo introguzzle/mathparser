@@ -1,5 +1,8 @@
 package ru.introguzzle.mathparser.parse;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import ru.introguzzle.mathparser.common.Context;
 import ru.introguzzle.mathparser.common.EvaluationContext;
 import ru.introguzzle.mathparser.common.MathSyntaxException;
@@ -10,8 +13,6 @@ import ru.introguzzle.mathparser.symbol.ImmutableSymbol;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,45 +33,23 @@ public class MathParser implements Parser<Double>, Serializable {
     }
 
     @Override
-    public Double parse(Expression expression) throws MathSyntaxException {
+    public Double parse(@NotNull Expression expression) throws MathSyntaxException {
         return this.parse(expression, new EvaluationContext());
     }
 
     @Override
-    public Double parse(Expression expression, Context context) throws MathSyntaxException {
+    public Double parse(@NotNull Expression expression,
+                        @NotNull Context context) throws MathSyntaxException {
         Tokens tokens = this.tokenize(expression, context);
         return this.parse(tokens, context);
     }
 
     @Override
-    public
-    BigDecimal parseBigDecimal(Expression expression)
-            throws MathSyntaxException {
-        return BigDecimal.valueOf(this.parse(expression));
-    }
+    public Optional<Double> tryParse(@Nullable Expression expression) {
+        if (expression == null) {
+            return Optional.empty();
+        }
 
-    @Override
-    public
-    BigDecimal parseBigDecimal(Expression expression, Context context)
-            throws MathSyntaxException {
-        return BigDecimal.valueOf(this.parse(expression, context));
-    }
-
-    @Override
-    public
-    BigInteger parseBigInteger(Expression expression)
-            throws MathSyntaxException {
-        return BigInteger.valueOf(this.parse(expression).longValue());
-    }
-
-    @Override
-    public BigInteger parseBigInteger(Expression expression, Context context)
-            throws MathSyntaxException {
-        return BigInteger.valueOf(this.parse(expression, context).longValue());
-    }
-
-    @Override
-    public Optional<Double> parseOptional(Expression expression) {
         try {
             return Optional.of(this.parse(expression));
         } catch (MathSyntaxException e) {
@@ -79,16 +58,22 @@ public class MathParser implements Parser<Double>, Serializable {
     }
 
     @Override
-    public Optional<Double> parseOptional(Expression expression, Context context) {
+    public Optional<Double> tryParse(@Nullable Expression expression,
+                                     @Nullable Context context) {
+        if (expression == null || context == null) {
+            return Optional.empty();
+        }
+
         try {
-            return Optional.of(this.parse(expression, context));
+            Double value = this.parse(expression, context);
+            return Optional.of(value);
         } catch (MathSyntaxException e) {
             return Optional.empty();
         }
     }
 
     private Double parse(Tokens tokens, Context context) throws MathSyntaxException {
-        tokens.skip();
+        tokens.skipDeclaration();
         Token token = tokens.getNextToken();
 
         if (token.getTokenType() == TokenType.EOF) {
@@ -388,10 +373,10 @@ public class MathParser implements Parser<Double>, Serializable {
                 return Double.parseDouble(token.getData());
 
             case CONSTANT:
-                Token finalToken = token;
+                final Token t = token;
                 Optional<ImmutableSymbol> symbol = this.tokenizer.getConstants()
                         .stream()
-                        .filter(s -> s.getName().equals(finalToken.getData()))
+                        .filter(s -> s.getName().equals(t.getData()))
                         .findFirst();
 
                 return symbol.orElseThrow().getValue();
@@ -415,10 +400,10 @@ public class MathParser implements Parser<Double>, Serializable {
 
     private double parseFunction(Tokens tokens, Context context) throws MathSyntaxException {
         String name = tokens.getNextToken().getData();
-        Token token = tokens.getNextToken();
+        tokens.getNextToken();
 
         List<Double> arguments = new ArrayList<>();
-        token = tokens.getNextToken();
+        Token token = tokens.getNextToken();
 
         if (token.getTokenType() != TokenType.RIGHT_BRACKET) {
             tokens.returnBack();

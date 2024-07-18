@@ -75,7 +75,7 @@ public class Tokens implements Serializable, Iterable<Token> {
         return coefficientCount == null ? computeCoefficientCount() : coefficientCount;
     }
 
-    public void skip() {
+    public void skipDeclaration() {
         for (int i = 0; i < tokens.size(); i++) {
             if (tokens.get(i).getTokenType() == TokenType.DECLARATION_END) {
                 this.position = i + 1;
