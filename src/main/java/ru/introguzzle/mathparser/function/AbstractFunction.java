@@ -27,7 +27,7 @@ public abstract class AbstractFunction implements Function {
 
     @Override
     public String toString() {
-        return "AbstractFunction{" +
+        return describe() + '{' +
                 "name='" + name + '\'' +
                 ", requiredArguments=" + requiredArguments + '\'' +
                 ", variadic='" + isVariadic() + '\'' +

@@ -1,7 +1,7 @@
 package ru.introguzzle.mathparser.generate;
 
 import ru.introguzzle.mathparser.common.Context;
-import ru.introguzzle.mathparser.common.MathSyntaxException;
+import ru.introguzzle.mathparser.common.SyntaxException;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.expression.MathExpression;
 import ru.introguzzle.mathparser.tokenize.Token;
@@ -40,11 +40,11 @@ public class CachedExpressionGenerator implements Generator<Expression> {
             return new MathExpression(changed.getTokens()
                     .stream()
                     .map(Token::getData)
-                    .collect(Collectors.joining()), false);
+                    .collect(Collectors.joining()));
 
 
 
-        } catch (MathSyntaxException e) {
+        } catch (SyntaxException e) {
             // e.g. failed to swap numbers
             return expression;
         }

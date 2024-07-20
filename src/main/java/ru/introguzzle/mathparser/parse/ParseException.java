@@ -1,8 +1,8 @@
 package ru.introguzzle.mathparser.parse;
 
-import ru.introguzzle.mathparser.common.MathSyntaxException;
+import ru.introguzzle.mathparser.common.SyntaxException;
 
-public abstract class ParseException extends MathSyntaxException {
+public abstract class ParseException extends SyntaxException {
 
     public ParseException() {
         super();

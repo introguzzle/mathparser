@@ -1,11 +1,14 @@
 package ru.introguzzle.mathparser.tokenize;
 
+import org.jetbrains.annotations.NotNull;
+import ru.introguzzle.mathparser.common.Nameable;
+import ru.introguzzle.mathparser.common.NotUniqueNamingException;
 import ru.introguzzle.mathparser.definition.FunctionDefinition;
 import ru.introguzzle.mathparser.common.Context;
+import ru.introguzzle.mathparser.expression.ExpressionIterator;
+import ru.introguzzle.mathparser.function.AbstractFunction;
 import ru.introguzzle.mathparser.function.Function;
-import ru.introguzzle.mathparser.symbol.ImmutableSymbol;
-import ru.introguzzle.mathparser.symbol.MutableSymbol;
-import ru.introguzzle.mathparser.symbol.Symbol;
+import ru.introguzzle.mathparser.symbol.*;
 import ru.introguzzle.mathparser.constant.Constant;
 import ru.introguzzle.mathparser.constant.ConstantReflector;
 import ru.introguzzle.mathparser.expression.Expression;
@@ -14,8 +17,8 @@ import ru.introguzzle.mathparser.function.FunctionReflector;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class MathTokenizer implements Tokenizer, Serializable {
 
@@ -31,12 +34,43 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return options;
     }
 
-    public static class Carrier {
+    public static class Result {
+        public boolean match = false;
+        public Token token;
+
+        public Result() {
+
+        }
+
+        public Result(boolean match, Token token) {
+            this.match = match;
+            this.token = token;
+        }
+
+        public static Result reduce(Result... results) {
+            boolean match = Arrays.stream(results).anyMatch(r -> r.match);
+            if (!match) {
+                return new Result(false, null);
+            }
+
+            Token nonNullToken = Arrays.stream(results)
+                    .map(result -> result.token)
+                    .filter(Objects::nonNull)
+                    .findFirst()
+                    .orElse(null);
+
+            return new Result(true, nonNullToken);
+        }
+    }
+
+    public static class Buffer {
+        public ExpressionIterator iterator;
         public Expression expression;
         public Tokens tokens;
         public Context context;
 
-        public Carrier(Expression expression, Tokens tokens, Context context) {
+        public Buffer(ExpressionIterator iterator, Expression expression, Tokens tokens, Context context) {
+            this.iterator = iterator;
             this.expression = expression;
             this.tokens = tokens;
             this.context = context;
@@ -45,56 +79,83 @@ public class MathTokenizer implements Tokenizer, Serializable {
 
     @Serial
     private static final long serialVersionUID = -54943912839L;
-    private transient Map<String, Function> functions = new HashMap<>();
-    private List<ImmutableSymbol> constants = new ArrayList<>();
+    private final transient Map<String, Nameable> nameableMap = new HashMap<>();
 
     public MathTokenizer() {
-        this.functions = FunctionReflector.get();
-        this.constants = ConstantReflector.get();
+        nameableMap.putAll(FunctionReflector.get());
+        nameableMap.putAll(ConstantReflector.get());
     }
 
     public MathTokenizer(Map<String, ? extends Function> functions) {
-        this.functions.putAll(functions);
+        nameableMap.putAll(functions);
     }
 
-    public MathTokenizer withFunctions(Map<String, ? extends Function> functions) {
-        this.functions.putAll(functions);
+    private static Map<String, Nameable> toMap(Collection<? extends Nameable> collection) {
+        return collection.stream().collect(Collectors.toMap(Nameable::getName, n -> n));
+    }
+
+    public MathTokenizer withFunctions(Collection<? extends Function> functions) {
+        nameableMap.putAll(toMap(functions));
         return this;
     }
 
     public MathTokenizer withConstants(Collection<? extends ImmutableSymbol> constants) {
-        this.constants.addAll(constants);
+        nameableMap.putAll(toMap(constants));
         return this;
     }
 
-    public MathTokenizer overrideFunction(String name, Function replace) {
-        this.functions.replace(name, replace);
+    public MathTokenizer overrideFunction(@NotNull String name,
+                                          int requiredArguments,
+                                          boolean variadic,
+                                          @NotNull java.util.function.Function<List<Double>, Double> replace) {
+        if (!nameableMap.containsKey(name)) {
+            throw new NotUniqueNamingException(name, nameableMap.keySet());
+        }
+
+        Function newFunction = new AbstractFunction(name, requiredArguments) {
+            @Override
+            public Double apply(List<Double> arguments) {
+                return replace.apply(arguments);
+            }
+
+            @Override
+            public boolean isVariadic() {
+                return variadic;
+            }
+        };
+
+        nameableMap.replace(name, newFunction);
         return this;
     }
 
-    public MathTokenizer overrideConstant(String representation, double value) {
-        this.constants.removeIf(symbol -> symbol.getName().equals(representation));
-        this.constants.add(new Constant(representation, value) {});
+    public MathTokenizer overrideConstant(String name, double value) {
+        nameableMap.remove(name);
+        nameableMap.put(name, new Constant(name, value) {});
         return this;
     }
 
     public MathTokenizer addFunction(Function function) {
-        this.functions.put(function.getName(), function);
+        nameableMap.put(function.getName(), function);
         return this;
     }
 
     public MathTokenizer addConstant(Constant constant) {
-        this.constants.add(constant);
+        nameableMap.put(constant.getName(), constant);
         return this;
     }
 
+
     public MathTokenizer clearFunctions() {
-        this.functions.clear();
+        nameableMap.entrySet()
+                .removeIf(entry -> entry.getValue() instanceof Function);
+
         return this;
     }
 
     public MathTokenizer clearConstants() {
-        this.constants.clear();
+        nameableMap.entrySet()
+                .removeIf(entry -> entry.getValue() instanceof ImmutableSymbol);
+
         return this;
     }
 
@@ -102,39 +163,48 @@ public class MathTokenizer implements Tokenizer, Serializable {
     public synchronized Tokens tokenize(Expression expression, Context context) throws TokenizeException {
         Stack<Character> bracketStack = new Stack<>();
         Tokens tokens = new Tokens();
-        Carrier carrier = new Carrier(expression, tokens, context);
+        ExpressionIterator iterator = expression.iterator();
+        Buffer buffer = new Buffer(iterator, expression, tokens, context);
+
+        if (expression.getString().isBlank() || expression.getString().isEmpty()) {
+            return new Tokens(new Token(TokenType.EOF, " "));
+        }
 
         if (expression instanceof FunctionDefinition definition) {
             int split = definition.getDefinitionSpliterator();
 
-            String declaration = expression.getString().substring(0, split);
+            if (split == -1) {
+                throw new FunctionDefinitionException("Not complete expression", definition, iterator.getCursor());
+            }
+
+            String declaration = expression.getString().substring(0, split).strip().replace(" ", "");
             Token declarationToken = new Token(TokenType.DECLARATION, declaration);
-            handleDeclaration(carrier, declarationToken);
+            handleDeclaration(buffer, declarationToken);
             tokens.add(declarationToken);
 
-            expression.setCursor(split);
+            iterator.setCursor(split);
         }
 
-        while (expression.hasNext()) {
-            char current = expression.current();
+        while (iterator.hasNext()) {
+            char current = iterator.current();
             switch (current) {
                 case ' ':
-                    expression.next();
+                    iterator.next();
                     continue;
                 case '(':
                     tokens.add(TokenType.LEFT_BRACKET, current);
                     bracketStack.push(current);
-                    expression.next();
+                    iterator.next();
                     continue;
                 case ')':
                     tokens.add(TokenType.RIGHT_BRACKET, current);
                     if (bracketStack.isEmpty()) {
-                        throw new IllegalBracketStartException();
+                        throw new IllegalBracketStartException(expression, iterator.getCursor());
                     } else {
                         bracketStack.pop();
                     }
 
-                    expression.next();
+                    iterator.next();
                     continue;
                 case '+':
                 case '-':
@@ -148,60 +218,67 @@ public class MathTokenizer implements Tokenizer, Serializable {
                 case '&':
                 case '|':
                 case '~':
-                    handleOperator(carrier);
-                    expression.next();
+                    tokens.add(handleOperator(buffer));
+                    if (!iterator.hasNext()) {
+                        break;
+                    }
+
+                    iterator.next();
                     continue;
                 case ',':
                     tokens.add(TokenType.COMMA, current);
-                    expression.next();
+                    iterator.next();
                     continue;
                 default:
-                    if (expression.isCurrentDigit() || current == '.') {
-                        handleNumber(carrier);
+                    if (iterator.isDigit()) {
+                        tokens.add(handleNumber(buffer));
+                        if (!iterator.hasNext()) {
+                            break;
+                        }
+
                         continue;
                     }
 
-                    if (expression.isCurrentLetter()) {
-                        handleSymbols(carrier);
+                    if (iterator.isLetter()) {
+                        tokens.add(handleSymbols(buffer));
+                        if (!iterator.hasNext()) {
+                            break;
+                        }
+
                         continue;
                     }
 
-                    throw new UnknownCharacterException(expression, current);
+                    throw new UnknownCharacterException(current, expression, iterator.getCursor());
             }
         }
 
         if (!bracketStack.isEmpty()) {
-            throw new BracketMismatchException();
+            throw new BracketMismatchException(expression, iterator.getCursor());
         }
 
         tokens.add(TokenType.EOF, "");
-        expression.reset();
-
-        if (options.strictMode) {
-            int size;
-            if ((size = context.getVariables().size()) != tokens.getVariableCount()) {
-                throw new VariableMismatchException(size, tokens.getVariableCount());
-            }
-
-            if ((size = context.getCoefficients().size()) != tokens.getCoefficientCount()) {
-                throw new CoefficientMismatchException(size, tokens.getCoefficientCount());
-            }
-        }
-
         return tokens;
     }
 
     @Override
     public List<ImmutableSymbol> getConstants() {
-        return this.constants;
+        return nameableMap.values()
+                .stream()
+                .filter(n -> n instanceof ImmutableSymbol)
+                .map(nameable -> (ImmutableSymbol) nameable)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Map<String, Function> getFunctions() {
-        return this.functions;
+    public List<Function> getFunctions() {
+        return nameableMap.values()
+                .stream()
+                .filter(n -> n instanceof Function)
+                .map(n -> (Function) n)
+                .toList();
     }
 
-    protected void handleDeclaration(Carrier carrier, Token declarationToken) throws UnknownSymbolTokenizeException {
+    protected void handleDeclaration(Buffer buffer, Token declarationToken) throws UnknownSymbolTokenizeException {
         String s = declarationToken.getData();
 
         int left = s.indexOf("(");
@@ -209,42 +286,43 @@ public class MathTokenizer implements Tokenizer, Serializable {
 
         String variable = s.substring(left + 1, right).strip().replace(" ", "");
         Optional<? extends MutableSymbol> optional =
-                carrier.context.getVariables().find(variable);
+                buffer.context.getSymbols().find(variable);
 
-        if (optional.isEmpty()) {
-            throw new UnknownSymbolTokenizeException(variable);
+        if (optional.isEmpty() || optional.get() instanceof Variable) {
+            throw new UnknownSymbolTokenizeException(variable, buffer.expression, buffer.iterator.getCursor());
         }
     }
 
-    protected void handleNumber(Carrier carrier) {
+    protected Token handleNumber(Buffer buffer) {
         StringBuilder number = new StringBuilder();
 
-        Expression expression = carrier.expression;
-        char current = expression.current();
+        ExpressionIterator iterator = buffer.iterator;
+        char current = iterator.current();
 
-        while (expression.hasNext() && expression.isCurrentDigit() || current == '.') {
+        while (iterator.hasNext() && iterator.isDigit()) {
             number.append(current);
-            expression.next();
-            if (!expression.hasNext()) {
+            iterator.next();
+            if (!iterator.hasNext()) {
                 break;
             }
 
-            current = expression.current();
+            current = iterator.current();
         }
 
-        carrier.tokens.add(TokenType.NUMBER, number.toString());
+        return new Token(TokenType.NUMBER, number);
     }
 
-    protected void handleOperator(Carrier carrier) {
-        Expression expression = carrier.expression;
-        char current = expression.current();
+    protected Token handleOperator(Buffer buffer) throws FunctionDefinitionException {
+        ExpressionIterator iterator = buffer.iterator;
+        char current = iterator.current();
+        Character next = iterator.peekNext();
 
-        Token token = switch (current) {
+        return switch (current) {
             case '+' -> new Token(TokenType.OPERATOR_ADD, current);
             case '-' -> new Token(TokenType.OPERATOR_SUB, current);
             case '*' -> {
-                if (expression.getCursor() + 1 < expression.getLength() && expression.peekNext() == '*') {
-                    expression.next();
+                if (next != null && next == '*') {
+                    iterator.next();
                     yield new Token(TokenType.OPERATOR_EXP, "**");
                 }
 
@@ -256,38 +334,43 @@ public class MathTokenizer implements Tokenizer, Serializable {
             case '|' -> new Token(TokenType.OPERATOR_OR, current);
             case '~' -> new Token(TokenType.OPERATOR_BITWISE_NOT, current);
             case '<' -> {
-                if (expression.getCursor() + 1 < expression.getLength() && expression.peekNext() == '<') {
-                    expression.next();
+                if (next != null && next == '<') {
+                    iterator.next();
                     yield new Token(TokenType.OPERATOR_LEFT_SHIFT, "<<");
-                } else if (expression.peekNext() == '=') {
-                    expression.next();
+                } else if (iterator.peekNext() == '=') {
+                    iterator.next();
                     yield new Token(TokenType.OPERATOR_LESS_OR_EQUALS, "<=");
                 }
 
                 yield new Token(TokenType.OPERATOR_LESS, current);
             }
             case '>' -> {
-                if (expression.getCursor() + 1 < expression.getLength() && expression.peekNext() == '>') {
-                    expression.next();
+                if (next != null && next == '>') {
+                    iterator.next();
                     yield new Token(TokenType.OPERATOR_RIGHT_SHIFT, ">>");
-                } else if (expression.peekNext() == '=') {
-                    expression.next();
+
+                } else if (next != null && next == '=') {
+                    iterator.next();
                     yield new Token(TokenType.OPERATOR_GREATER_OR_EQUALS, ">=");
                 }
 
                 yield new Token(TokenType.OPERATOR_GREATER, current);
             }
             case '=' -> {
-                if (expression.getCursor() + 1 < expression.getLength() && expression.peekNext() == '=') {
-                    expression.next();
+                if (next != null && next == '=') {
+                    iterator.next();
                     yield new Token(TokenType.OPERATOR_EQUALS, "==");
                 }
 
-                yield new Token(TokenType.DECLARATION_END, current);
+                if (buffer.expression instanceof FunctionDefinition) {
+                    yield new Token(TokenType.DECLARATION_END, current);
+                } else {
+                    throw new FunctionDefinitionException("Declaration is not allowed", buffer.expression, iterator.getCursor());
+                }
             }
             case '!' -> {
-                if (expression.getCursor() + 1 < expression.getLength() && expression.peekNext() == '=') {
-                    expression.next();
+                if (next != null && next == '=') {
+                    iterator.next();
                     yield new Token(TokenType.OPERATOR_NOT_EQUALS, "!=");
                 }
 
@@ -296,87 +379,62 @@ public class MathTokenizer implements Tokenizer, Serializable {
 
             default -> throw new IllegalArgumentException("Unknown operator: " + current);
         };
-
-        carrier.tokens.add(token);
     }
 
-    protected void handleSymbols(Carrier carrier) throws TokenizeException {
-        Expression expression = carrier.expression;
-        boolean match;
+    protected Token handleSymbols(Buffer buffer) throws TokenizeException {
+        ExpressionIterator iterator = buffer.iterator;
 
-        StringBuilder sequence = new StringBuilder();
+        StringBuilder symbols = new StringBuilder();
 
-        while (expression.hasNext() && expression.isCurrentLetter()) {
-            sequence.append(expression.next());
-            if (!expression.hasNext()) {
+        int start = iterator.getCursor();
+
+        while (iterator.hasNext() && iterator.isLetter()) {
+            symbols.append(iterator.next());
+            if (!iterator.hasNext()) {
                 break;
             }
         }
 
-        match = handleFunction(carrier, sequence)
-                || handleConstant(carrier, sequence)
-                || handleMutableList(carrier, sequence);
+        Result result = Result.reduce(
+                find(symbols),
+                findFromContext(buffer.context, symbols)
+        );
 
-        if (!match) {
-            throw new UnknownSymbolTokenizeException(sequence);
-        }
-    }
-
-    protected boolean handleFunction(Carrier carrier, CharSequence sequence) {
-        AtomicBoolean match = new AtomicBoolean(false);
-        this.functions.keySet().stream()
-                .filter(s -> s.contentEquals(sequence))
-                .findFirst()
-                .ifPresent(s -> {
-                    carrier.tokens.add(TokenType.FUNCTION_NAME, sequence);
-                    match.set(true);
-                });
-
-        return match.get();
-    }
-
-    protected boolean handleConstant(Carrier carrier, CharSequence sequence) {
-        AtomicBoolean match = new AtomicBoolean(false);
-        Predicate<ImmutableSymbol> isConstant = s -> s instanceof Constant;
-        this.constants
-                .stream()
-                .parallel()
-                .filter(isConstant.and(Symbol.match(sequence)))
-                .findFirst()
-                .ifPresent(s -> {
-                    carrier.tokens.add(TokenType.CONSTANT, sequence);
-                    match.set(true);
-                });
-
-        return match.get();
-    }
-
-    protected boolean handleMutableList(Carrier carrier, CharSequence sequence) {
-        AtomicBoolean match = new AtomicBoolean(false);
-        carrier.context.getVariables()
-                .stream()
-                .parallel()
-                .filter(s -> s.getName().contentEquals(sequence))
-                .findFirst()
-                .ifPresent(s -> {
-                    carrier.tokens.add(TokenType.VARIABLE, sequence);
-                    match.set(true);
-                });
-
-        if (match.get()) {
-            return true;
+        if (!result.match) {
+            iterator.setCursor(start);
+            throw new UnknownSymbolTokenizeException(symbols, buffer.expression, iterator.getCursor());
         }
 
-        carrier.context.getCoefficients()
-                .stream()
-                .parallel()
-                .filter(s -> s.getName().contentEquals(sequence))
+        return result.token;
+    }
+
+    protected Result find(CharSequence symbols) {
+        Result result = new Result();
+
+        nameableMap.values().stream()
+                .filter(Nameable.match(symbols))
                 .findFirst()
                 .ifPresent(s -> {
-                    carrier.tokens.add(TokenType.COEFFICIENT, sequence);
-                    match.set(true);
+                    result.token = new Token(s.type(), symbols);
+                    result.match = true;
                 });
 
-        return match.get();
+        return result;
+    }
+
+    protected Result findFromContext(Context context, CharSequence symbols) {
+        Result result = new Result();
+
+        context.getSymbols()
+                .stream()
+                .parallel()
+                .filter(s -> s.getName().contentEquals(symbols))
+                .findFirst()
+                .ifPresent(s -> {
+                    result.token = new Token(s.type(), symbols);
+                    result.match = true;
+                });
+
+        return result;
     }
 }

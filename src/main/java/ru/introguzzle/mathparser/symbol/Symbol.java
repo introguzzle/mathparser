@@ -1,16 +1,7 @@
 package ru.introguzzle.mathparser.symbol;
 
-import java.util.function.Predicate;
+import ru.introguzzle.mathparser.common.Nameable;
 
-public interface Symbol<T extends Number> {
-    String getName();
+public interface Symbol<T extends Number> extends Nameable {
     T getValue();
-
-    default boolean nameEquals(CharSequence sequence) {
-        return match(sequence).test(this);
-    }
-
-    static Predicate<Symbol<?>> match(CharSequence sequence) {
-        return s -> s.getName().contentEquals(sequence);
-    }
 }

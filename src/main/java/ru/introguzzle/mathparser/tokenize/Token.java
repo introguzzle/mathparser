@@ -54,7 +54,7 @@ public class Token implements Serializable, Comparable<Token> {
         return tokenType == token.tokenType && data.equals(token.data);
     }
 
-    public boolean sameType(Token anotherToken) {
+    public boolean typeEquals(Token anotherToken) {
         return this.tokenType == anotherToken.tokenType;
     }
 

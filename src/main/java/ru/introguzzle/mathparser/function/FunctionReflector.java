@@ -7,9 +7,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import org.jetbrains.annotations.NotNull;
+import ru.introguzzle.mathparser.tokenize.ContextlessMathTokenizer;
+import ru.introguzzle.mathparser.tokenize.MathTokenizer;
 
 public class FunctionReflector {
-    private static Map<String, Function> functionMap;
+    public static final Map<String, Function> functionMap = new HashMap<>();
     @NotNull
     private static Map<String, Function> load() {
         Map<String, Function> functionMap = new HashMap<>();
@@ -35,8 +37,8 @@ public class FunctionReflector {
     }
 
     public static Map<String, Function> get() {
-        if (FunctionReflector.functionMap == null) {
-            FunctionReflector.functionMap = FunctionReflector.load();
+        if (FunctionReflector.functionMap.isEmpty()) {
+            FunctionReflector.functionMap.putAll(FunctionReflector.load());
         }
 
         return FunctionReflector.functionMap;

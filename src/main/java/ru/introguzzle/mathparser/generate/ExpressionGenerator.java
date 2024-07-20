@@ -107,7 +107,7 @@ public class ExpressionGenerator implements Generator<Expression> {
         }
 
         ExpressionBuilder appendFunction(Depth depth) {
-            Function function = Random.pickFromMap(tokenizer.getFunctions());
+            Function function = Random.pickFromCollection(tokenizer.getFunctions());
 
             if (function == null) {
                 throw new EmptyFunctionListException("No registered functions");
@@ -168,7 +168,7 @@ public class ExpressionGenerator implements Generator<Expression> {
                 builder.append(createNumber());
             }
 
-            return new MathExpression(builder.toString().strip(), false);
+            return new MathExpression(builder.toString().strip());
         }
     }
 

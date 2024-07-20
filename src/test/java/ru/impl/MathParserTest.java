@@ -3,13 +3,15 @@ package ru.impl;
 import org.junit.Before;
 import org.junit.Test;
 
+import ru.introguzzle.mathparser.common.Context;
+import ru.introguzzle.mathparser.common.NotUniqueNamingException;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.parse.Parser;
+import ru.introguzzle.mathparser.symbol.Symbol;
 import ru.introguzzle.mathparser.tokenize.Tokenizer;
-import ru.introguzzle.mathparser.symbol.NotUniqueVariableException;
 import ru.introguzzle.mathparser.expression.MathExpression;
 import ru.introguzzle.mathparser.parse.MathParser;
-import ru.introguzzle.mathparser.common.EvaluationContext;
+import ru.introguzzle.mathparser.common.NamingContext;
 import ru.introguzzle.mathparser.tokenize.MathTokenizer;
 import ru.introguzzle.mathparser.tokenize.UnknownSymbolTokenizeException;
 import ru.introguzzle.mathparser.symbol.Variable;
@@ -53,9 +55,9 @@ public class MathParserTest {
         Expression expression = new MathExpression("max(a, b, c)");
 
         Variables variables = new Variables();
-        variables.add("a", 2);
+        variables.add(new Variable("a", 2));
 
-        parser.parse(expression, new EvaluationContext(variables, null));
+        parser.parse(expression, new NamingContext(variables));
     }
 
     @Test
@@ -67,7 +69,7 @@ public class MathParserTest {
         Variable c = new Variable("c", 444.0);
         Variables variables = new Variables(a, b, c);
 
-        EvaluationContext context = new EvaluationContext(variables, null);
+        NamingContext context = new NamingContext(variables);
 
         Double result = parser.parse(expression, context);
         assertEquals(Double.valueOf(444.0), result);
@@ -149,7 +151,9 @@ public class MathParserTest {
         variables.add("c", 10.0);
         variables.add("d", 2.0);
 
-        Double result = parser.parse(expression, new EvaluationContext(variables, null));
+        Context context = new NamingContext(variables);
+
+        Double result = parser.parse(expression, context);
         assertEquals(Double.valueOf(5.0 + 10.0 / (2.0 + Math.E)), result);
     }
 
@@ -189,7 +193,7 @@ public class MathParserTest {
         variables.size();
     }
 
-    @Test(expected = NotUniqueVariableException.class)
+    @Test(expected = NotUniqueNamingException.class)
     public void test_not_unique_variables_throws1() {
         Variables variables = new Variables(
             new Variable("a", 3),
@@ -199,7 +203,7 @@ public class MathParserTest {
         variables.size();
     }
 
-    @Test(expected = NotUniqueVariableException.class)
+    @Test(expected = NotUniqueNamingException.class)
     public void test_not_unique_variables_throws2() {
         Variables variables = new Variables();
 

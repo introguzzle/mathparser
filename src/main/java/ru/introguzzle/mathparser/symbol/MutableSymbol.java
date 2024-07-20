@@ -33,8 +33,8 @@ public abstract class MutableSymbol implements Symbol<Double>, Serializable {
 
     @Override
     public String toString() {
-        return "Variable{" +
-                "representation='" + name + '\'' +
+        return describe() + "{" +
+                "name='" + name + '\'' +
                 ", value=" + value +
                 '}';
     }

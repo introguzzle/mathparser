@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
@@ -21,6 +22,15 @@ public class Tokens implements Serializable, Iterable<Token> {
 
     public Tokens() {
         tokens = new ArrayList<>();
+    }
+
+    public Tokens(Token token) {
+        tokens = new ArrayList<>();
+        tokens.add(token);
+    }
+
+    public Tokens(Token... tokens) {
+        this.tokens = Arrays.asList(tokens);
     }
 
     public Tokens(List<Token> tokens) {

@@ -7,7 +7,7 @@ public interface Options {
     int getFlags();
 
     default boolean match(int flag) {
-        return (this.getFlags() & flag) == flag;
+        return (getFlags() & flag) == flag;
     }
 
     default boolean matchAll(int... flags) {

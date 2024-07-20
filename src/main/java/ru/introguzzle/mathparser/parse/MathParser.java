@@ -4,8 +4,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import ru.introguzzle.mathparser.common.Context;
-import ru.introguzzle.mathparser.common.EvaluationContext;
-import ru.introguzzle.mathparser.common.MathSyntaxException;
+import ru.introguzzle.mathparser.common.Nameable;
+import ru.introguzzle.mathparser.common.NamingContext;
+import ru.introguzzle.mathparser.common.SyntaxException;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.function.Function;
 import ru.introguzzle.mathparser.tokenize.*;
@@ -33,13 +34,13 @@ public class MathParser implements Parser<Double>, Serializable {
     }
 
     @Override
-    public Double parse(@NotNull Expression expression) throws MathSyntaxException {
-        return this.parse(expression, new EvaluationContext());
+    public Double parse(@NotNull Expression expression) throws SyntaxException {
+        return this.parse(expression, new NamingContext());
     }
 
     @Override
     public Double parse(@NotNull Expression expression,
-                        @NotNull Context context) throws MathSyntaxException {
+                        @NotNull Context context) throws SyntaxException {
         Tokens tokens = this.tokenize(expression, context);
         return this.parse(tokens, context);
     }
@@ -52,7 +53,7 @@ public class MathParser implements Parser<Double>, Serializable {
 
         try {
             return Optional.of(this.parse(expression));
-        } catch (MathSyntaxException e) {
+        } catch (SyntaxException e) {
             return Optional.empty();
         }
     }
@@ -67,12 +68,12 @@ public class MathParser implements Parser<Double>, Serializable {
         try {
             Double value = this.parse(expression, context);
             return Optional.of(value);
-        } catch (MathSyntaxException e) {
+        } catch (SyntaxException e) {
             return Optional.empty();
         }
     }
 
-    private Double parse(Tokens tokens, Context context) throws MathSyntaxException {
+    private Double parse(Tokens tokens, Context context) throws SyntaxException {
         tokens.skipDeclaration();
         Token token = tokens.getNextToken();
 
@@ -84,7 +85,7 @@ public class MathParser implements Parser<Double>, Serializable {
         return this.parseComparison(tokens, context);
     }
 
-    private double parseComparison(Tokens tokens, Context context) throws MathSyntaxException {
+    private double parseComparison(Tokens tokens, Context context) throws SyntaxException {
         double value = this.parseBitwiseOr(tokens, context);
         while (true) {
             Token token = tokens.getNextToken();
@@ -130,7 +131,7 @@ public class MathParser implements Parser<Double>, Serializable {
         }
     }
 
-    private double parseBitwiseOr(Tokens tokens, Context context) throws MathSyntaxException {
+    private double parseBitwiseOr(Tokens tokens, Context context) throws SyntaxException {
         double value = this.parseBitwiseExclusiveOr(tokens, context);
         while (true) {
             Token token = tokens.getNextToken();
@@ -156,7 +157,7 @@ public class MathParser implements Parser<Double>, Serializable {
         }
     }
 
-    private double parseBitwiseExclusiveOr(Tokens tokens, Context context) throws MathSyntaxException {
+    private double parseBitwiseExclusiveOr(Tokens tokens, Context context) throws SyntaxException {
         double value = this.parseBitwiseAnd(tokens, context);
         while (true) {
             Token token = tokens.getNextToken();
@@ -183,7 +184,7 @@ public class MathParser implements Parser<Double>, Serializable {
         }
     }
 
-    private double parseBitwiseAnd(Tokens tokens, Context context) throws MathSyntaxException {
+    private double parseBitwiseAnd(Tokens tokens, Context context) throws SyntaxException {
         double value = this.parseBitwiseShift(tokens, context);
         while (true) {
             Token token = tokens.getNextToken();
@@ -211,7 +212,7 @@ public class MathParser implements Parser<Double>, Serializable {
         }
     }
 
-    private double parseBitwiseShift(Tokens tokens, Context context) throws MathSyntaxException {
+    private double parseBitwiseShift(Tokens tokens, Context context) throws SyntaxException {
         double value = this.parseAdditionSubtraction(tokens, context);
         while (true) {
             Token token = tokens.getNextToken();
@@ -245,7 +246,7 @@ public class MathParser implements Parser<Double>, Serializable {
         }
     }
 
-    private double parseAdditionSubtraction(Tokens tokens, Context context) throws MathSyntaxException {
+    private double parseAdditionSubtraction(Tokens tokens, Context context) throws SyntaxException {
         double value = this.parseMultiplicationDivision(tokens, context);
         while (true) {
             Token token = tokens.getNextToken();
@@ -279,7 +280,7 @@ public class MathParser implements Parser<Double>, Serializable {
         }
     }
 
-    private double parseMultiplicationDivision(Tokens tokens, Context context) throws MathSyntaxException {
+    private double parseMultiplicationDivision(Tokens tokens, Context context) throws SyntaxException {
         double value = this.parseExponent(tokens, context);
         while (true) {
             Token token = tokens.getNextToken();
@@ -315,7 +316,7 @@ public class MathParser implements Parser<Double>, Serializable {
         }
     }
 
-    private double parseExponent(Tokens tokens, Context context) throws MathSyntaxException {
+    private double parseExponent(Tokens tokens, Context context) throws SyntaxException {
         double value = this.parseFactor(tokens, context);
         while (true) {
             Token token = tokens.getNextToken();
@@ -352,7 +353,7 @@ public class MathParser implements Parser<Double>, Serializable {
         }
     }
 
-    private double parseFactor(Tokens tokens, Context context) throws MathSyntaxException {
+    private double parseFactor(Tokens tokens, Context context) throws SyntaxException {
         Token token = tokens.getNextToken();
 
         switch (token.getTokenType()) {
@@ -382,7 +383,7 @@ public class MathParser implements Parser<Double>, Serializable {
                 return symbol.orElseThrow().getValue();
 
             case VARIABLE:
-                return context.getVariables().find(token.getData()).orElseThrow().getValue();
+                return context.getSymbol(token.getData()).orElseThrow().getValue();
 
             case LEFT_BRACKET:
                 double value = this.parse(tokens, context);
@@ -398,7 +399,7 @@ public class MathParser implements Parser<Double>, Serializable {
         }
     }
 
-    private double parseFunction(Tokens tokens, Context context) throws MathSyntaxException {
+    private double parseFunction(Tokens tokens, Context context) throws SyntaxException {
         String name = tokens.getNextToken().getData();
         tokens.getNextToken();
 
@@ -418,7 +419,13 @@ public class MathParser implements Parser<Double>, Serializable {
             } while (token.getTokenType() == TokenType.COMMA);
         }
 
-        Function function = this.tokenizer.getFunctions().get(name);
+        Function function = this.tokenizer.getFunctions()
+                .stream()
+                .filter(Nameable.match(name))
+                .findFirst()
+                .orElseThrow();
+
+
         int given = arguments.size();
 
         if (function.isVariadic()) {

@@ -1,6 +1,9 @@
 package ru.introguzzle.mathparser.symbol;
 
 import org.jetbrains.annotations.NotNull;
+import ru.introguzzle.mathparser.common.NoSuchNameException;
+import ru.introguzzle.mathparser.common.NotUniqueNamingException;
+import ru.introguzzle.mathparser.common.Nameable;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -27,14 +30,14 @@ public abstract class MutableSymbolList<T extends MutableSymbol>
         }
     }
 
-    protected void checkUnique(@NotNull T item) {
+    private void checkUnique(@NotNull T item) {
         if (names.contains(item.getName())) {
-            throw new MutableSymbolListException("Unique constrain violation");
+            throw new NotUniqueNamingException(item.getName(), names);
         }
     }
 
     public Optional<? extends T> find(@NotNull String name) {
-        for (T item : items) {
+        for (T item: items) {
             if (item.getName().equals(name)) {
                 return Optional.of(item);
             }
@@ -43,9 +46,9 @@ public abstract class MutableSymbolList<T extends MutableSymbol>
         return Optional.empty();
     }
 
-    public void setValue(String name, double value) {
+    public void setValue(@NotNull String name, double value) {
         find(name)
-                .orElseThrow(() -> new MutableSymbolListException("No such element with following name: " + name))
+                .orElseThrow(() -> new NoSuchNameException(name, names))
                 .setValue(value);
     }
 
@@ -55,12 +58,20 @@ public abstract class MutableSymbolList<T extends MutableSymbol>
         names.add(item.getName());
     }
 
+    public void addAll(MutableSymbolList<? extends T> items) {
+        this.items.addAll(items.getItems());
+    }
+
+    public void clear() {
+        this.items.clear();
+    }
+
     public boolean remove(T item) {
         return items.remove(item) && names.remove(item.getName());
     }
 
     public boolean remove(String name) {
-        return items.removeIf(Symbol.match(name)) && names.remove(name);
+        return items.removeIf(Nameable.match(name)) && names.remove(name);
     }
 
     public List<T> getItems() {

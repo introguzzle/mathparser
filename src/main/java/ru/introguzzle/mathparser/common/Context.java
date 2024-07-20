@@ -1,41 +1,27 @@
 package ru.introguzzle.mathparser.common;
 
-import ru.introguzzle.mathparser.symbol.Coefficient;
-import ru.introguzzle.mathparser.symbol.Coefficients;
-import ru.introguzzle.mathparser.symbol.Variable;
-import ru.introguzzle.mathparser.symbol.Variables;
+import ru.introguzzle.mathparser.symbol.*;
 
 import java.util.Optional;
 import java.util.Set;
 
 public interface Context {
-    Variables getVariables();
-
-    Coefficients getCoefficients();
+    MutableSymbolList<MutableSymbol> getSymbols();
 
     Context getParent();
 
-    void addVariable(Variable variable);
+    void addSymbol(MutableSymbol symbol);
 
-    void addCoefficient(Coefficient coefficient);
 
-    boolean removeVariable(Variable variable);
+    boolean removeSymbol(String name);
 
-    boolean removeCoefficient(Coefficient coefficient);
+    boolean removeSymbol(MutableSymbol symbol);
 
-    boolean removeVariable(String name);
-
-    boolean removeCoefficient(String name);
-
-    Optional<? extends Variable> getVariable(String name);
-
-    Optional<? extends Coefficient> getCoefficient(String name);
+    Optional<? extends MutableSymbol> getSymbol(String name);
 
     Set<String> getNames();
 
     void setParent(Context parent);
 
-    void setVariables(Variables variables);
-
-    void setCoefficients(Coefficients coefficients);
+    void setSymbols(MutableSymbolList<? extends MutableSymbol> symbols);
 }
