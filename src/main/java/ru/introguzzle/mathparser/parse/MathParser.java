@@ -2,15 +2,14 @@ package ru.introguzzle.mathparser.parse;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import ru.introguzzle.mathparser.common.Context;
 import ru.introguzzle.mathparser.common.Nameable;
 import ru.introguzzle.mathparser.common.NamingContext;
 import ru.introguzzle.mathparser.common.SyntaxException;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.function.Function;
-import ru.introguzzle.mathparser.tokenize.*;
 import ru.introguzzle.mathparser.symbol.ImmutableSymbol;
+import ru.introguzzle.mathparser.tokenize.*;
 
 import java.io.Serial;
 import java.io.Serializable;

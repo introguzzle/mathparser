@@ -17,7 +17,6 @@ import ru.introguzzle.mathparser.function.FunctionReflector;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class MathTokenizer implements Tokenizer, Serializable {
@@ -288,7 +287,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
         Optional<? extends MutableSymbol> optional =
                 buffer.context.getSymbols().find(variable);
 
-        if (optional.isEmpty() || optional.get() instanceof Variable) {
+        if (optional.isEmpty() || !(optional.get() instanceof Variable)) {
             throw new UnknownSymbolTokenizeException(variable, buffer.expression, buffer.iterator.getCursor());
         }
     }
@@ -314,7 +313,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
 
     protected Token handleOperator(Buffer buffer) throws FunctionDefinitionException {
         ExpressionIterator iterator = buffer.iterator;
-        char current = iterator.current();
+        Character current = iterator.current();
         Character next = iterator.peekNext();
 
         return switch (current) {

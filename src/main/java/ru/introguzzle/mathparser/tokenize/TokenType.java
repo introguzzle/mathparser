@@ -53,6 +53,7 @@ public enum TokenType {
         NUMBER,
         SPECIAL,
         FUNCTION,
-        DECLARATION, SYMBOL
+        DECLARATION,
+        SYMBOL
     }
 }

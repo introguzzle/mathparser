@@ -3,7 +3,6 @@ package ru.introguzzle.mathparser.symbol;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 public class Coefficients extends MutableSymbolList<Coefficient> {
 

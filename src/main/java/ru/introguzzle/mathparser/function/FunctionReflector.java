@@ -7,11 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import org.jetbrains.annotations.NotNull;
-import ru.introguzzle.mathparser.tokenize.ContextlessMathTokenizer;
-import ru.introguzzle.mathparser.tokenize.MathTokenizer;
 
 public class FunctionReflector {
-    public static final Map<String, Function> functionMap = new HashMap<>();
+
+    private static final Map<String, Function> functionMap = new HashMap<>();
     @NotNull
     private static Map<String, Function> load() {
         Map<String, Function> functionMap = new HashMap<>();

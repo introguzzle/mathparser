@@ -4,13 +4,8 @@ import ru.introguzzle.mathparser.common.Context;
 import ru.introguzzle.mathparser.common.NamingContext;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.expression.MathExpression;
-import ru.introguzzle.mathparser.parse.MathParser;
-import ru.introguzzle.mathparser.symbol.Coefficient;
 import ru.introguzzle.mathparser.symbol.Variable;
 import ru.introguzzle.mathparser.symbol.Variables;
-import ru.introguzzle.mathparser.tokenize.MathTokenizer;
-import ru.introguzzle.mathparser.tokenize.TokenizeException;
-import ru.introguzzle.mathparser.tokenize.Tokens;
 
 import java.util.Collection;
 import java.util.List;
@@ -49,20 +44,6 @@ public class ExpressionStorage {
                 new MathExpression(string),
                 new NamingContext(new Variables(variables))
         );
-    }
-
-    public static void main(String[] args) throws TokenizeException {
-        MathTokenizer tokenizer = new MathTokenizer();
-        Expression expression = new MathExpression("x + A");
-        Context context = new NamingContext();
-        context.getSymbols().add(new Variable("a", 4));
-        context.getSymbols().add(new Coefficient("A", 4));
-
-        tokenizer.getFunctions().forEach(System.out::println);
-        tokenizer.getConstants().forEach(System.out::println);
-        context.getSymbols().forEach(System.out::println);
-
-        Tokens tokens = tokenizer.tokenize(expression, context);
     }
 
     private static Variable v(String name) {
