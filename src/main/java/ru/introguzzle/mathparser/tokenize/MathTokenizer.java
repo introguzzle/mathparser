@@ -1,5 +1,6 @@
 package ru.introguzzle.mathparser.tokenize;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.common.Nameable;
 import ru.introguzzle.mathparser.common.NoSuchNameException;
@@ -46,13 +47,16 @@ public class MathTokenizer implements Tokenizer, Serializable {
             this.token = token;
         }
 
-        public static Result reduce(Result... results) {
+        @Contract("_ -> new")
+        public static @NotNull Result reduce(Result... results) {
             boolean match = Arrays.stream(results).anyMatch(r -> r.match);
+
             if (!match) {
                 return new Result(false, null);
             }
 
             Token nonNullToken = Arrays.stream(results)
+                    .sequential()
                     .map(result -> result.token)
                     .filter(Objects::nonNull)
                     .findFirst()
@@ -62,14 +66,16 @@ public class MathTokenizer implements Tokenizer, Serializable {
         }
     }
 
-    public record Buffer(ExpressionIterator iterator,
-                         Expression expression,
-                         Tokens tokens,
-                         Context context) {
+    public record Buffer(@NotNull ExpressionIterator iterator,
+                         @NotNull Expression expression,
+                         @NotNull Tokens tokens,
+                         @NotNull Context context) {
     }
 
     @Serial
     private static final long serialVersionUID = -54943912839L;
+
+    @NotNull
     private final transient Map<String, Nameable> nameableMap = new HashMap<>();
 
     public MathTokenizer() {
@@ -77,20 +83,20 @@ public class MathTokenizer implements Tokenizer, Serializable {
         nameableMap.putAll(ConstantReflector.get());
     }
 
-    public MathTokenizer(Map<String, ? extends Function> functions) {
+    public MathTokenizer(@NotNull Map<String, ? extends Function> functions) {
         nameableMap.putAll(functions);
     }
 
-    private static Map<String, Nameable> toMap(Collection<? extends Nameable> collection) {
+    private static Map<String, Nameable> toMap(@NotNull Collection<? extends Nameable> collection) {
         return collection.stream().collect(Collectors.toMap(Nameable::getName, n -> n));
     }
 
-    public MathTokenizer withFunctions(Collection<? extends Function> functions) {
+    public MathTokenizer withFunctions(@NotNull Collection<? extends Function> functions) {
         nameableMap.putAll(toMap(functions));
         return this;
     }
 
-    public MathTokenizer withConstants(Collection<? extends ImmutableSymbol> constants) {
+    public MathTokenizer withConstants(@NotNull Collection<? extends ImmutableSymbol> constants) {
         nameableMap.putAll(toMap(constants));
         return this;
     }
@@ -119,23 +125,23 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return this;
     }
 
-    public MathTokenizer overrideConstant(String name, double value) {
+    public MathTokenizer overrideConstant(@NotNull String name, double value) {
         nameableMap.remove(name);
         nameableMap.put(name, new Constant(name, value) {});
         return this;
     }
 
-    public MathTokenizer addFunction(Function function) {
+    public MathTokenizer addFunction(@NotNull Function function) {
         nameableMap.put(function.getName(), function);
         return this;
     }
 
-    public MathTokenizer addConstant(Constant constant) {
+    public MathTokenizer addConstant(@NotNull Constant constant) {
         nameableMap.put(constant.getName(), constant);
         return this;
     }
 
-    public MathTokenizer addName(Nameable nameable) {
+    public MathTokenizer addName(@NotNull Nameable nameable) {
         nameableMap.put(nameable.getName(), nameable);
         return this;
     }
@@ -156,7 +162,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
     }
 
     @Override
-    public synchronized Tokens tokenize(Expression expression, Context context) throws TokenizeException {
+    public synchronized @NotNull Tokens tokenize(@NotNull Expression expression, @NotNull Context context) throws TokenizeException {
         Stack<Character> parenthesisStack = new Stack<>();
         Tokens tokens = new Tokens();
         ExpressionIterator iterator = expression.iterator();
@@ -266,35 +272,14 @@ public class MathTokenizer implements Tokenizer, Serializable {
 
     protected Token handleDefinition(Buffer buffer, FunctionDefinition definition) throws UnknownSymbolTokenizeException, FunctionDefinitionException {
         int split = definition.getDefinitionSpliterator();
+        Variable variable = definition.getVariable();
 
-        if (split == -1) {
-            throw new FunctionDefinitionException("Not complete expression", definition, buffer.iterator.getCursor());
-        }
-
-        String declaration = buffer.expression
-                .getString()
-                .substring(0, split)
-                .strip()
-                .replace(" ", "");
-
-        int left = declaration.indexOf("(");
-        int right = declaration.indexOf(")");
-
-        String variable = declaration
-                .substring(left + 1, right)
-                .strip()
-                .replace(" ", "");
-
-        Optional<? extends MutableSymbol> optional =
-                buffer.context.getSymbols().find(variable);
-
-        if (optional.isEmpty() || !(optional.get() instanceof Variable)) {
-            throw new UnknownSymbolTokenizeException(variable, buffer.expression, buffer.iterator.getCursor());
-        }
-
+        buffer.context.addSymbol(variable);
         buffer.iterator.setCursor(split);
-
-        return new Token(TokenType.DECLARATION, declaration);
+        return new Token(
+                TokenType.DECLARATION,
+                definition.getString().substring(split)
+        );
     }
 
     protected Token handleNumber(Buffer buffer) {

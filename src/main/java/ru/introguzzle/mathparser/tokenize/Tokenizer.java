@@ -1,5 +1,6 @@
 package ru.introguzzle.mathparser.tokenize;
 
+import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.common.Context;
 import ru.introguzzle.mathparser.common.Optionable;
 import ru.introguzzle.mathparser.expression.Expression;
@@ -9,7 +10,7 @@ import ru.introguzzle.mathparser.symbol.ImmutableSymbol;
 import java.util.List;
 
 public interface Tokenizer extends Optionable<TokenizerOptions> {
-    Tokens tokenize(Expression expression, Context context) throws TokenizeException;
+    @NotNull Tokens tokenize(@NotNull Expression expression, @NotNull Context context) throws TokenizeException;
 
     List<ImmutableSymbol> getConstants();
     List<Function> getFunctions();

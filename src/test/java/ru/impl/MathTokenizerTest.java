@@ -35,11 +35,8 @@ public class MathTokenizerTest {
 
     @Test
     public void test_function_definition() throws Exception {
-        Expression expression = new FunctionDefinition("f(x)    = x + x^3");
+        Expression expression = new FunctionDefinition("f(x)    = x + x^3", new Variable("x", 0));
         Context context = new NamingContext();
-
-        context.addSymbol(new Variable("x", 3));
-
         tokenizer.tokenize(expression, context).forEach(System.out::println);
     }
 
@@ -284,7 +281,7 @@ public class MathTokenizerTest {
             }
         });
 
-        Expression expression = new MathExpression("test_function(3) ^ test_function(4) * clown()");
+        Expression expression = new MathExpression("test_function(3) ^ test_function(clown()) * clown()");
         Context context = new NamingContext();
         Tokens tokens = tokenizer.tokenize(expression, context);
 
