@@ -2,6 +2,7 @@ package ru.introguzzle.mathparser.symbol;
 
 
 import ru.introguzzle.mathparser.tokenize.TokenType;
+import ru.introguzzle.mathparser.tokenize.Type;
 
 public class Variable extends MutableSymbol {
 
@@ -10,7 +11,7 @@ public class Variable extends MutableSymbol {
     }
 
     @Override
-    public TokenType type() {
+    public Type type() {
         return TokenType.VARIABLE;
     }
 }

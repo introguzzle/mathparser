@@ -10,21 +10,21 @@ public class Token implements Serializable, Comparable<Token> {
 
     @Serial
     private static final long serialVersionUID = -54892981192L;
-    private final TokenType tokenType;
+    private final Type type;
     private final String data;
 
-    public Token(TokenType tokenType, CharSequence data) {
-        this.tokenType = tokenType;
+    public Token(Type type, CharSequence data) {
+        this.type = type;
         this.data = data.toString();
     }
 
-    public Token(TokenType tokenType, Character data) {
-        this.tokenType = tokenType;
+    public Token(Type type, Character data) {
+        this.type = type;
         this.data = data.toString();
     }
 
-    public TokenType getTokenType() {
-        return this.tokenType;
+    public Type getType() {
+        return this.type;
     }
 
     public String getData() {
@@ -33,7 +33,7 @@ public class Token implements Serializable, Comparable<Token> {
 
     @Override
     public String toString() {
-        return "Token{" + "type=" + getTokenType() + ", data= '" + getData() + "'}";
+        return "Token{" + "type=" + getType() + ", data= '" + getData() + "'}";
     }
 
     @Override
@@ -43,7 +43,7 @@ public class Token implements Serializable, Comparable<Token> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.data, this.tokenType);
+        return Objects.hash(this.data, this.type);
     }
 
     @Override
@@ -51,11 +51,11 @@ public class Token implements Serializable, Comparable<Token> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Token token = (Token) o;
-        return tokenType == token.tokenType && data.equals(token.data);
+        return type == token.type && data.equals(token.data);
     }
 
     public boolean typeEquals(Token anotherToken) {
-        return this.tokenType == anotherToken.tokenType;
+        return this.type == anotherToken.type;
     }
 
     @Override

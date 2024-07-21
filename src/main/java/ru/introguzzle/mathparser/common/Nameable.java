@@ -1,6 +1,6 @@
 package ru.introguzzle.mathparser.common;
 
-import ru.introguzzle.mathparser.tokenize.TokenType;
+import ru.introguzzle.mathparser.tokenize.Type;
 import java.util.function.Predicate;
 
 public interface Nameable {
@@ -22,7 +22,7 @@ public interface Nameable {
         return s -> s.contentEquals(nameable.getName());
     }
 
-    TokenType type();
+    Type type();
 
     boolean equals(Object o);
 }

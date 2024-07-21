@@ -1,8 +1,8 @@
 package ru.introguzzle.mathparser.tokenize;
 
-public enum TokenType {
-    LEFT_BRACKET(Category.BRACKET),
-    RIGHT_BRACKET(Category.BRACKET),
+public enum TokenType implements Type {
+    LEFT_PARENTHESIS(Category.PARENTHESIS),
+    RIGHT_PARENTHESIS(Category.PARENTHESIS),
     NUMBER(Category.NUMBER),
     FUNCTION_NAME(Category.FUNCTION),
     EOF(Category.SPECIAL),
@@ -45,15 +45,5 @@ public enum TokenType {
 
     public Category getCategory() {
         return this.category;
-    }
-
-    public enum Category {
-        OPERATOR,
-        BRACKET,
-        NUMBER,
-        SPECIAL,
-        FUNCTION,
-        DECLARATION,
-        SYMBOL
     }
 }

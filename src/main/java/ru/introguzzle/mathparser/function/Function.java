@@ -2,6 +2,7 @@ package ru.introguzzle.mathparser.function;
 
 import ru.introguzzle.mathparser.common.Nameable;
 import ru.introguzzle.mathparser.tokenize.TokenType;
+import ru.introguzzle.mathparser.tokenize.Type;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface Function extends java.util.function.Function<List<Double>, Doub
     }
 
     @Override
-    default TokenType type() {
+    default Type type() {
         return TokenType.FUNCTION_NAME;
     }
 }

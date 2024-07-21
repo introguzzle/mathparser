@@ -39,28 +39,28 @@ public class MathTokenizerTest {
 
         assertEquals(tokens.getPosition(), 0);
         assertEquals(8, tokens.size());
-        assertEquals(TokenType.NUMBER, tokens.get(0).getTokenType());
+        assertEquals(TokenType.NUMBER, tokens.get(0).getType());
         assertEquals("2", tokens.get(0).getData());
 
-        assertEquals(TokenType.OPERATOR_EXP, tokens.get(1).getTokenType());
+        assertEquals(TokenType.OPERATOR_EXP, tokens.get(1).getType());
         assertEquals("**", tokens.get(1).getData());
 
-        assertEquals(TokenType.NUMBER, tokens.get(2).getTokenType());
+        assertEquals(TokenType.NUMBER, tokens.get(2).getType());
         assertEquals("3", tokens.get(2).getData());
 
-        assertEquals(TokenType.OPERATOR_MUL, tokens.get(3).getTokenType());
+        assertEquals(TokenType.OPERATOR_MUL, tokens.get(3).getType());
         assertEquals("*", tokens.get(3).getData());
 
-        assertEquals(TokenType.LEFT_BRACKET, tokens.get(4).getTokenType());
+        assertEquals(TokenType.LEFT_PARENTHESIS, tokens.get(4).getType());
         assertEquals("(", tokens.get(4).getData());
 
-        assertEquals(TokenType.NUMBER, tokens.get(5).getTokenType());
+        assertEquals(TokenType.NUMBER, tokens.get(5).getType());
         assertEquals("4.5", tokens.get(5).getData());
 
-        assertEquals(TokenType.RIGHT_BRACKET, tokens.get(6).getTokenType());
+        assertEquals(TokenType.RIGHT_PARENTHESIS, tokens.get(6).getType());
         assertEquals(")", tokens.get(6).getData());
 
-        assertEquals(TokenType.EOF, tokens.get(7).getTokenType());
+        assertEquals(TokenType.EOF, tokens.get(7).getType());
     }
 
     @Test
@@ -73,16 +73,16 @@ public class MathTokenizerTest {
 
         assertEquals(4, tokens.size());
 
-        assertEquals(TokenType.NUMBER, tokens.get(0).getTokenType());
+        assertEquals(TokenType.NUMBER, tokens.get(0).getType());
         assertEquals("2", tokens.get(0).getData());
 
-        assertEquals(TokenType.OPERATOR_ADD, tokens.get(1).getTokenType());
+        assertEquals(TokenType.OPERATOR_ADD, tokens.get(1).getType());
         assertEquals("+", tokens.get(1).getData());
 
-        assertEquals(TokenType.NUMBER, tokens.get(2).getTokenType());
+        assertEquals(TokenType.NUMBER, tokens.get(2).getType());
         assertEquals("2", tokens.get(2).getData());
 
-        assertEquals(TokenType.EOF, tokens.get(3).getTokenType());
+        assertEquals(TokenType.EOF, tokens.get(3).getType());
     }
 
     @Test
@@ -94,34 +94,34 @@ public class MathTokenizerTest {
         assertEquals(tokens.getPosition(), 0);
         assertEquals(10, tokens.size());
 
-        assertEquals(TokenType.FUNCTION_NAME, tokens.get(0).getTokenType());
+        assertEquals(TokenType.FUNCTION_NAME, tokens.get(0).getType());
         assertEquals("sin", tokens.get(0).getData());
 
-        assertEquals(TokenType.LEFT_BRACKET, tokens.get(1).getTokenType());
+        assertEquals(TokenType.LEFT_PARENTHESIS, tokens.get(1).getType());
         assertEquals("(", tokens.get(1).getData());
 
-        assertEquals(TokenType.NUMBER, tokens.get(2).getTokenType());
+        assertEquals(TokenType.NUMBER, tokens.get(2).getType());
         assertEquals("1", tokens.get(2).getData());
 
-        assertEquals(TokenType.RIGHT_BRACKET, tokens.get(3).getTokenType());
+        assertEquals(TokenType.RIGHT_PARENTHESIS, tokens.get(3).getType());
         assertEquals(")", tokens.get(3).getData());
 
-        assertEquals(TokenType.OPERATOR_ADD, tokens.get(4).getTokenType());
+        assertEquals(TokenType.OPERATOR_ADD, tokens.get(4).getType());
         assertEquals("+", tokens.get(4).getData());
 
-        assertEquals(TokenType.FUNCTION_NAME, tokens.get(5).getTokenType());
+        assertEquals(TokenType.FUNCTION_NAME, tokens.get(5).getType());
         assertEquals("cos", tokens.get(5).getData());
 
-        assertEquals(TokenType.LEFT_BRACKET, tokens.get(6).getTokenType());
+        assertEquals(TokenType.LEFT_PARENTHESIS, tokens.get(6).getType());
         assertEquals("(", tokens.get(6).getData());
 
-        assertEquals(TokenType.NUMBER, tokens.get(7).getTokenType());
+        assertEquals(TokenType.NUMBER, tokens.get(7).getType());
         assertEquals("1", tokens.get(7).getData());
 
-        assertEquals(TokenType.RIGHT_BRACKET, tokens.get(8).getTokenType());
+        assertEquals(TokenType.RIGHT_PARENTHESIS, tokens.get(8).getType());
         assertEquals(")", tokens.get(8).getData());
 
-        assertEquals(TokenType.EOF, tokens.get(9).getTokenType());
+        assertEquals(TokenType.EOF, tokens.get(9).getType());
     }
 
     @Test(expected = UnknownSymbolTokenizeException.class)
@@ -143,16 +143,16 @@ public class MathTokenizerTest {
 
         assertEquals(4, tokens.size());
 
-        assertEquals(TokenType.VARIABLE, tokens.get(0).getTokenType());
+        assertEquals(TokenType.VARIABLE, tokens.get(0).getType());
         assertEquals("x", tokens.get(0).getData());
 
-        assertEquals(TokenType.OPERATOR_ADD, tokens.get(1).getTokenType());
+        assertEquals(TokenType.OPERATOR_ADD, tokens.get(1).getType());
         assertEquals("+", tokens.get(1).getData());
 
-        assertEquals(TokenType.COEFFICIENT, tokens.get(2).getTokenType());
+        assertEquals(TokenType.COEFFICIENT, tokens.get(2).getType());
         assertEquals("A", tokens.get(2).getData());
 
-        assertEquals(TokenType.EOF, tokens.get(3).getTokenType());
+        assertEquals(TokenType.EOF, tokens.get(3).getType());
 
         assertEquals(tokens.getVariableCount(), 1);
         assertEquals(tokens.getCoefficientCount(), 1);
@@ -181,31 +181,31 @@ public class MathTokenizerTest {
         Tokens tokens = tokenizer.tokenize(expression, context);
 
         assertEquals(9, tokens.size());
-        assertEquals(TokenType.FUNCTION_NAME, tokens.get(0).getTokenType());
+        assertEquals(TokenType.FUNCTION_NAME, tokens.get(0).getType());
         assertEquals("sin", tokens.get(0).getData());
 
-        assertEquals(TokenType.LEFT_BRACKET, tokens.get(1).getTokenType());
+        assertEquals(TokenType.LEFT_PARENTHESIS, tokens.get(1).getType());
         assertEquals("(", tokens.get(1).getData());
 
-        assertEquals(TokenType.NUMBER, tokens.get(2).getTokenType());
+        assertEquals(TokenType.NUMBER, tokens.get(2).getType());
         assertEquals("1", tokens.get(2).getData());
 
-        assertEquals(TokenType.COMMA, tokens.get(3).getTokenType());
+        assertEquals(TokenType.COMMA, tokens.get(3).getType());
         assertEquals(",", tokens.get(3).getData());
 
-        assertEquals(TokenType.NUMBER, tokens.get(4).getTokenType());
+        assertEquals(TokenType.NUMBER, tokens.get(4).getType());
         assertEquals("3", tokens.get(4).getData());
 
-        assertEquals(TokenType.COMMA, tokens.get(5).getTokenType());
+        assertEquals(TokenType.COMMA, tokens.get(5).getType());
         assertEquals(",", tokens.get(5).getData());
 
-        assertEquals(TokenType.NUMBER, tokens.get(6).getTokenType());
+        assertEquals(TokenType.NUMBER, tokens.get(6).getType());
         assertEquals("4", tokens.get(6).getData());
 
-        assertEquals(TokenType.RIGHT_BRACKET, tokens.get(7).getTokenType());
+        assertEquals(TokenType.RIGHT_PARENTHESIS, tokens.get(7).getType());
         assertEquals(")", tokens.get(7).getData());
 
-        assertEquals(TokenType.EOF, tokens.get(8).getTokenType());
+        assertEquals(TokenType.EOF, tokens.get(8).getType());
 
     }
 
@@ -223,13 +223,13 @@ public class MathTokenizerTest {
         Tokens tokens = tokenizer.tokenize(expression, context);
 
         assertEquals(3, tokens.size());
-        assertEquals(TokenType.NUMBER, tokens.get(0).getTokenType());
+        assertEquals(TokenType.NUMBER, tokens.get(0).getType());
         assertEquals("2.344", tokens.get(0).getData());
 
-        assertEquals(TokenType.OPERATOR_MUL, tokens.get(1).getTokenType());
+        assertEquals(TokenType.OPERATOR_MUL, tokens.get(1).getType());
         assertEquals("*", tokens.get(1).getData());
 
-        assertEquals(TokenType.EOF, tokens.get(2).getTokenType());
+        assertEquals(TokenType.EOF, tokens.get(2).getType());
     }
 
     @Test
@@ -276,7 +276,7 @@ public class MathTokenizerTest {
         Context context = new NamingContext();
         Tokens tokens = tokenizer.tokenize(expression, context);
 
-        assertEquals(TokenType.FUNCTION_NAME, tokens.get(0).getTokenType());
+        assertEquals(TokenType.FUNCTION_NAME, tokens.get(0).getType());
         assertEquals("test_function", tokens.get(0).getData());
     }
 
@@ -326,34 +326,34 @@ public class MathTokenizerTest {
 
         assertEquals(tokens.size(), 10);
 
-        assertEquals(TokenType.NUMBER, tokens.get(0).getTokenType());
+        assertEquals(TokenType.NUMBER, tokens.get(0).getType());
         assertEquals("1", tokens.get(0).getData());
 
-        assertEquals(TokenType.OPERATOR_RIGHT_SHIFT, tokens.get(1).getTokenType());
+        assertEquals(TokenType.OPERATOR_RIGHT_SHIFT, tokens.get(1).getType());
         assertEquals(">>", tokens.get(1).getData());
 
-        assertEquals(TokenType.NUMBER, tokens.get(2).getTokenType());
+        assertEquals(TokenType.NUMBER, tokens.get(2).getType());
         assertEquals("2", tokens.get(2).getData());
 
-        assertEquals(TokenType.OPERATOR_OR, tokens.get(3).getTokenType());
+        assertEquals(TokenType.OPERATOR_OR, tokens.get(3).getType());
         assertEquals("|", tokens.get(3).getData());
 
-        assertEquals(TokenType.NUMBER, tokens.get(4).getTokenType());
+        assertEquals(TokenType.NUMBER, tokens.get(4).getType());
         assertEquals("3", tokens.get(4).getData());
 
-        assertEquals(TokenType.OPERATOR_AND, tokens.get(5).getTokenType());
+        assertEquals(TokenType.OPERATOR_AND, tokens.get(5).getType());
         assertEquals("&", tokens.get(5).getData());
 
-        assertEquals(TokenType.NUMBER, tokens.get(6).getTokenType());
+        assertEquals(TokenType.NUMBER, tokens.get(6).getType());
         assertEquals("4", tokens.get(6).getData());
 
-        assertEquals(TokenType.OPERATOR_LEFT_SHIFT, tokens.get(7).getTokenType());
+        assertEquals(TokenType.OPERATOR_LEFT_SHIFT, tokens.get(7).getType());
         assertEquals("<<", tokens.get(7).getData());
 
-        assertEquals(TokenType.NUMBER, tokens.get(8).getTokenType());
+        assertEquals(TokenType.NUMBER, tokens.get(8).getType());
         assertEquals("5", tokens.get(8).getData());
 
-        assertEquals(TokenType.EOF, tokens.get(9).getTokenType());
+        assertEquals(TokenType.EOF, tokens.get(9).getType());
     }
 
     @Test
@@ -364,34 +364,34 @@ public class MathTokenizerTest {
 
         assertEquals(tokens.size(), 10);
 
-        assertEquals(TokenType.NUMBER, tokens.get(0).getTokenType());
+        assertEquals(TokenType.NUMBER, tokens.get(0).getType());
         assertEquals("0", tokens.get(0).getData());
 
-        assertEquals(TokenType.OPERATOR_LESS, tokens.get(1).getTokenType());
+        assertEquals(TokenType.OPERATOR_LESS, tokens.get(1).getType());
         assertEquals("<", tokens.get(1).getData());
 
-        assertEquals(TokenType.NUMBER, tokens.get(2).getTokenType());
+        assertEquals(TokenType.NUMBER, tokens.get(2).getType());
         assertEquals("1", tokens.get(2).getData());
 
-        assertEquals(TokenType.OPERATOR_LESS_OR_EQUALS, tokens.get(3).getTokenType());
+        assertEquals(TokenType.OPERATOR_LESS_OR_EQUALS, tokens.get(3).getType());
         assertEquals("<=", tokens.get(3).getData());
 
-        assertEquals(TokenType.NUMBER, tokens.get(4).getTokenType());
+        assertEquals(TokenType.NUMBER, tokens.get(4).getType());
         assertEquals("2", tokens.get(4).getData());
 
-        assertEquals(TokenType.OPERATOR_GREATER_OR_EQUALS, tokens.get(5).getTokenType());
+        assertEquals(TokenType.OPERATOR_GREATER_OR_EQUALS, tokens.get(5).getType());
         assertEquals(">=", tokens.get(5).getData());
 
-        assertEquals(TokenType.NUMBER, tokens.get(6).getTokenType());
+        assertEquals(TokenType.NUMBER, tokens.get(6).getType());
         assertEquals("3", tokens.get(6).getData());
 
-        assertEquals(TokenType.OPERATOR_GREATER, tokens.get(7).getTokenType());
+        assertEquals(TokenType.OPERATOR_GREATER, tokens.get(7).getType());
         assertEquals(">", tokens.get(7).getData());
 
-        assertEquals(TokenType.NUMBER, tokens.get(8).getTokenType());
+        assertEquals(TokenType.NUMBER, tokens.get(8).getType());
         assertEquals("4", tokens.get(8).getData());
 
-        assertEquals(TokenType.EOF, tokens.get(9).getTokenType());
+        assertEquals(TokenType.EOF, tokens.get(9).getType());
     }
 
     @Test

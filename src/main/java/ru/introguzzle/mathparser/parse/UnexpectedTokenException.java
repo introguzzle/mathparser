@@ -5,6 +5,6 @@ import ru.introguzzle.mathparser.tokenize.Tokens;
 
 public class UnexpectedTokenException extends ParseException {
     public UnexpectedTokenException(Tokens tokens, Token token) {
-        super("Unexpected token: '" + token.getTokenType() + "' at pos " + tokens.getPosition() + " in expression");
+        super("Unexpected token: '" + token.getType() + "' at pos " + tokens.getPosition() + " in expression");
     }
 }

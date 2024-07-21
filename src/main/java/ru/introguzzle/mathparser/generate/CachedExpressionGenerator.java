@@ -4,10 +4,7 @@ import ru.introguzzle.mathparser.common.Context;
 import ru.introguzzle.mathparser.common.SyntaxException;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.expression.MathExpression;
-import ru.introguzzle.mathparser.tokenize.Token;
-import ru.introguzzle.mathparser.tokenize.TokenType;
-import ru.introguzzle.mathparser.tokenize.Tokenizer;
-import ru.introguzzle.mathparser.tokenize.Tokens;
+import ru.introguzzle.mathparser.tokenize.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +14,9 @@ public class CachedExpressionGenerator implements Generator<Expression> {
     private final Tokenizer tokenizer;
     private GeneratorOptions options = new GeneratorOptions(GeneratorOptions.INCLUDE_FLOATS) {};
 
+    {
+        options.maxFloating = 1;
+    }
 
     public CachedExpressionGenerator(Tokenizer tokenizer) {
         this.tokenizer = tokenizer;
@@ -37,11 +37,12 @@ public class CachedExpressionGenerator implements Generator<Expression> {
             Tokens tokens = this.tokenizer.tokenize(expression, context);
             Tokens changed = swapNumbers(tokens);
 
-            return new MathExpression(changed.getTokens()
+            return new MathExpression(
+                    changed.getTokens()
                     .stream()
-                    .map(Token::getData)
-                    .collect(Collectors.joining()));
-
+                    .map(t -> t.getData() + " ")
+                    .collect(Collectors.joining())
+            );
 
 
         } catch (SyntaxException e) {
@@ -54,7 +55,7 @@ public class CachedExpressionGenerator implements Generator<Expression> {
         List<Token> result = new ArrayList<>();
 
         for (Token token: tokens) {
-            if (token.getTokenType() == TokenType.NUMBER) {
+            if (token.getType() == TokenType.NUMBER) {
                 float f = Random.randomFloat(options.min, options.max);
                 result.add(new Token(TokenType.NUMBER, Float.toString(f)));
                 continue;

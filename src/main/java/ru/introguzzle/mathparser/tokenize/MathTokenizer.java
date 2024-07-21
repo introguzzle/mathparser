@@ -62,18 +62,10 @@ public class MathTokenizer implements Tokenizer, Serializable {
         }
     }
 
-    public static class Buffer {
-        public ExpressionIterator iterator;
-        public Expression expression;
-        public Tokens tokens;
-        public Context context;
-
-        public Buffer(ExpressionIterator iterator, Expression expression, Tokens tokens, Context context) {
-            this.iterator = iterator;
-            this.expression = expression;
-            this.tokens = tokens;
-            this.context = context;
-        }
+    public record Buffer(ExpressionIterator iterator,
+                         Expression expression,
+                         Tokens tokens,
+                         Context context) {
     }
 
     @Serial
@@ -143,6 +135,11 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return this;
     }
 
+    public MathTokenizer addName(Nameable nameable) {
+        nameableMap.put(nameable.getName(), nameable);
+        return this;
+    }
+
 
     public MathTokenizer clearFunctions() {
         nameableMap.entrySet()
@@ -191,12 +188,12 @@ public class MathTokenizer implements Tokenizer, Serializable {
                     iterator.next();
                     continue;
                 case '(':
-                    tokens.add(TokenType.LEFT_BRACKET, current);
+                    tokens.add(TokenType.LEFT_PARENTHESIS, current);
                     bracketStack.push(current);
                     iterator.next();
                     continue;
                 case ')':
-                    tokens.add(TokenType.RIGHT_BRACKET, current);
+                    tokens.add(TokenType.RIGHT_PARENTHESIS, current);
                     if (bracketStack.isEmpty()) {
                         throw new IllegalBracketStartException(expression, iterator.getCursor());
                     } else {
@@ -406,6 +403,12 @@ public class MathTokenizer implements Tokenizer, Serializable {
 
         return result.token;
     }
+
+    /**
+     *
+     * @param symbols Sequence of letters (candidate for nameable)
+     * @return Search result
+     */
 
     protected Result find(CharSequence symbols) {
         Result result = new Result();

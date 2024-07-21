@@ -58,13 +58,13 @@ public class ExpressionStorage {
             pair("x * y - z", v("x"), v("y"), v("z")),
             pair("(a + b) * c", v("a"), v("b"), v("c")),
             pair("sin(x) + cos(y)", v("x"), v("y")),
-            pair("sqrt(a ** 2 + b ** 2)", v("a")),
+            pair("sqrt(a ** 2 + b ** 2)", v("a"), v("b")),
             pair("log(x) + exp(y)", v("x"), v("y")),
             pair("1 * (1 - 1) / 1"),
             pair("a * (b + c) - d", v("a"), v("b"), v("c"), v("d")),
             pair("x / (y + z) ** 2", v("x"), v("y"), v("z")),
             pair("tan(theta) - 1", v("theta")),
             pair("abs(x) + sign(y)", v("x"), v("y")),
-            pair("x^2 + y^2 - 2 * x * y * cos(theta)", v("x"), v("y"))
+            pair("x ** 2 + y ** 2 - 2 * x * y * cos(theta)", v("x"), v("y"), v("theta"))
     );
 }

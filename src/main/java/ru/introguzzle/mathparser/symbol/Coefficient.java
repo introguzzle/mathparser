@@ -1,6 +1,7 @@
 package ru.introguzzle.mathparser.symbol;
 
 import ru.introguzzle.mathparser.tokenize.TokenType;
+import ru.introguzzle.mathparser.tokenize.Type;
 
 public class Coefficient extends MutableSymbol {
 
@@ -9,7 +10,7 @@ public class Coefficient extends MutableSymbol {
     }
 
     @Override
-    public TokenType type() {
+    public Type type() {
         return TokenType.COEFFICIENT;
     }
 }

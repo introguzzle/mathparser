@@ -41,12 +41,12 @@ public class Tokens implements Serializable, Iterable<Token> {
         tokens.add(token);
     }
 
-    public void add(TokenType tokenType, CharSequence name) {
-        add(new Token(tokenType, name));
+    public void add(Type type, CharSequence name) {
+        add(new Token(type, name));
     }
 
-    public void add(TokenType tokenType, char name) {
-        add(new Token(tokenType, name));
+    public void add(Type type, char name) {
+        add(new Token(type, name));
     }
 
     public void reset() {
@@ -87,7 +87,7 @@ public class Tokens implements Serializable, Iterable<Token> {
 
     public void skipDeclaration() {
         for (int i = 0; i < tokens.size(); i++) {
-            if (tokens.get(i).getTokenType() == TokenType.DECLARATION_END) {
+            if (tokens.get(i).getType() == TokenType.DECLARATION_END) {
                 this.position = i + 1;
                 break;
             }
@@ -95,17 +95,17 @@ public class Tokens implements Serializable, Iterable<Token> {
     }
 
     public boolean isFunctionDefinition() {
-        Predicate<Token> predicate = token -> token.getTokenType() == TokenType.DECLARATION;
+        Predicate<Token> predicate = token -> token.getType() == TokenType.DECLARATION;
 
         return tokens.stream()
-                .filter(predicate.or(token -> token.getTokenType() == TokenType.DECLARATION_END))
+                .filter(predicate.or(token -> token.getType() == TokenType.DECLARATION_END))
                 .count() == 2;
 
     }
 
     private int computeVariableCount() {
         variableCount = (int) tokens.stream()
-                .filter(token -> token.getTokenType() == TokenType.VARIABLE)
+                .filter(token -> token.getType() == TokenType.VARIABLE)
                 .count();
 
         return variableCount;
@@ -113,7 +113,7 @@ public class Tokens implements Serializable, Iterable<Token> {
 
     private int computeConstantCount() {
         constantCount = (int) tokens.stream()
-                .filter(token -> token.getTokenType() == TokenType.CONSTANT)
+                .filter(token -> token.getType() == TokenType.CONSTANT)
                 .count();
 
         return constantCount;
@@ -121,7 +121,7 @@ public class Tokens implements Serializable, Iterable<Token> {
 
     private int computeCoefficientCount() {
         coefficientCount = (int) tokens.stream()
-                .filter(token -> token.getTokenType() == TokenType.COEFFICIENT)
+                .filter(token -> token.getType() == TokenType.COEFFICIENT)
                 .count();
 
         return coefficientCount;

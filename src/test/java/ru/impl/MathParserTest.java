@@ -7,7 +7,6 @@ import ru.introguzzle.mathparser.common.Context;
 import ru.introguzzle.mathparser.common.NotUniqueNamingException;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.parse.Parser;
-import ru.introguzzle.mathparser.symbol.Symbol;
 import ru.introguzzle.mathparser.tokenize.Tokenizer;
 import ru.introguzzle.mathparser.expression.MathExpression;
 import ru.introguzzle.mathparser.parse.MathParser;
