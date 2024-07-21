@@ -43,6 +43,7 @@ public enum TokenType implements Type {
         this.category = category;
     }
 
+    @Override
     public Category getCategory() {
         return this.category;
     }

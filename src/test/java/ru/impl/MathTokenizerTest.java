@@ -6,6 +6,7 @@ import ru.introguzzle.mathparser.common.Context;
 import ru.introguzzle.mathparser.common.NamingException;
 import ru.introguzzle.mathparser.constant.Constant;
 import ru.introguzzle.mathparser.constant.ConstantReflector;
+import ru.introguzzle.mathparser.definition.FunctionDefinition;
 import ru.introguzzle.mathparser.function.FunctionReflector;
 import ru.introguzzle.mathparser.symbol.Coefficient;
 import ru.introguzzle.mathparser.tokenize.*;
@@ -17,6 +18,7 @@ import ru.introguzzle.mathparser.symbol.Variable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static org.junit.Assert.assertEquals;
@@ -29,6 +31,16 @@ public class MathTokenizerTest {
     @Before
     public void setUp() {
         this.tokenizer = new MathTokenizer();
+    }
+
+    @Test
+    public void test_function_definition() throws Exception {
+        Expression expression = new FunctionDefinition("f(x)    = x + x^3");
+        Context context = new NamingContext();
+
+        context.addSymbol(new Variable("x", 3));
+
+        tokenizer.tokenize(expression, context).forEach(System.out::println);
     }
 
     @Test

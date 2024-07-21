@@ -2,7 +2,7 @@ package ru.introguzzle.mathparser.tokenize;
 
 import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.common.Nameable;
-import ru.introguzzle.mathparser.common.NotUniqueNamingException;
+import ru.introguzzle.mathparser.common.NoSuchNameException;
 import ru.introguzzle.mathparser.definition.FunctionDefinition;
 import ru.introguzzle.mathparser.common.Context;
 import ru.introguzzle.mathparser.expression.ExpressionIterator;
@@ -100,7 +100,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
                                           boolean variadic,
                                           @NotNull java.util.function.Function<List<Double>, Double> replace) {
         if (!nameableMap.containsKey(name)) {
-            throw new NotUniqueNamingException(name, nameableMap.keySet());
+            throw new NoSuchNameException(name, nameableMap.keySet());
         }
 
         Function newFunction = new AbstractFunction(name, requiredArguments) {
@@ -157,7 +157,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
 
     @Override
     public synchronized Tokens tokenize(Expression expression, Context context) throws TokenizeException {
-        Stack<Character> bracketStack = new Stack<>();
+        Stack<Character> parenthesisStack = new Stack<>();
         Tokens tokens = new Tokens();
         ExpressionIterator iterator = expression.iterator();
         Buffer buffer = new Buffer(iterator, expression, tokens, context);
@@ -167,18 +167,8 @@ public class MathTokenizer implements Tokenizer, Serializable {
         }
 
         if (expression instanceof FunctionDefinition definition) {
-            int split = definition.getDefinitionSpliterator();
-
-            if (split == -1) {
-                throw new FunctionDefinitionException("Not complete expression", definition, iterator.getCursor());
-            }
-
-            String declaration = expression.getString().substring(0, split).strip().replace(" ", "");
-            Token declarationToken = new Token(TokenType.DECLARATION, declaration);
-            handleDeclaration(buffer, declarationToken);
+            Token declarationToken = handleDefinition(buffer, definition);
             tokens.add(declarationToken);
-
-            iterator.setCursor(split);
         }
 
         while (iterator.hasNext()) {
@@ -189,15 +179,15 @@ public class MathTokenizer implements Tokenizer, Serializable {
                     continue;
                 case '(':
                     tokens.add(TokenType.LEFT_PARENTHESIS, current);
-                    bracketStack.push(current);
+                    parenthesisStack.push(current);
                     iterator.next();
                     continue;
                 case ')':
                     tokens.add(TokenType.RIGHT_PARENTHESIS, current);
-                    if (bracketStack.isEmpty()) {
+                    if (parenthesisStack.isEmpty()) {
                         throw new IllegalBracketStartException(expression, iterator.getCursor());
                     } else {
-                        bracketStack.pop();
+                        parenthesisStack.pop();
                     }
 
                     iterator.next();
@@ -248,7 +238,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
             }
         }
 
-        if (!bracketStack.isEmpty()) {
+        if (!parenthesisStack.isEmpty()) {
             throw new BracketMismatchException(expression, iterator.getCursor());
         }
 
@@ -274,19 +264,37 @@ public class MathTokenizer implements Tokenizer, Serializable {
                 .toList();
     }
 
-    protected void handleDeclaration(Buffer buffer, Token declarationToken) throws UnknownSymbolTokenizeException {
-        String s = declarationToken.getData();
+    protected Token handleDefinition(Buffer buffer, FunctionDefinition definition) throws UnknownSymbolTokenizeException, FunctionDefinitionException {
+        int split = definition.getDefinitionSpliterator();
 
-        int left = s.indexOf("(");
-        int right = s.indexOf(")");
+        if (split == -1) {
+            throw new FunctionDefinitionException("Not complete expression", definition, buffer.iterator.getCursor());
+        }
 
-        String variable = s.substring(left + 1, right).strip().replace(" ", "");
+        String declaration = buffer.expression
+                .getString()
+                .substring(0, split)
+                .strip()
+                .replace(" ", "");
+
+        int left = declaration.indexOf("(");
+        int right = declaration.indexOf(")");
+
+        String variable = declaration
+                .substring(left + 1, right)
+                .strip()
+                .replace(" ", "");
+
         Optional<? extends MutableSymbol> optional =
                 buffer.context.getSymbols().find(variable);
 
         if (optional.isEmpty() || !(optional.get() instanceof Variable)) {
             throw new UnknownSymbolTokenizeException(variable, buffer.expression, buffer.iterator.getCursor());
         }
+
+        buffer.iterator.setCursor(split);
+
+        return new Token(TokenType.DECLARATION, declaration);
     }
 
     protected Token handleNumber(Buffer buffer) {
@@ -308,7 +316,8 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return new Token(TokenType.NUMBER, number);
     }
 
-    protected Token handleOperator(Buffer buffer) throws FunctionDefinitionException {
+    protected Token handleOperator(Buffer buffer)
+            throws FunctionDefinitionException, UnknownOperatorException {
         ExpressionIterator iterator = buffer.iterator;
         Character current = iterator.current();
         Character next = iterator.peekNext();
@@ -373,7 +382,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
                 yield new Token(TokenType.OPERATOR_NOT, "!");
             }
 
-            default -> throw new IllegalArgumentException("Unknown operator: " + current);
+            default -> throw new UnknownOperatorException(current, buffer.expression, iterator.getCursor());
         };
     }
 

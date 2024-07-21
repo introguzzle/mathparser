@@ -10,6 +10,6 @@ public class FunctionDefinition extends MathExpression {
     }
 
     public int getDefinitionSpliterator() {
-        return this.getString().indexOf("=");
+        return getString().indexOf("=");
     }
 }

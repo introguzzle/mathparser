@@ -4,6 +4,8 @@ public interface Type {
     int ordinal();
     Category getCategory();
 
+    String name();
+
     enum Category implements Type {
         OPERATOR,
         PARENTHESIS,
