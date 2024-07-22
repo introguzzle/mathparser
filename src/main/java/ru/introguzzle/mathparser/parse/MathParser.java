@@ -10,6 +10,9 @@ import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.function.Function;
 import ru.introguzzle.mathparser.symbol.ImmutableSymbol;
 import ru.introguzzle.mathparser.tokenize.*;
+import ru.introguzzle.mathparser.tokenize.token.Token;
+import ru.introguzzle.mathparser.tokenize.token.TokenType;
+import ru.introguzzle.mathparser.tokenize.token.Tokens;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -18,8 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class MathParser implements Parser<Double>, Serializable {
-
-    private final Tokenizer tokenizer;
+    protected final Tokenizer tokenizer;
 
     public MathParser(Tokenizer tokenizer) {
         this.tokenizer = tokenizer;
@@ -28,7 +30,7 @@ public class MathParser implements Parser<Double>, Serializable {
     @Serial
     private static final long serialVersionUID = -2443784738437783L;
 
-    private Tokens tokenize(Expression expression, Context context) throws TokenizeException {
+    protected Tokens tokenize(Expression expression, Context context) throws TokenizeException {
         return this.tokenizer.tokenize(expression, context);
     }
 
@@ -72,12 +74,12 @@ public class MathParser implements Parser<Double>, Serializable {
         }
     }
 
-    private Double parse(Tokens tokens, Context context) throws SyntaxException {
+    public Double parse(Tokens tokens, Context context) throws SyntaxException {
         tokens.skipDeclaration();
         Token token = tokens.getNextToken();
 
         if (token.getType() == TokenType.EOF) {
-            return 0.0;
+            return Double.NaN;
         }
 
         tokens.returnBack();
@@ -374,7 +376,7 @@ public class MathParser implements Parser<Double>, Serializable {
 
             case TokenType.CONSTANT:
                 final Token t = token;
-                Optional<ImmutableSymbol> symbol = this.tokenizer.getConstants()
+                Optional<ImmutableSymbol> symbol = tokenizer.getConstants()
                         .stream()
                         .filter(s -> s.getName().equals(t.getData()))
                         .findFirst();
@@ -382,6 +384,7 @@ public class MathParser implements Parser<Double>, Serializable {
                 return symbol.orElseThrow().getValue();
 
             case TokenType.VARIABLE:
+            case TokenType.COEFFICIENT:
                 return context.getSymbol(token.getData()).orElseThrow().getValue();
 
             case TokenType.LEFT_PARENTHESIS:

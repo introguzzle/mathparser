@@ -5,6 +5,7 @@ import ru.introguzzle.mathparser.common.SyntaxException;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.expression.MathExpression;
 import ru.introguzzle.mathparser.tokenize.*;
+import ru.introguzzle.mathparser.tokenize.token.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,14 +58,14 @@ public class CachedExpressionGenerator implements Generator<Expression> {
         for (Token token: tokens) {
             if (token.getType() == TokenType.NUMBER) {
                 float f = Random.randomFloat(options.min, options.max);
-                result.add(new Token(TokenType.NUMBER, Float.toString(f)));
+                result.add(new SimpleToken(TokenType.NUMBER, Float.toString(f)));
                 continue;
             }
 
             result.add(token);
         }
 
-        return new Tokens(result);
+        return new SimpleTokens(result);
     }
 
     @Override

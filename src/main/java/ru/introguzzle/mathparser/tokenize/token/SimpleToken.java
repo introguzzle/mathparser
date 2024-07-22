@@ -1,4 +1,4 @@
-package ru.introguzzle.mathparser.tokenize;
+package ru.introguzzle.mathparser.tokenize.token;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -6,27 +6,32 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Token implements Serializable, Comparable<Token> {
+public class SimpleToken implements
+        Token,
+        Serializable,
+        Comparable<Token> {
 
     @Serial
     private static final long serialVersionUID = -54892981192L;
     private final Type type;
     private final String data;
 
-    public Token(Type type, CharSequence data) {
+    public SimpleToken(Type type, CharSequence data) {
         this.type = type;
         this.data = data.toString();
     }
 
-    public Token(Type type, Character data) {
+    public SimpleToken(Type type, Character data) {
         this.type = type;
         this.data = data.toString();
     }
 
+    @Override
     public Type getType() {
         return this.type;
     }
 
+    @Override
     public String getData() {
         return data;
     }
@@ -37,8 +42,8 @@ public class Token implements Serializable, Comparable<Token> {
     }
 
     @Override
-    public int compareTo(@NotNull Token o) {
-        return this.data.compareTo(o.data);
+    public int compareTo(@NotNull Token token) {
+        return getData().compareTo(token.getData());
     }
 
     @Override
@@ -50,12 +55,8 @@ public class Token implements Serializable, Comparable<Token> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Token token = (Token) o;
+        SimpleToken token = (SimpleToken) o;
         return type == token.type && data.equals(token.data);
-    }
-
-    public boolean typeEquals(Token anotherToken) {
-        return this.type == anotherToken.type;
     }
 
     @Override

@@ -26,6 +26,11 @@ public abstract class AbstractFunction implements Function {
     public abstract Double apply(List<Double> arguments);
 
     @Override
+    public AbstractFunction clone() throws CloneNotSupportedException {
+        return (AbstractFunction) super.clone();
+    }
+
+    @Override
     public String toString() {
         return describe() + '{' +
                 "name='" + name + '\'' +

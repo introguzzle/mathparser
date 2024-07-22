@@ -1,4 +1,4 @@
-package ru.introguzzle.mathparser.tokenize;
+package ru.introguzzle.mathparser.tokenize.token;
 
 public interface Type {
     int ordinal();

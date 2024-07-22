@@ -35,7 +35,7 @@ public class MathExpression implements Expression, Serializable {
     }
 
     @Serial
-    private static final long serialVersionUID = -121848309212132L;
+    private static final long serialVersionUID = 555455926606431241L;
 
     @Override
     public int compareTo(@NotNull Expression o) {

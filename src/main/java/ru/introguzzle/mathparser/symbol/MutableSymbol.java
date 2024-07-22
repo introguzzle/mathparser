@@ -32,6 +32,11 @@ public abstract class MutableSymbol implements Symbol<Double>, Serializable {
     }
 
     @Override
+    public MutableSymbol clone() throws CloneNotSupportedException {
+        return (MutableSymbol) super.clone();
+    }
+
+    @Override
     public String toString() {
         return describe() + "{" +
                 "name='" + name + '\'' +

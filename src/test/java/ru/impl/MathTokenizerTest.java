@@ -15,10 +15,11 @@ import ru.introguzzle.mathparser.expression.MathExpression;
 import ru.introguzzle.mathparser.function.AbstractFunction;
 import ru.introguzzle.mathparser.common.NamingContext;
 import ru.introguzzle.mathparser.symbol.Variable;
+import ru.introguzzle.mathparser.tokenize.token.TokenType;
+import ru.introguzzle.mathparser.tokenize.token.Tokens;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static org.junit.Assert.assertEquals;

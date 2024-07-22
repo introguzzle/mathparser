@@ -1,8 +1,8 @@
 package ru.introguzzle.mathparser.constant;
 
 import ru.introguzzle.mathparser.symbol.ImmutableSymbol;
-import ru.introguzzle.mathparser.tokenize.TokenType;
-import ru.introguzzle.mathparser.tokenize.Type;
+import ru.introguzzle.mathparser.tokenize.token.TokenType;
+import ru.introguzzle.mathparser.tokenize.token.Type;
 
 public abstract class Constant extends ImmutableSymbol {
 

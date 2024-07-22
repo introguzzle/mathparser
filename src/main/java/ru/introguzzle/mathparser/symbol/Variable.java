@@ -1,8 +1,8 @@
 package ru.introguzzle.mathparser.symbol;
 
 
-import ru.introguzzle.mathparser.tokenize.TokenType;
-import ru.introguzzle.mathparser.tokenize.Type;
+import ru.introguzzle.mathparser.tokenize.token.TokenType;
+import ru.introguzzle.mathparser.tokenize.token.Type;
 
 public class Variable extends MutableSymbol {
 

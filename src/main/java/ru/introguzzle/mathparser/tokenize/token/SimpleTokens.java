@@ -1,4 +1,4 @@
-package ru.introguzzle.mathparser.tokenize;
+package ru.introguzzle.mathparser.tokenize.token;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -8,9 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Predicate;
 
-public class Tokens implements Serializable, Iterable<Token> {
+public class SimpleTokens implements Tokens, Serializable {
 
     @Serial
     private static final long serialVersionUID = 48984394839L;
@@ -20,71 +19,79 @@ public class Tokens implements Serializable, Iterable<Token> {
     private transient Integer variableCount;
     private transient Integer coefficientCount;
 
-    public Tokens() {
+    public SimpleTokens() {
         tokens = new ArrayList<>();
     }
 
-    public Tokens(Token token) {
+    public SimpleTokens(Token token) {
         tokens = new ArrayList<>();
         tokens.add(token);
     }
 
-    public Tokens(Token... tokens) {
+    public SimpleTokens(Token... tokens) {
         this.tokens = Arrays.asList(tokens);
     }
 
-    public Tokens(List<Token> tokens) {
+    public SimpleTokens(List<Token> tokens) {
         this.tokens = tokens;
     }
 
+    @Override
     public void add(Token token) {
         tokens.add(token);
     }
 
+    @Override
     public void add(Type type, CharSequence name) {
-        add(new Token(type, name));
+        add(new SimpleToken(type, name));
     }
 
+    @Override
     public void add(Type type, char name) {
-        add(new Token(type, name));
+        add(new SimpleToken(type, name));
     }
 
+    @Override
     public void reset() {
         position = 0;
     }
 
-    public void clear() {
-        tokens.clear();
-    }
-
+    @Override
     public Token getNextToken() {
         return tokens.get(this.position++);
     }
 
+    @Override
     public void returnBack() {
         position--;
     }
 
+    @Override
     public int getPosition() {
         return position;
     }
 
+    @Override
     public List<Token> getTokens() {
         return tokens;
     }
 
+    @Override
     public int getVariableCount() {
         return variableCount == null ? computeVariableCount() : variableCount;
     }
 
+    @Override
     public int getConstantCount() {
         return constantCount == null ? computeConstantCount() : constantCount;
     }
 
+    @Override
     public int getCoefficientCount() {
         return coefficientCount == null ? computeCoefficientCount() : coefficientCount;
     }
 
+    @Override
     public void skipDeclaration() {
         for (int i = 0; i < tokens.size(); i++) {
             if (tokens.get(i).getType() == TokenType.DECLARATION_END) {
@@ -92,15 +99,6 @@ public class Tokens implements Serializable, Iterable<Token> {
                 break;
             }
         }
-    }
-
-    public boolean isFunctionDefinition() {
-        Predicate<Token> predicate = token -> token.getType() == TokenType.DECLARATION;
-
-        return tokens.stream()
-                .filter(predicate.or(token -> token.getType() == TokenType.DECLARATION_END))
-                .count() == 2;
-
     }
 
     private int computeVariableCount() {
@@ -127,10 +125,12 @@ public class Tokens implements Serializable, Iterable<Token> {
         return coefficientCount;
     }
 
+    @Override
     public int size() {
         return tokens.size();
     }
 
+    @Override
     public Token get(int index) {
         return tokens.get(index);
     }

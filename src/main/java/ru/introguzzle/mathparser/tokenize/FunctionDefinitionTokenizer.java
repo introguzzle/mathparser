@@ -5,79 +5,59 @@ import org.jetbrains.annotations.Nullable;
 import ru.introguzzle.mathparser.common.*;
 import ru.introguzzle.mathparser.definition.FunctionDefinition;
 import ru.introguzzle.mathparser.definition.FunctionDefinitionType;
+import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.function.Function;
 import ru.introguzzle.mathparser.symbol.MutableSymbol;
+import ru.introguzzle.mathparser.tokenize.token.FunctionTokens;
+import ru.introguzzle.mathparser.tokenize.token.SimpleToken;
+import ru.introguzzle.mathparser.tokenize.token.Tokens;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
 public abstract class FunctionDefinitionTokenizer extends MathTokenizer {
 
-    private final Map<String, Nameable> temporary = new HashMap<>();
     private Resolver<FunctionDefinition, FunctionDefinitionType> resolver;
 
-    public abstract Supplier<Nameable> factory(CharSequence name);
+    public abstract Supplier<MutableSymbol> defaultSupplier(CharSequence name, double value);
+    public abstract double getDefaultValue();
 
-    public Map<String, Nameable> getTemporary() {
-        return temporary;
-    }
-
-    public void setResolver(Resolver<FunctionDefinition, FunctionDefinitionType> resolver) {
+    public
+    FunctionDefinitionTokenizer setResolver(Resolver<FunctionDefinition, FunctionDefinitionType> resolver) {
         this.resolver = resolver;
+        return this;
     }
 
     public FunctionDefinitionTokenizer() {
 
     }
 
-    public FunctionDefinitionTokenizer(@Nullable Resolver<FunctionDefinition, FunctionDefinitionType> resolver) {
+    public
+    FunctionDefinitionTokenizer(@Nullable Resolver<FunctionDefinition, FunctionDefinitionType> resolver) {
         this.resolver = resolver;
     }
 
-    public FunctionDefinitionTokenizer(@NotNull Map<String, ? extends Function> functions,
-                                       @Nullable Resolver<FunctionDefinition, FunctionDefinitionType> resolver) {
+    public
+    FunctionDefinitionTokenizer(@NotNull Map<String, ? extends Function> functions,
+                                @Nullable Resolver<FunctionDefinition, FunctionDefinitionType> resolver) {
         super(functions);
         this.resolver = resolver;
     }
 
-    /**
-     * Adapter class
-     */
-    public static class TokenizerResult extends Tokens {
-        private final Map<String, Nameable> temporary = new HashMap<>();
-        private final FunctionDefinitionType type;
-
-        public Map<String, Nameable> getTemporary() {
-            return temporary;
-        }
-
-        public TokenizerResult(Tokens tokens, FunctionDefinitionType type) {
-            this.type = type;
-            getTokens().clear();
-            getTokens().addAll(tokens.getTokens());
-        }
-
-        public FunctionDefinitionType getType() {
-            return type;
-        }
-    }
-
-    public synchronized @NotNull
-    TokenizerResult tokenize(@NotNull FunctionDefinition definition)
+    public synchronized
+    @NotNull FunctionTokens tokenize(@NotNull FunctionDefinition definition,
+                                     @NotNull Context context)
             throws TokenizeException {
 
-        Tokens tokens = super.tokenize(definition, new NamingContext());
+        Tokens tokens = super.tokenize(definition, context);
         FunctionDefinitionType type = resolve(definition, tokens);
 
-        TokenizerResult result = new TokenizerResult(tokens, type);
-        result.getTemporary().putAll(temporary);
-        temporary.clear();
-
-        return result;
+        return new FunctionTokens(tokens, type);
     }
 
-    protected FunctionDefinitionType resolve(FunctionDefinition definition, Tokens tokens) {
+    protected
+    FunctionDefinitionType resolve(FunctionDefinition definition,
+                                             Tokens tokens) {
         if (resolver != null) {
             return resolver.resolve(definition);
         }
@@ -95,28 +75,20 @@ public abstract class FunctionDefinitionTokenizer extends MathTokenizer {
                 : FunctionDefinitionType.PARAMETRIC_FUNCTION;
     }
 
-    private static class NotMutableSymbolException extends ContextException {
-        public NotMutableSymbolException(String message) {
-            super(message);
-        }
-    }
-
     @Override
-    protected Result findFromContext(Context context, CharSequence symbols) {
-        Nameable nameable = context.getSymbols().stream()
+    protected
+    Result findFromContext(@Mutates Context context,
+                           CharSequence symbols) {
+
+        MutableSymbol symbol = context.getSymbols().stream()
                 .filter(Nameable.match(symbols))
                 .findFirst()
                 .orElseGet(() -> {
-                    Nameable fromSupplier = factory(symbols).get();
-
-                    if (fromSupplier instanceof MutableSymbol mutable) {
-                        temporary.put(symbols.toString(), fromSupplier);
-                        return mutable;
-                    }
-
-                    throw new NotMutableSymbolException("Not mutable symbol in context");
+                    MutableSymbol fromSupplier = defaultSupplier(symbols, getDefaultValue()).get();
+                    context.addSymbol(fromSupplier);
+                    return fromSupplier;
                 });
 
-        return new Result(true, new Token(nameable.type(), symbols));
+        return new Result(true, new SimpleToken(symbol.type(), symbols));
     }
 }

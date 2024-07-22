@@ -1,8 +1,8 @@
 package ru.introguzzle.mathparser.function;
 
 import ru.introguzzle.mathparser.common.Nameable;
-import ru.introguzzle.mathparser.tokenize.TokenType;
-import ru.introguzzle.mathparser.tokenize.Type;
+import ru.introguzzle.mathparser.tokenize.token.TokenType;
+import ru.introguzzle.mathparser.tokenize.token.Type;
 
 import java.util.List;
 

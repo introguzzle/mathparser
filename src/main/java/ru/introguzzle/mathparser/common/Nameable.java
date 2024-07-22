@@ -1,9 +1,9 @@
 package ru.introguzzle.mathparser.common;
 
-import ru.introguzzle.mathparser.tokenize.Type;
+import ru.introguzzle.mathparser.tokenize.token.Type;
 import java.util.function.Predicate;
 
-public interface Nameable {
+public interface Nameable extends Cloneable {
     String getName();
 
     default String describe() {

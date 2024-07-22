@@ -35,6 +35,11 @@ public abstract class ImmutableSymbol implements Symbol<Double>, Serializable {
     }
 
     @Override
+    public ImmutableSymbol clone() throws CloneNotSupportedException {
+        return (ImmutableSymbol) super.clone();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
