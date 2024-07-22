@@ -1,19 +1,15 @@
 package ru.introguzzle.mathparser.parse;
 
 import ru.introguzzle.mathparser.common.Context;
-import ru.introguzzle.mathparser.common.NamingContext;
 import ru.introguzzle.mathparser.common.SyntaxException;
 import ru.introguzzle.mathparser.definition.FunctionDefinition;
 import ru.introguzzle.mathparser.definition.FunctionDefinitionType;
 import ru.introguzzle.mathparser.symbol.Coefficient;
 import ru.introguzzle.mathparser.symbol.MutableSymbol;
-import ru.introguzzle.mathparser.symbol.Variable;
 import ru.introguzzle.mathparser.tokenize.FunctionDefinitionTokenizer;
 import ru.introguzzle.mathparser.tokenize.TokenizeException;
 import ru.introguzzle.mathparser.tokenize.token.FunctionTokens;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Supplier;
 
 public class FunctionDefinitionParser extends MathParser {

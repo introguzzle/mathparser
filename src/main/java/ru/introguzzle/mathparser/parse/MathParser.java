@@ -415,6 +415,7 @@ public class MathParser implements Parser<Double>, Serializable {
                 token = tokens.getNextToken();
 
                 if ((token.getType() != TokenType.COMMA) && (token.getType() != TokenType.RIGHT_PARENTHESIS)) {
+                    // Should never happen, because tokenizer won't let this pass to here
                     throw new RuntimeException();
                 }
 
