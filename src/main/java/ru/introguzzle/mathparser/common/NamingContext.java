@@ -93,4 +93,9 @@ public class NamingContext implements Context {
         this.symbols.clear();
         this.symbols.addAll(symbols);
     }
+
+    @Override
+    public boolean contains(CharSequence name) {
+        return names.contains(name.toString());
+    }
 }

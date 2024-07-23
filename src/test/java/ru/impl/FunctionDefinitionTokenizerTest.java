@@ -25,7 +25,7 @@ public class FunctionDefinitionTokenizerTest {
     public void setUp() {
         tokenizer = new FunctionDefinitionTokenizer() {
             @Override
-            public Supplier<MutableSymbol> defaultSupplier(CharSequence name, double value) {
+            public Supplier<MutableSymbol> getDefaultFactory(CharSequence name, double value) {
                 return () -> new Coefficient(name.toString(), value);
             }
 

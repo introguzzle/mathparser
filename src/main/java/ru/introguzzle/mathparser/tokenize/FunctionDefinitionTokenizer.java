@@ -5,7 +5,6 @@ import org.jetbrains.annotations.Nullable;
 import ru.introguzzle.mathparser.common.*;
 import ru.introguzzle.mathparser.definition.FunctionDefinition;
 import ru.introguzzle.mathparser.definition.FunctionDefinitionType;
-import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.function.Function;
 import ru.introguzzle.mathparser.symbol.MutableSymbol;
 import ru.introguzzle.mathparser.tokenize.token.FunctionTokens;
@@ -19,7 +18,7 @@ public abstract class FunctionDefinitionTokenizer extends MathTokenizer {
 
     private Resolver<FunctionDefinition, FunctionDefinitionType> resolver;
 
-    public abstract Supplier<MutableSymbol> defaultSupplier(CharSequence name, double value);
+    public abstract Supplier<MutableSymbol> getDefaultFactory(CharSequence name, double value);
     public abstract double getDefaultValue();
 
     public
@@ -84,7 +83,7 @@ public abstract class FunctionDefinitionTokenizer extends MathTokenizer {
                 .filter(Nameable.match(symbols))
                 .findFirst()
                 .orElseGet(() -> {
-                    MutableSymbol fromSupplier = defaultSupplier(symbols, getDefaultValue()).get();
+                    MutableSymbol fromSupplier = getDefaultFactory(symbols, getDefaultValue()).get();
                     context.addSymbol(fromSupplier);
                     return fromSupplier;
                 });

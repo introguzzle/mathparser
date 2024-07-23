@@ -2,6 +2,7 @@ package ru.introguzzle.mathparser.tokenize;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.introguzzle.mathparser.common.Nameable;
 import ru.introguzzle.mathparser.common.NoSuchNameException;
 import ru.introguzzle.mathparser.definition.FunctionDefinition;
@@ -43,7 +44,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
 
         }
 
-        public Result(boolean match, Token token) {
+        public Result(boolean match, @Nullable Token token) {
             this.match = match;
             this.token = token;
         }
@@ -271,11 +272,14 @@ public class MathTokenizer implements Tokenizer, Serializable {
                 .toList();
     }
 
-    protected Token handleDefinition(Buffer buffer, FunctionDefinition definition) throws UnknownSymbolTokenizeException, FunctionDefinitionException {
+    protected Token handleDefinition(Buffer buffer, FunctionDefinition definition) {
         int split = definition.getDefinitionSpliterator();
         Variable variable = definition.getVariable();
 
-        buffer.context.addSymbol(variable);
+        if (!buffer.context.contains(variable.getName())) {
+            buffer.context.addSymbol(variable);
+        }
+
         buffer.iterator.setCursor(split);
         return new SimpleToken(
                 TokenType.DECLARATION,

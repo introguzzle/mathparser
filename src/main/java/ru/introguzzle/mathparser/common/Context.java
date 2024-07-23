@@ -24,4 +24,6 @@ public interface Context {
     void setParent(Context parent);
 
     void setSymbols(MutableSymbolList<? extends MutableSymbol> symbols);
+
+    boolean contains(CharSequence name);
 }
