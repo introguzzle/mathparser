@@ -9,6 +9,7 @@ import ru.introguzzle.mathparser.function.Function;
 import ru.introguzzle.mathparser.symbol.MutableSymbol;
 import ru.introguzzle.mathparser.tokenize.token.FunctionTokens;
 import ru.introguzzle.mathparser.tokenize.token.SimpleToken;
+import ru.introguzzle.mathparser.tokenize.token.Token;
 import ru.introguzzle.mathparser.tokenize.token.Tokens;
 
 import java.util.Map;
@@ -76,8 +77,10 @@ public abstract class FunctionDefinitionTokenizer extends MathTokenizer {
 
     @Override
     protected
-    Result findFromContext(@Mutates Context context,
+    Result findFromContext(@Mutates Buffer buffer,
                            CharSequence symbols) {
+
+        Context context = buffer.context();
 
         MutableSymbol symbol = context.getSymbols().stream()
                 .filter(Nameable.match(symbols))
@@ -88,6 +91,7 @@ public abstract class FunctionDefinitionTokenizer extends MathTokenizer {
                     return fromSupplier;
                 });
 
-        return new Result(true, new SimpleToken(symbol.type(), symbols));
+        Token token = new SimpleToken(symbol.type(), symbols, buffer.iterator().getCursor());
+        return new Result(true, token);
     }
 }

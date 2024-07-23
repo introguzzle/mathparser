@@ -58,7 +58,7 @@ public class CachedExpressionGenerator implements Generator<Expression> {
         for (Token token: tokens) {
             if (token.getType() == TokenType.NUMBER) {
                 float f = Random.randomFloat(options.min, options.max);
-                result.add(new SimpleToken(TokenType.NUMBER, Float.toString(f)));
+                result.add(new SimpleToken(TokenType.NUMBER, Float.toString(f), token.getOffset()));
                 continue;
             }
 

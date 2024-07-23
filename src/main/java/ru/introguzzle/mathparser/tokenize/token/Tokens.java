@@ -5,9 +5,9 @@ import java.util.List;
 public interface Tokens extends Iterable<Token> {
     void add(Token token);
 
-    void add(Type type, CharSequence name);
+    void add(Type type, CharSequence name, int offset);
 
-    void add(Type type, char name);
+    void add(Type type, char name, int offset);
 
     void reset();
 

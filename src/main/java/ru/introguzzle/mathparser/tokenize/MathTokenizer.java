@@ -70,7 +70,6 @@ public class MathTokenizer implements Tokenizer, Serializable {
 
     public record Buffer(@NotNull ExpressionIterator iterator,
                          @NotNull Expression expression,
-                         @NotNull Tokens tokens,
                          @NotNull Context context) {
     }
 
@@ -168,10 +167,10 @@ public class MathTokenizer implements Tokenizer, Serializable {
         Stack<Character> parenthesisStack = new Stack<>();
         Tokens tokens = new SimpleTokens();
         ExpressionIterator iterator = expression.iterator();
-        Buffer buffer = new Buffer(iterator, expression, tokens, context);
+        Buffer buffer = new Buffer(iterator, expression, context);
 
         if (expression.getString().isBlank() || expression.getString().isEmpty()) {
-            return new SimpleTokens(new SimpleToken(TokenType.EOF, " "));
+            return new SimpleTokens(new SimpleToken(TokenType.EOF, " ", 0));
         }
 
         if (expression instanceof FunctionDefinition definition) {
@@ -186,12 +185,12 @@ public class MathTokenizer implements Tokenizer, Serializable {
                     iterator.next();
                     continue;
                 case '(':
-                    tokens.add(TokenType.LEFT_PARENTHESIS, current);
+                    tokens.add(TokenType.LEFT_PARENTHESIS, current, iterator.getCursor());
                     parenthesisStack.push(current);
                     iterator.next();
                     continue;
                 case ')':
-                    tokens.add(TokenType.RIGHT_PARENTHESIS, current);
+                    tokens.add(TokenType.RIGHT_PARENTHESIS, current, iterator.getCursor());
                     if (parenthesisStack.isEmpty()) {
                         throw new IllegalBracketStartException(expression, iterator.getCursor());
                     } else {
@@ -220,7 +219,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
                     iterator.next();
                     continue;
                 case ',':
-                    tokens.add(TokenType.COMMA, current);
+                    tokens.add(TokenType.COMMA, current, iterator.getCursor());
                     iterator.next();
                     continue;
                 default:
@@ -250,7 +249,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
             throw new BracketMismatchException(expression, iterator.getCursor());
         }
 
-        tokens.add(TokenType.EOF, "");
+        tokens.add(TokenType.EOF, "", iterator.getCursor());
         return tokens;
     }
 
@@ -268,7 +267,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return nameableMap.values()
                 .stream()
                 .filter(n -> n instanceof Function)
-                .map(n -> (Function) n)
+                .map(Function.class::cast)
                 .toList();
     }
 
@@ -283,7 +282,8 @@ public class MathTokenizer implements Tokenizer, Serializable {
         buffer.iterator.setCursor(split);
         return new SimpleToken(
                 TokenType.DECLARATION,
-                definition.getString().substring(split)
+                definition.getString().substring(split),
+                0
         );
     }
 
@@ -292,6 +292,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
 
         ExpressionIterator iterator = buffer.iterator;
         char current = iterator.current();
+        final int start = iterator.getCursor();
 
         while (iterator.hasNext() && iterator.isDigit()) {
             number.append(current);
@@ -303,7 +304,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
             current = iterator.current();
         }
 
-        return new SimpleToken(TokenType.NUMBER, number);
+        return new SimpleToken(TokenType.NUMBER, number, start);
     }
 
     protected Token handleOperator(Buffer buffer)
@@ -312,67 +313,69 @@ public class MathTokenizer implements Tokenizer, Serializable {
         Character current = iterator.current();
         Character next = iterator.peekNext();
 
+        final int offset = iterator.getCursor();
+
         return switch (current) {
-            case '+' -> new SimpleToken(TokenType.OPERATOR_ADD, current);
-            case '-' -> new SimpleToken(TokenType.OPERATOR_SUB, current);
+            case '+' -> new SimpleToken(TokenType.OPERATOR_ADD, current, offset);
+            case '-' -> new SimpleToken(TokenType.OPERATOR_SUB, current, offset);
             case '*' -> {
                 if (next != null && next == '*') {
                     iterator.next();
-                    yield new SimpleToken(TokenType.OPERATOR_EXP, "**");
+                    yield new SimpleToken(TokenType.OPERATOR_EXP, "**", offset);
                 }
 
-                yield new SimpleToken(TokenType.OPERATOR_MUL, current);
+                yield new SimpleToken(TokenType.OPERATOR_MUL, current, offset);
             }
-            case '/' -> new SimpleToken(TokenType.OPERATOR_DIV, current);
-            case '^' -> new SimpleToken(TokenType.OPERATOR_XOR, current);
-            case '&' -> new SimpleToken(TokenType.OPERATOR_AND, current);
-            case '|' -> new SimpleToken(TokenType.OPERATOR_OR, current);
-            case '~' -> new SimpleToken(TokenType.OPERATOR_BITWISE_NOT, current);
+            case '/' -> new SimpleToken(TokenType.OPERATOR_DIV, current, offset);
+            case '^' -> new SimpleToken(TokenType.OPERATOR_XOR, current, offset);
+            case '&' -> new SimpleToken(TokenType.OPERATOR_AND, current, offset);
+            case '|' -> new SimpleToken(TokenType.OPERATOR_OR, current, offset);
+            case '~' -> new SimpleToken(TokenType.OPERATOR_BITWISE_NOT, current, offset);
             case '<' -> {
                 if (next != null && next == '<') {
                     iterator.next();
-                    yield new SimpleToken(TokenType.OPERATOR_LEFT_SHIFT, "<<");
+                    yield new SimpleToken(TokenType.OPERATOR_LEFT_SHIFT, "<<", offset);
                 } else if (iterator.peekNext() == '=') {
                     iterator.next();
-                    yield new SimpleToken(TokenType.OPERATOR_LESS_OR_EQUALS, "<=");
+                    yield new SimpleToken(TokenType.OPERATOR_LESS_OR_EQUALS, "<=", offset);
                 }
 
-                yield new SimpleToken(TokenType.OPERATOR_LESS, current);
+                yield new SimpleToken(TokenType.OPERATOR_LESS, current, offset);
             }
             case '>' -> {
                 if (next != null && next == '>') {
                     iterator.next();
-                    yield new SimpleToken(TokenType.OPERATOR_RIGHT_SHIFT, ">>");
+                    yield new SimpleToken(TokenType.OPERATOR_RIGHT_SHIFT, ">>", offset);
 
                 } else if (next != null && next == '=') {
                     iterator.next();
-                    yield new SimpleToken(TokenType.OPERATOR_GREATER_OR_EQUALS, ">=");
+                    yield new SimpleToken(TokenType.OPERATOR_GREATER_OR_EQUALS, ">=", offset);
                 }
 
-                yield new SimpleToken(TokenType.OPERATOR_GREATER, current);
+                yield new SimpleToken(TokenType.OPERATOR_GREATER, current, offset);
             }
             case '=' -> {
                 if (next != null && next == '=') {
                     iterator.next();
-                    yield new SimpleToken(TokenType.OPERATOR_EQUALS, "==");
+                    yield new SimpleToken(TokenType.OPERATOR_EQUALS, "==", offset);
                 }
 
                 if (buffer.expression instanceof FunctionDefinition) {
-                    yield new SimpleToken(TokenType.DECLARATION_END, current);
+                    yield new SimpleToken(TokenType.DECLARATION_END, current, offset);
                 } else {
-                    throw new FunctionDefinitionException("Declaration is not allowed", buffer.expression, iterator.getCursor());
+                    throw new FunctionDefinitionException("Declaration is not allowed", buffer.expression, offset);
                 }
             }
             case '!' -> {
                 if (next != null && next == '=') {
                     iterator.next();
-                    yield new SimpleToken(TokenType.OPERATOR_NOT_EQUALS, "!=");
+                    yield new SimpleToken(TokenType.OPERATOR_NOT_EQUALS, "!=", offset);
                 }
 
-                yield new SimpleToken(TokenType.OPERATOR_NOT, "!");
+                yield new SimpleToken(TokenType.OPERATOR_NOT, "!", offset);
             }
 
-            default -> throw new UnknownOperatorException(current, buffer.expression, iterator.getCursor());
+            default -> throw new UnknownOperatorException(current, buffer.expression, offset);
         };
     }
 
@@ -381,7 +384,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
 
         StringBuilder symbols = new StringBuilder();
 
-        int start = iterator.getCursor();
+        final int start = iterator.getCursor();
 
         while (iterator.hasNext() && iterator.isLetter()) {
             symbols.append(iterator.next());
@@ -391,13 +394,13 @@ public class MathTokenizer implements Tokenizer, Serializable {
         }
 
         Result result = Result.reduce(
-                find(symbols),
-                findFromContext(buffer.context, symbols)
+                find(buffer, symbols),
+                findFromContext(buffer, symbols)
         );
 
         if (!result.match) {
             iterator.setCursor(start);
-            throw new UnknownSymbolTokenizeException(symbols, buffer.expression, iterator.getCursor());
+            throw new UnknownSymbolTokenizeException(symbols, buffer.expression, start);
         }
 
         return result.token;
@@ -409,30 +412,30 @@ public class MathTokenizer implements Tokenizer, Serializable {
      * @return Search result
      */
 
-    protected Result find(CharSequence symbols) {
+    protected Result find(Buffer buffer, CharSequence symbols) {
         Result result = new Result();
 
         nameableMap.values().stream()
                 .filter(Nameable.match(symbols))
                 .findFirst()
                 .ifPresent(s -> {
-                    result.token = new SimpleToken(s.type(), symbols);
+                    result.token = new SimpleToken(s.type(), symbols, buffer.iterator.getCursor());
                     result.match = true;
                 });
 
         return result;
     }
 
-    protected Result findFromContext(Context context, CharSequence symbols) {
+    protected Result findFromContext(Buffer buffer, CharSequence symbols) {
         Result result = new Result();
 
-        context.getSymbols()
+        buffer.context.getSymbols()
                 .stream()
                 .parallel()
                 .filter(s -> s.getName().contentEquals(symbols))
                 .findFirst()
                 .ifPresent(s -> {
-                    result.token = new SimpleToken(s.type(), symbols);
+                    result.token = new SimpleToken(s.type(), symbols, buffer.iterator.getCursor());
                     result.match = true;
                 });
 

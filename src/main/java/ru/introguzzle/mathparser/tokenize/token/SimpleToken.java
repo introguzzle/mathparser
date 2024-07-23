@@ -15,15 +15,21 @@ public class SimpleToken implements
     private static final long serialVersionUID = -54892981192L;
     private final Type type;
     private final String data;
+    private final int offset;
+    private final int length;
 
-    public SimpleToken(Type type, CharSequence data) {
+    public SimpleToken(Type type, CharSequence data, int offset) {
         this.type = type;
         this.data = data.toString();
+        this.offset = offset;
+        this.length = data.length();
     }
 
-    public SimpleToken(Type type, Character data) {
+    public SimpleToken(Type type, Character data, int offset) {
         this.type = type;
         this.data = data.toString();
+        this.offset = offset;
+        this.length = 1;
     }
 
     @Override
@@ -37,8 +43,23 @@ public class SimpleToken implements
     }
 
     @Override
+    public int getOffset() {
+        return offset;
+    }
+
+    @Override
+    public int getLength() {
+        return length;
+    }
+
+    @Override
     public String toString() {
-        return "Token{" + "type=" + getType() + ", data= '" + getData() + "'}";
+        return "SimpleToken{" +
+                "type=" + type +
+                ", data='" + data + '\'' +
+                ", offset=" + offset +
+                ", length=" + length +
+                '}';
     }
 
     @Override

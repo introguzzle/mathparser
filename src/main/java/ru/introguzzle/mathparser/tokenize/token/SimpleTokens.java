@@ -42,13 +42,13 @@ public class SimpleTokens implements Tokens, Serializable {
     }
 
     @Override
-    public void add(Type type, CharSequence name) {
-        add(new SimpleToken(type, name));
+    public void add(Type type, CharSequence name, int offset) {
+        add(new SimpleToken(type, name, offset));
     }
 
     @Override
-    public void add(Type type, char name) {
-        add(new SimpleToken(type, name));
+    public void add(Type type, char name, int offset) {
+        add(new SimpleToken(type, name, offset));
     }
 
     @Override
