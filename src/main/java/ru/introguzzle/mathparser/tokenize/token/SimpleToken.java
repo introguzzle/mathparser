@@ -60,7 +60,7 @@ public class SimpleToken implements
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    protected SimpleToken clone() throws CloneNotSupportedException {
+        return (SimpleToken) super.clone();
     }
 }

@@ -47,7 +47,7 @@ public class FunctionDefinitionParser extends MathParser {
                        Context context)
             throws SyntaxException {
 
-        var result = tokenize(definition, context);
+        FunctionTokens result = tokenize(definition, context);
         double value = super.parse(result, context);
         FunctionDefinitionType type = result.getType();
 
