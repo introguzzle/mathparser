@@ -394,8 +394,8 @@ public class MathTokenizer implements Tokenizer, Serializable {
         }
 
         Result result = Result.reduce(
-                find(buffer, symbols),
-                findFromContext(buffer, symbols)
+                find(symbols, start),
+                findFromContext(buffer.context, symbols, start)
         );
 
         if (!result.match) {
@@ -412,30 +412,30 @@ public class MathTokenizer implements Tokenizer, Serializable {
      * @return Search result
      */
 
-    protected Result find(Buffer buffer, CharSequence symbols) {
+    protected Result find(CharSequence symbols, int start) {
         Result result = new Result();
 
         nameableMap.values().stream()
                 .filter(Nameable.match(symbols))
                 .findFirst()
                 .ifPresent(s -> {
-                    result.token = new SimpleToken(s.type(), symbols, buffer.iterator.getCursor());
+                    result.token = new SimpleToken(s.type(), symbols, start);
                     result.match = true;
                 });
 
         return result;
     }
 
-    protected Result findFromContext(Buffer buffer, CharSequence symbols) {
+    protected Result findFromContext(Context context, CharSequence symbols, int start) {
         Result result = new Result();
 
-        buffer.context.getSymbols()
+        context.getSymbols()
                 .stream()
                 .parallel()
                 .filter(s -> s.getName().contentEquals(symbols))
                 .findFirst()
                 .ifPresent(s -> {
-                    result.token = new SimpleToken(s.type(), symbols, buffer.iterator.getCursor());
+                    result.token = new SimpleToken(s.type(), symbols, start);
                     result.match = true;
                 });
 

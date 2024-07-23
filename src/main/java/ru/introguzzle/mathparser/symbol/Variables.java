@@ -1,7 +1,6 @@
 package ru.introguzzle.mathparser.symbol;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 public class Variables extends MutableSymbolList<Variable> {
 

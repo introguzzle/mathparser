@@ -26,7 +26,7 @@ public class ExpressionGenerator implements Generator<Expression> {
 
     private class ExpressionBuilder {
 
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         int count = 0;
 
         ExpressionBuilder append(String s) {

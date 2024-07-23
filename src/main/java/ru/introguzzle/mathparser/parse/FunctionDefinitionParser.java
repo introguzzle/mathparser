@@ -8,7 +8,7 @@ import ru.introguzzle.mathparser.symbol.Coefficient;
 import ru.introguzzle.mathparser.symbol.MutableSymbol;
 import ru.introguzzle.mathparser.tokenize.FunctionDefinitionTokenizer;
 import ru.introguzzle.mathparser.tokenize.TokenizeException;
-import ru.introguzzle.mathparser.tokenize.token.FunctionTokens;
+import ru.introguzzle.mathparser.tokenize.token.FunctionTokensProxy;
 
 import java.util.function.Supplier;
 
@@ -30,9 +30,8 @@ public class FunctionDefinitionParser extends MathParser {
         });
     }
 
-    protected
-    FunctionTokens tokenize(FunctionDefinition definition,
-                            Context context)
+    protected FunctionTokensProxy tokenize(FunctionDefinition definition,
+                                           Context context)
             throws TokenizeException {
 
         FunctionDefinitionTokenizer tokenizer = (FunctionDefinitionTokenizer) this.tokenizer;
@@ -47,7 +46,7 @@ public class FunctionDefinitionParser extends MathParser {
                        Context context)
             throws SyntaxException {
 
-        FunctionTokens result = tokenize(definition, context);
+        FunctionTokensProxy result = tokenize(definition, context);
         double value = super.parse(result, context);
         FunctionDefinitionType type = result.getType();
 

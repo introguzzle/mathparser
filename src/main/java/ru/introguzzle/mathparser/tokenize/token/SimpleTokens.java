@@ -1,6 +1,11 @@
 package ru.introguzzle.mathparser.tokenize.token;
 
 import org.jetbrains.annotations.NotNull;
+import ru.introguzzle.mathparser.common.SyntaxException;
+import ru.introguzzle.mathparser.expression.Expression;
+import ru.introguzzle.mathparser.expression.MathExpression;
+import ru.introguzzle.mathparser.parse.MathParser;
+import ru.introguzzle.mathparser.tokenize.MathTokenizer;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -26,6 +31,12 @@ public class SimpleTokens implements Tokens, Serializable {
     public SimpleTokens(Token token) {
         tokens = new ArrayList<>();
         tokens.add(token);
+    }
+
+    public static void main(String[] args) throws SyntaxException {
+        MathParser p = new MathParser(new MathTokenizer());
+
+        p.parse(new MathExpression("5 - 3 ////"));
     }
 
     public SimpleTokens(Token... tokens) {
@@ -133,6 +144,31 @@ public class SimpleTokens implements Tokens, Serializable {
     @Override
     public Token get(int index) {
         return tokens.get(index);
+    }
+
+    @Override
+    public String reduce() {
+        StringBuilder builder = new StringBuilder();
+        int currentOffset = 0;
+
+        for (Token token : tokens) {
+            int tokenOffset = token.getOffset();
+
+            while (currentOffset < tokenOffset) {
+                builder.append(' ');
+                currentOffset++;
+            }
+
+            builder.append(token.getData());
+            currentOffset += token.getData().length();
+        }
+
+        return builder.toString();
+    }
+
+    @Override
+    public Expression toExpression() {
+        return new MathExpression(reduce());
     }
 
     @Override

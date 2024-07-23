@@ -1,8 +1,6 @@
 package ru.introguzzle.mathparser.function;
 
-import ru.introguzzle.mathparser.common.SyntaxException;
-
-public class IllegalFunctionInvocationException extends SyntaxException {
+public class IllegalFunctionInvocationException extends RuntimeException {
 
     public IllegalFunctionInvocationException(String message) {
         super(message);

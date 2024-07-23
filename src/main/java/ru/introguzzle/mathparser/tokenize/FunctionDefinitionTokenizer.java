@@ -7,7 +7,7 @@ import ru.introguzzle.mathparser.definition.FunctionDefinition;
 import ru.introguzzle.mathparser.definition.FunctionDefinitionType;
 import ru.introguzzle.mathparser.function.Function;
 import ru.introguzzle.mathparser.symbol.MutableSymbol;
-import ru.introguzzle.mathparser.tokenize.token.FunctionTokens;
+import ru.introguzzle.mathparser.tokenize.token.FunctionTokensProxy;
 import ru.introguzzle.mathparser.tokenize.token.SimpleToken;
 import ru.introguzzle.mathparser.tokenize.token.Token;
 import ru.introguzzle.mathparser.tokenize.token.Tokens;
@@ -45,14 +45,14 @@ public abstract class FunctionDefinitionTokenizer extends MathTokenizer {
     }
 
     public synchronized
-    @NotNull FunctionTokens tokenize(@NotNull FunctionDefinition definition,
-                                     @NotNull Context context)
+    @NotNull FunctionTokensProxy tokenize(@NotNull FunctionDefinition definition,
+                                          @NotNull Context context)
             throws TokenizeException {
 
         Tokens tokens = super.tokenize(definition, context);
         FunctionDefinitionType type = resolve(definition, tokens);
 
-        return new FunctionTokens(tokens, type);
+        return new FunctionTokensProxy(tokens, type);
     }
 
     protected
@@ -77,11 +77,9 @@ public abstract class FunctionDefinitionTokenizer extends MathTokenizer {
 
     @Override
     protected
-    Result findFromContext(@Mutates Buffer buffer,
-                           CharSequence symbols) {
-
-        Context context = buffer.context();
-
+    Result findFromContext(@Mutates Context context,
+                           CharSequence symbols,
+                           int start) {
         MutableSymbol symbol = context.getSymbols().stream()
                 .filter(Nameable.match(symbols))
                 .findFirst()
@@ -91,7 +89,7 @@ public abstract class FunctionDefinitionTokenizer extends MathTokenizer {
                     return fromSupplier;
                 });
 
-        Token token = new SimpleToken(symbol.type(), symbols, buffer.iterator().getCursor());
+        Token token = new SimpleToken(symbol.type(), symbols, start);
         return new Result(true, token);
     }
 }

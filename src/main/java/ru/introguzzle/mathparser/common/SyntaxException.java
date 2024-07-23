@@ -1,15 +1,17 @@
 package ru.introguzzle.mathparser.common;
 
+import ru.introguzzle.mathparser.expression.Expression;
+
 public abstract class SyntaxException extends Exception {
 
-    public SyntaxException() {
-        super();
-    }
-    public SyntaxException(String message) {
-        super(message);
+    private final Expression expression;
+
+    public SyntaxException(String message, Expression expression, int offset) {
+        super(message + "\n" + ExceptionUtilities.generatePointer(expression.getString(), offset));
+        this.expression = expression;
     }
 
-    public SyntaxException(String message, Throwable cause) {
-        super(message, cause);
+    public Expression getExpression() {
+        return expression;
     }
 }

@@ -1,7 +1,9 @@
 package ru.introguzzle.mathparser.common;
 
+import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.expression.Expression;
 
+@FunctionalInterface
 public interface Resolver<T extends Expression, R> {
-    R resolve(T expression);
+    @NotNull R resolve(@NotNull T expression);
 }
