@@ -3,16 +3,12 @@ package ru.introguzzle.mathparser.symbol;
 import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.common.NoSuchNameException;
 import ru.introguzzle.mathparser.common.NotUniqueNamingException;
-import ru.introguzzle.mathparser.common.Nameable;
 
 import java.util.*;
-import java.util.stream.Stream;
 
-public abstract class MutableSymbolList<T extends MutableSymbol>
-        implements Iterable<T> {
+public abstract class MutableSymbolList<T extends MutableSymbol> {
 
-    private final List<T> items = new ArrayList<>();
-    private final Set<String> names = new HashSet<>();
+    private final Map<String, T> map = new HashMap<>();
 
     public MutableSymbolList() {
     }
@@ -31,55 +27,48 @@ public abstract class MutableSymbolList<T extends MutableSymbol>
     }
 
     private void checkUnique(@NotNull T item) {
-        if (names.contains(item.getName())) {
-            throw new NotUniqueNamingException(item.getName(), names);
+        if (map.containsKey(item.getName())) {
+            throw new NotUniqueNamingException(item.getName(), map.keySet());
         }
     }
 
     public Optional<? extends T> find(@NotNull String name) {
-        for (T item: items) {
-            if (item.getName().equals(name)) {
-                return Optional.of(item);
-            }
-        }
-
-        return Optional.empty();
+        return Optional.ofNullable(map.getOrDefault(name, null));
     }
 
     public void setValue(@NotNull String name, double value) {
         find(name)
-                .orElseThrow(() -> new NoSuchNameException(name, names))
+                .orElseThrow(() -> new NoSuchNameException(name, map.keySet()))
                 .setValue(value);
     }
 
     public void add(T item) {
-        this.checkUnique(item);
-        items.add(item);
-        names.add(item.getName());
+        checkUnique(item);
+        map.put(item.getName(), item);
     }
 
     public void addAll(MutableSymbolList<? extends T> items) {
-        this.items.addAll(items.getItems());
+        map.putAll(items.map);
     }
 
     public void clear() {
-        this.items.clear();
+        map.clear();
     }
 
     public boolean remove(T item) {
-        return items.remove(item) && names.remove(item.getName());
+        return map.remove(item.getName()) != null;
     }
 
     public boolean remove(String name) {
-        return items.removeIf(Nameable.match(name)) && names.remove(name);
+        return map.remove(name) != null;
     }
 
-    public List<T> getItems() {
-        return items;
+    public Map<String, T> getMap() {
+        return map;
     }
 
     public Set<String> getNames() {
-        return names;
+        return new HashSet<>(map.keySet());
     }
 
     @Override
@@ -87,34 +76,20 @@ public abstract class MutableSymbolList<T extends MutableSymbol>
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MutableSymbolList<?> that = (MutableSymbolList<?>) o;
-        return Objects.equals(items, that.items) && Objects.equals(names, that.names);
+        return size() == that.size() && Objects.equals(map, that.map);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(items, names);
+        return Objects.hash(map);
     }
 
     @Override
     public String toString() {
-        return items.toString();
+        return map.toString();
     }
 
     public int size() {
-        return items.size();
-    }
-
-    @NotNull
-    @Override
-    public Iterator<T> iterator() {
-        return items.iterator();
-    }
-
-    public Stream<T> stream() {
-        return items.stream();
-    }
-
-    public Stream<T> parallelStream() {
-        return items.parallelStream();
+        return map.size();
     }
 }

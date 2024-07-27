@@ -12,27 +12,28 @@ import java.util.Set;
  */
 public class NamingContext implements Context {
     private final MutableSymbolList<MutableSymbol> symbols = new MutableSymbolList<>() {};
-
-    private Context parent;
-
     private final Set<String> names = new HashSet<>();
+    private Context parent;
 
     public NamingContext() {
 
     }
 
     public NamingContext(Context parent) {
-        if (parent != null) {
-            this.parent = parent;
-
-            symbols.getItems().addAll(parent.getSymbols().getItems());
-            names.addAll(parent.getNames());
-        }
+        registerParent(parent);
     }
 
     public NamingContext(@NotNull MutableSymbolList<? extends MutableSymbol> symbols) {
         names.addAll(symbols.getNames());
-        this.symbols.getItems().addAll(symbols.getItems());
+        this.symbols.addAll(symbols);
+    }
+
+    private void registerParent(Context parent) {
+        if (parent != null) {
+            this.parent = parent;
+            this.names.addAll(parent.getNames());
+            this.symbols.addAll(parent.getSymbols());
+        }
     }
 
     @Override
@@ -58,34 +59,42 @@ public class NamingContext implements Context {
 
     @Override
     public boolean removeSymbol(String name) {
-        symbols.getItems().removeIf(symbol -> symbol.nameEquals(name));
+        symbols.remove(name);
         return names.remove(name);
     }
 
     @Override
     public boolean removeSymbol(MutableSymbol symbol) {
-        return symbols.remove(symbol) && names.remove(symbol.getName());
+        return symbols.remove(symbol) & names.remove(symbol.getName());
     }
 
     @Override
     public Optional<? extends MutableSymbol> getSymbol(String name) {
-        Optional<? extends MutableSymbol> symbol = symbols.find(name);
+        Optional<? extends MutableSymbol> optional = symbols.find(name);
 
-        if (symbol.isEmpty() && parent != null) {
+        if (optional.isEmpty() && parent != null) {
             return parent.getSymbol(name);
         }
 
-        return symbol;
+        return optional;
     }
 
     @Override
     public Set<String> getNames() {
-        return new HashSet<>(names);
+        Set<String> names = this.names;
+        Context parent = this.parent;
+
+        while (parent != null) {
+            names.addAll(parent.getNames());
+            parent = parent.getParent();
+        }
+
+        return names;
     }
 
     @Override
     public void setParent(Context parent) {
-        this.parent = parent;
+        registerParent(parent);
     }
 
     @Override
@@ -95,7 +104,20 @@ public class NamingContext implements Context {
     }
 
     @Override
+    public String toString() {
+        return "NamingContext{" +
+                "symbols=" + symbols +
+                ", names=" + names +
+                ", parent=" + parent +
+                '}';
+    }
+
+    @Override
     public boolean contains(CharSequence name) {
+        if (parent != null) {
+            return parent.contains(name) || names.contains(name.toString());
+        }
+
         return names.contains(name.toString());
     }
 }

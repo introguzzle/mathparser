@@ -12,7 +12,7 @@ import ru.introguzzle.mathparser.tokenize.token.FunctionTokensProxy;
 
 import java.util.function.Supplier;
 
-public class FunctionDefinitionParser extends MathParser {
+public class FunctionDefinitionParser extends MathParser implements Parser<Double> {
 
     public FunctionDefinitionParser() {
         super(new FunctionDefinitionTokenizer() {

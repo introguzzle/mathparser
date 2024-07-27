@@ -430,6 +430,8 @@ public class MathTokenizer implements Tokenizer, Serializable {
         Result result = new Result();
 
         context.getSymbols()
+                .getMap()
+                .values()
                 .stream()
                 .parallel()
                 .filter(s -> s.getName().contentEquals(symbols))

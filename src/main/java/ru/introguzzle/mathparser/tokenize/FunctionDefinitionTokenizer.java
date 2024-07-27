@@ -15,8 +15,8 @@ import ru.introguzzle.mathparser.tokenize.token.Tokens;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public abstract class FunctionDefinitionTokenizer extends MathTokenizer {
-
+public abstract class FunctionDefinitionTokenizer
+        extends MathTokenizer {
     private Resolver<FunctionDefinition, FunctionDefinitionType> resolver;
 
     public abstract Supplier<MutableSymbol> getDefaultFactory(CharSequence name, double value);
@@ -80,12 +80,17 @@ public abstract class FunctionDefinitionTokenizer extends MathTokenizer {
     Result findFromContext(@Mutates Context context,
                            CharSequence symbols,
                            int start) {
-        MutableSymbol symbol = context.getSymbols().stream()
+        if (context.getParent() == null) {
+            context.setParent(new NamingContext());
+        }
+
+        MutableSymbol symbol = context.getSymbols().getMap().values()
+                .stream()
                 .filter(Nameable.match(symbols))
                 .findFirst()
                 .orElseGet(() -> {
                     MutableSymbol fromSupplier = getDefaultFactory(symbols, getDefaultValue()).get();
-                    context.addSymbol(fromSupplier);
+                    context.getParent().addSymbol(fromSupplier);
                     return fromSupplier;
                 });
 

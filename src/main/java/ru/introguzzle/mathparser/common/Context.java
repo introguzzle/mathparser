@@ -6,24 +6,16 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface Context {
-    MutableSymbolList<MutableSymbol> getSymbols();
-
     Context getParent();
-
-    void addSymbol(MutableSymbol symbol);
-
-
-    boolean removeSymbol(String name);
-
-    boolean removeSymbol(MutableSymbol symbol);
-
-    Optional<? extends MutableSymbol> getSymbol(String name);
-
-    Set<String> getNames();
-
     void setParent(Context parent);
 
+    MutableSymbolList<MutableSymbol> getSymbols();
+    Optional<? extends MutableSymbol> getSymbol(String name);
+    void addSymbol(MutableSymbol symbol);
+    boolean removeSymbol(String name);
+    boolean removeSymbol(MutableSymbol symbol);
     void setSymbols(MutableSymbolList<? extends MutableSymbol> symbols);
 
+    Set<String> getNames();
     boolean contains(CharSequence name);
 }
