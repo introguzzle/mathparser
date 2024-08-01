@@ -1,6 +1,9 @@
 package ru.introguzzle.mathparser.expression;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Iterator;
+import java.util.Objects;
 
 public class ExpressionIterator implements Iterator<Character> {
 
@@ -57,6 +60,14 @@ public class ExpressionIterator implements Iterator<Character> {
         }
 
         return null;
+    }
+
+    private static final String SPECIAL_CHARS = "+-/*~!@#$%^&*()\"{}_[]|\\?/<>,.=";
+    public boolean isSpecial(@Nullable String specialChars) {
+        return Objects
+                .requireNonNullElse(specialChars, SPECIAL_CHARS)
+                .indexOf(at(cursor)) != -1;
+
     }
 
     public boolean isDigit() {

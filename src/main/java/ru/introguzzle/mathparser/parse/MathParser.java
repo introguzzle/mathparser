@@ -14,9 +14,7 @@ import ru.introguzzle.mathparser.tokenize.token.type.*;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class MathParser implements Parser<Double>, Serializable {
     protected final Tokenizer tokenizer;
@@ -38,8 +36,7 @@ public class MathParser implements Parser<Double>, Serializable {
     }
 
     @Override
-    public Double parse(@NotNull Expression expression,
-                        @NotNull Context context) throws SyntaxException {
+    public Double parse(@NotNull Expression expression, @NotNull Context context) throws SyntaxException {
         Tokens tokens = this.tokenize(expression, context);
         return parse(tokens, context);
     }
@@ -54,249 +51,30 @@ public class MathParser implements Parser<Double>, Serializable {
         }
 
         tokens.returnBack();
-        return parseComparison(tokens, context);
+        return parseExpression(tokens, context, Integer.MAX_VALUE);
     }
 
-    private double parseComparison(Tokens tokens, Context context) throws SyntaxException {
-        double value = parseBitwiseOr(tokens, context);
-        Token token = tokens.getNextToken();
+    private double parseExpression(Tokens tokens, Context context, int priority) throws SyntaxException {
+        double leftValue = parseFactor(tokens, context);
 
-        if (token.getType() instanceof OperatorType operator) {
-            if (operator.getPriority() == Priorities.COMPARISON_PRIORITY) {
-                return operator.apply(List.of(value, parseBitwiseOr(tokens, context)));
-            }
-        }
+        while (true) {
+            Token token = tokens.getNextToken();
+            ScalarOperatorType operator = tokenizer.getOperators().get(token.getData());
 
-        return switch (token.getType()) {
-            case TerminalType.TERMINAL, ParenthesisType.RIGHT, SpecialType.COMMA -> {
+            if (operator == null || operator.getPriority() >= priority) {
                 tokens.returnBack();
-                yield value;
+                break;
             }
 
-            default -> throw new UnexpectedTokenException(tokens, token);
-        };
-    }
+            int nextPriority = operator.isRightAssociative()
+                    ? operator.getPriority() + 1
+                    : operator.getPriority();
 
-    private double parseBitwiseOr(Tokens tokens, Context context) throws SyntaxException {
-        double value = parseBitwiseExclusiveOr(tokens, context);
-        while (true) {
-            Token token = tokens.getNextToken();
-            switch (token.getType()) {
-                case OperatorType.OR:
-                    value = (long) value | (long) parseBitwiseExclusiveOr(tokens, context);
-                    break;
-                case OperatorType.LESS:
-                case OperatorType.LESS_OR_EQUALS:
-                case OperatorType.GREATER:
-                case OperatorType.GREATER_OR_EQUALS:
-                case OperatorType.EQUALS:
-                case OperatorType.NOT_EQUALS:
-                case TerminalType.TERMINAL:
-                case ParenthesisType.RIGHT:
-                case SpecialType.COMMA:
-                    tokens.returnBack();
-
-                    return value;
-                default:
-                    throw new UnexpectedTokenException(tokens, token);
-            }
+            double rightValue = parseExpression(tokens, context, nextPriority);
+            leftValue = operator.apply(List.of(leftValue, rightValue));
         }
-    }
 
-    private double parseBitwiseExclusiveOr(Tokens tokens, Context context) throws SyntaxException {
-        double value = parseBitwiseAnd(tokens, context);
-        while (true) {
-            Token token = tokens.getNextToken();
-            switch (token.getType()) {
-                case OperatorType.XOR:
-                    value = (long) value ^ (long) parseBitwiseAnd(tokens, context);
-                    break;
-                case OperatorType.OR:
-                case OperatorType.LESS:
-                case OperatorType.LESS_OR_EQUALS:
-                case OperatorType.GREATER:
-                case OperatorType.GREATER_OR_EQUALS:
-                case OperatorType.EQUALS:
-                case OperatorType.NOT_EQUALS:
-                case TerminalType.TERMINAL:
-                case ParenthesisType.RIGHT:
-                case SpecialType.COMMA:
-                    tokens.returnBack();
-
-                    return value;
-                default:
-                    throw new UnexpectedTokenException(tokens, token);
-            }
-        }
-    }
-
-    private double parseBitwiseAnd(Tokens tokens, Context context) throws SyntaxException {
-        double value = parseBitwiseShift(tokens, context);
-        while (true) {
-            Token token = tokens.getNextToken();
-            switch (token.getType()) {
-                case OperatorType.AND:
-                    value = (long) value & (long) parseBitwiseShift(tokens, context);
-                    break;
-                case OperatorType.LESS:
-                case OperatorType.LESS_OR_EQUALS:
-                case OperatorType.GREATER:
-                case OperatorType.GREATER_OR_EQUALS:
-                case OperatorType.EQUALS:
-                case OperatorType.NOT_EQUALS:
-                case OperatorType.OR:
-                case OperatorType.XOR:
-                case TerminalType.TERMINAL:
-                case ParenthesisType.RIGHT:
-                case SpecialType.COMMA:
-                    tokens.returnBack();
-
-                    return value;
-                default:
-                    throw new UnexpectedTokenException(tokens, token);
-            }
-        }
-    }
-
-    private double parseBitwiseShift(Tokens tokens, Context context) throws SyntaxException {
-        double value = parseAdditionSubtraction(tokens, context);
-        while (true) {
-            Token token = tokens.getNextToken();
-            switch (token.getType()) {
-                case OperatorType.LEFT_SHIFT:
-                    value = (long) value << (long) parseAdditionSubtraction(tokens, context);
-                    break;
-
-                case OperatorType.RIGHT_SHIFT:
-                    value = (long) value >> (long) parseAdditionSubtraction(tokens, context);
-                    break;
-
-                case OperatorType.LESS:
-                case OperatorType.LESS_OR_EQUALS:
-                case OperatorType.GREATER:
-                case OperatorType.GREATER_OR_EQUALS:
-                case OperatorType.EQUALS:
-                case OperatorType.NOT_EQUALS:
-                case OperatorType.OR:
-                case OperatorType.AND:
-                case OperatorType.XOR:
-                case TerminalType.TERMINAL:
-                case ParenthesisType.RIGHT:
-                case SpecialType.COMMA:
-                    tokens.returnBack();
-
-                    return value;
-                default:
-                    throw new UnexpectedTokenException(tokens, token);
-            }
-        }
-    }
-
-    private double parseAdditionSubtraction(Tokens tokens, Context context) throws SyntaxException {
-        double value = parseMultiplicationDivision(tokens, context);
-        while (true) {
-            Token token = tokens.getNextToken();
-            switch (token.getType()) {
-                case OperatorType.ADDITION:
-                    value += parseMultiplicationDivision(tokens, context);
-                    break;
-                case OperatorType.SUBTRACTION:
-                    value -= parseMultiplicationDivision(tokens, context);
-                    break;
-                case OperatorType.LESS:
-                case OperatorType.LESS_OR_EQUALS:
-                case OperatorType.GREATER:
-                case OperatorType.GREATER_OR_EQUALS:
-                case OperatorType.EQUALS:
-                case OperatorType.NOT_EQUALS:
-                case OperatorType.LEFT_SHIFT:
-                case OperatorType.RIGHT_SHIFT:
-                case OperatorType.AND:
-                case OperatorType.OR:
-                case OperatorType.XOR:
-                case TerminalType.TERMINAL:
-                case ParenthesisType.RIGHT:
-                case SpecialType.COMMA:
-                    tokens.returnBack();
-
-                    return value;
-                default:
-                    throw new UnexpectedTokenException(tokens, token);
-            }
-        }
-    }
-
-    private double parseMultiplicationDivision(Tokens tokens, Context context) throws SyntaxException {
-        double value = parseExponent(tokens, context);
-        while (true) {
-            Token token = tokens.getNextToken();
-            switch (token.getType()) {
-                case OperatorType.MULTIPLICATION:
-                    value *= parseExponent(tokens, context);
-                    break;
-                case OperatorType.DIVISION:
-                    value /= parseExponent(tokens, context);
-                    break;
-                case OperatorType.LESS:
-                case OperatorType.LESS_OR_EQUALS:
-                case OperatorType.GREATER:
-                case OperatorType.GREATER_OR_EQUALS:
-                case OperatorType.EQUALS:
-                case OperatorType.NOT_EQUALS:
-                case OperatorType.OR:
-                case OperatorType.ADDITION:
-                case OperatorType.SUBTRACTION:
-                case OperatorType.AND:
-                case OperatorType.XOR:
-                case OperatorType.LEFT_SHIFT:
-                case OperatorType.RIGHT_SHIFT:
-                case TerminalType.TERMINAL:
-                case ParenthesisType.RIGHT:
-                case SpecialType.COMMA:
-                    tokens.returnBack();
-
-                    return value;
-                default:
-                    throw new UnexpectedTokenException(tokens, token);
-            }
-        }
-    }
-
-    private double parseExponent(Tokens tokens, Context context) throws SyntaxException {
-        double value = parseFactor(tokens, context);
-        while (true) {
-            Token token = tokens.getNextToken();
-            switch (token.getType()) {
-                case OperatorType.EXPONENT:
-                    value = Math.pow(value, parseExponent(tokens, context));
-                    break;
-
-                case OperatorType.LESS:
-                case OperatorType.LESS_OR_EQUALS:
-                case OperatorType.GREATER:
-                case OperatorType.GREATER_OR_EQUALS:
-                case OperatorType.EQUALS:
-                case OperatorType.NOT_EQUALS:
-                case OperatorType.OR:
-                case OperatorType.ADDITION:
-                case OperatorType.SUBTRACTION:
-                case OperatorType.MULTIPLICATION:
-                case OperatorType.DIVISION:
-                case OperatorType.XOR:
-                case OperatorType.LEFT_SHIFT:
-                case OperatorType.RIGHT_SHIFT:
-                case OperatorType.AND:
-                case TerminalType.TERMINAL:
-                case ParenthesisType.RIGHT:
-                case SpecialType.COMMA:
-                    tokens.returnBack();
-
-                    return value;
-
-                default:
-                    throw new UnexpectedTokenException(tokens, token);
-            }
-        }
+        return leftValue;
     }
 
     private double parseFactor(Tokens tokens, Context context) throws SyntaxException {
@@ -307,14 +85,13 @@ public class MathParser implements Parser<Double>, Serializable {
                 tokens.returnBack();
                 return parseFunction(tokens, context);
 
+            // Special case of unary minus on level of factor
             case OperatorType.SUBTRACTION:
                 return -parseFactor(tokens, context);
 
+            // Special case of unary plus on level of factor
             case OperatorType.ADDITION:
                 return parseFactor(tokens, context);
-
-            case OperatorType.BITWISE_NOT:
-                return ~((long) parseFactor(tokens, context));
 
             case NumberType.NUMBER:
                 return Double.parseDouble(token.getData());
@@ -337,6 +114,12 @@ public class MathParser implements Parser<Double>, Serializable {
                 return value;
 
             default:
+                if (token.getType() instanceof ScalarOperatorType op) {
+                    if (op.operands() == ScalarOperatorType.UNARY) {
+                        return op.apply(List.of(parseFactor(tokens, context)));
+                    }
+                }
+
                 throw new UnexpectedTokenException(tokens, token);
         }
     }
@@ -353,12 +136,10 @@ public class MathParser implements Parser<Double>, Serializable {
             do {
                 arguments.add(parse(tokens, context));
                 token = tokens.getNextToken();
-
                 if ((token.getType() != SpecialType.COMMA) && (token.getType() != ParenthesisType.RIGHT)) {
                     // Should never happen, because tokenizer won't let this pass to here
                     throw new RuntimeException();
                 }
-
             } while (token.getType() == SpecialType.COMMA);
         }
 

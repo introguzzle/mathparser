@@ -1,16 +1,18 @@
 package ru.introguzzle.mathparser.tokenize;
 
+import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.tokenize.token.*;
 import ru.introguzzle.mathparser.tokenize.token.type.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class PrefixTokenProcessor implements TokenProcessor {
 
-    private static final Map<String, Priorable> OPERATORS =
-            Arrays.stream(OperatorType.values())
-                    .collect(Collectors.toMap(OperatorType::getRepresentation, op -> op));
+    private final Map<String, ScalarOperatorType> operators = new HashMap<>();
+
+    public PrefixTokenProcessor(Map<String, ? extends ScalarOperatorType> operators) {
+        this.operators.putAll(operators);
+    }
 
     @Override
     public Tokens process(Tokens tokens) throws UnknownOperatorException {
@@ -32,34 +34,23 @@ public class PrefixTokenProcessor implements TokenProcessor {
                 if (!operatorTokens.isEmpty() && operatorTokens.peek().getType() == ParenthesisType.LEFT) {
                     operatorTokens.pop();
                 }
-            } else if (type instanceof FunctionType || OPERATORS.containsKey(string)) {
-                Priorable p = OPERATORS.get(string);
+            } else if (type instanceof FunctionType || operators.containsKey(string)) {
+                ScalarOperatorType op = operators.get(string);
 
-                if (p == null && type instanceof FunctionType functionType) {
-                    p = new Priorable() {
-                        @Override
-                        public int getPriority() {
-                            return functionType.getPriority();
-                        }
-
-                        @Override
-                        public Association getAssociation() {
-                            return functionType.getAssociation();
-                        }
-                    };
-
-                    OPERATORS.put(string, p);
+                if (op == null && type instanceof FunctionType) {
+                    op = createDummy();
+                    operators.put(string, op);
                 }
 
-                if (p == null) {
+                if (op == null) {
                     throw new UnknownOperatorException(string, tokens.toExpression(), tokens.getPosition());
                 }
 
                 while (!operatorTokens.isEmpty()
-                        && OPERATORS.containsKey(operatorTokens.peek().getData())
+                        && operators.containsKey(operatorTokens.peek().getData())
                         && (
-                        (p.getPriority() > OPERATORS.get(operatorTokens.peek().getData()).getPriority())
-                                || (p.getPriority() == OPERATORS.get(operatorTokens.peek().getData()).getPriority() && !p.isRightAssociative())
+                        (op.getPriority() > operators.get(operatorTokens.peek().getData()).getPriority())
+                                || (op.getPriority() == operators.get(operatorTokens.peek().getData()).getPriority() && !op.isRightAssociative())
                 )) {
                     output.add(operatorTokens.pop());
                 }
@@ -73,5 +64,49 @@ public class PrefixTokenProcessor implements TokenProcessor {
         }
 
         return output;
+    }
+
+    private static @NotNull ScalarOperatorType createDummy() {
+        return new ScalarOperatorType() {
+            @Override
+            public int operands() {
+                return Integer.MAX_VALUE;
+            }
+
+            @Override
+            public Double apply(List<Double> doubles) {
+                return Double.NaN;
+            }
+
+            @Override
+            public int getPriority() {
+                return Priorities.FUNCTION_PRIORITY;
+            }
+
+            @Override
+            public Association getAssociation() {
+                return Association.LEFT;
+            }
+
+            @Override
+            public @NotNull String getRepresentation() {
+                return "___";
+            }
+
+            @Override
+            public int ordinal() {
+                return 0;
+            }
+
+            @Override
+            public Category getCategory() {
+                return null;
+            }
+
+            @Override
+            public String name() {
+                return "";
+            }
+        };
     }
 }

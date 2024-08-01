@@ -8,8 +8,11 @@ import ru.introguzzle.mathparser.function.Function;
 import ru.introguzzle.mathparser.symbol.ImmutableSymbol;
 import ru.introguzzle.mathparser.tokenize.token.Token;
 import ru.introguzzle.mathparser.tokenize.token.Tokens;
+import ru.introguzzle.mathparser.tokenize.token.type.OperatorType;
+import ru.introguzzle.mathparser.tokenize.token.type.ScalarOperatorType;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface Tokenizer extends Optionable<TokenizerOptions> {
@@ -39,4 +42,6 @@ public interface Tokenizer extends Optionable<TokenizerOptions> {
                 .filter(s -> s.getName().equals(name))
                 .findFirst();
     }
+
+    Map<String,? extends ScalarOperatorType> getOperators();
 }

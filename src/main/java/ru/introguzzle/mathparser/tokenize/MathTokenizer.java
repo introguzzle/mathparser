@@ -3,10 +3,8 @@ package ru.introguzzle.mathparser.tokenize;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ru.introguzzle.mathparser.common.Nameable;
-import ru.introguzzle.mathparser.common.NoSuchNameException;
+import ru.introguzzle.mathparser.common.*;
 import ru.introguzzle.mathparser.definition.FunctionDefinition;
-import ru.introguzzle.mathparser.common.Context;
 import ru.introguzzle.mathparser.expression.ExpressionIterator;
 import ru.introguzzle.mathparser.function.AbstractFunction;
 import ru.introguzzle.mathparser.function.Function;
@@ -79,6 +77,14 @@ public class MathTokenizer implements Tokenizer, Serializable {
 
     @NotNull
     private final transient Map<String, Nameable> nameableMap = new HashMap<>();
+    private final transient Map<String, ScalarOperatorType> operators = Arrays.stream(OperatorType.values())
+            .collect(Collectors.toMap(OperatorType::getRepresentation, o -> o));
+
+    private String allowedOperatorSymbols;
+
+    public void setAllowedOperatorSymbols(String allowedOperatorSymbols) {
+        this.allowedOperatorSymbols = allowedOperatorSymbols;
+    }
 
     public MathTokenizer() {
         nameableMap.putAll(FunctionReflector.get());
@@ -100,6 +106,14 @@ public class MathTokenizer implements Tokenizer, Serializable {
 
     public MathTokenizer withConstants(@NotNull Collection<? extends ImmutableSymbol> constants) {
         nameableMap.putAll(toMap(constants));
+        return this;
+    }
+
+    public MathTokenizer withOperators(@NotNull Collection<? extends ScalarOperatorType> operators) {
+        this.operators.putAll(operators.stream()
+                .collect(Collectors.toMap(ScalarType::getRepresentation, o -> o))
+        );
+
         return this;
     }
 
@@ -148,6 +162,11 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return this;
     }
 
+    public MathTokenizer addOperator(@NotNull ScalarOperatorType operator) {
+        operators.put(operator.getRepresentation(), operator);
+        return this;
+    }
+
     public MathTokenizer clearFunctions() {
         nameableMap.entrySet()
                 .removeIf(entry -> entry.getValue() instanceof Function);
@@ -184,11 +203,13 @@ public class MathTokenizer implements Tokenizer, Serializable {
                 case ' ':
                     iterator.next();
                     continue;
+
                 case '(':
                     tokens.add(ParenthesisType.LEFT, current, iterator.getCursor());
                     parenthesisStack.push(current);
                     iterator.next();
                     continue;
+
                 case ')':
                     tokens.add(ParenthesisType.RIGHT, current, iterator.getCursor());
                     if (parenthesisStack.isEmpty()) {
@@ -199,30 +220,22 @@ public class MathTokenizer implements Tokenizer, Serializable {
 
                     iterator.next();
                     continue;
-                case '+':
-                case '-':
-                case '*':
-                case '/':
-                case '^':
-                case '>':
-                case '<':
-                case '=':
-                case '!':
-                case '&':
-                case '|':
-                case '~':
-                    tokens.add(handleOperator(buffer));
-                    if (!iterator.hasNext()) {
-                        break;
-                    }
 
-                    iterator.next();
-                    continue;
                 case ',':
                     tokens.add(SpecialType.COMMA, current, iterator.getCursor());
                     iterator.next();
                     continue;
+
                 default:
+                    if (iterator.isSpecial(allowedOperatorSymbols)) {
+                        tokens.add(handleOperator(buffer));
+                        if (!iterator.hasNext()) {
+                            break;
+                        }
+
+                        continue;
+                    }
+
                     if (iterator.isDigit()) {
                         tokens.add(handleNumber(buffer));
                         if (!iterator.hasNext()) {
@@ -271,6 +284,11 @@ public class MathTokenizer implements Tokenizer, Serializable {
                 .toList();
     }
 
+    @Override
+    public Map<String, ? extends ScalarOperatorType> getOperators() {
+        return operators;
+    }
+
     protected Token handleDefinition(Buffer buffer, FunctionDefinition definition) {
         int split = definition.getDefinitionSpliterator();
         Variable variable = definition.getVariable();
@@ -308,82 +326,34 @@ public class MathTokenizer implements Tokenizer, Serializable {
     }
 
     protected Token handleOperator(Buffer buffer)
-            throws FunctionDefinitionException, UnknownOperatorException {
+            throws UnknownOperatorException {
         ExpressionIterator iterator = buffer.iterator;
-        Character current = iterator.current();
-        Character next = iterator.peekNext();
+        StringBuilder operator = new StringBuilder();
+        final int start = iterator.getCursor();
 
-        final int offset = iterator.getCursor();
-
-        return switch (current) {
-            case '+' -> OperatorType.ADDITION.getToken(offset);
-            case '-' -> OperatorType.SUBTRACTION.getToken(offset);
-            case '*' -> {
-                if (next != null && next == '*') {
-                    iterator.next();
-                    yield OperatorType.EXPONENT.getToken(offset);
-                }
-
-                yield OperatorType.MULTIPLICATION.getToken(offset);
+        while (iterator.hasNext() && iterator.isSpecial(allowedOperatorSymbols)) {
+            operator.append(iterator.next());
+            if (!iterator.hasNext()) {
+                break;
             }
-            case '/' -> OperatorType.DIVISION.getToken(offset);
-            case '^' -> OperatorType.XOR.getToken(offset);
-            case '&' -> OperatorType.AND.getToken(offset);
-            case '|' -> OperatorType.OR.getToken(offset);
-            case '~' -> OperatorType.BITWISE_NOT.getToken(offset);
-            case '<' -> {
-                if (next != null && next == '<') {
-                    iterator.next();
-                    yield OperatorType.LEFT_SHIFT.getToken(offset);
-                } else if (iterator.peekNext() == '=') {
-                    iterator.next();
-                    yield OperatorType.LESS_OR_EQUALS.getToken(offset);
-                }
+        }
 
-                yield OperatorType.LESS.getToken(offset);
-            }
-            case '>' -> {
-                if (next != null && next == '>') {
-                    iterator.next();
-                    yield OperatorType.RIGHT_SHIFT.getToken(offset);
+        ScalarType scalarType = operators.get(operator.toString());
 
-                } else if (next != null && next == '=') {
-                    iterator.next();
-                    yield OperatorType.GREATER_OR_EQUALS.getToken(offset);
-                }
-
-                yield OperatorType.GREATER.getToken(offset);
-            }
-            case '=' -> {
-                if (next != null && next == '=') {
-                    iterator.next();
-                    yield OperatorType.EQUALS.getToken(offset);
-                }
-
-                if (buffer.expression instanceof FunctionDefinition) {
-                    yield new SimpleToken(DeclarationType.DECLARATION_TERMINAL, current, offset);
-                } else {
-                    throw new FunctionDefinitionException("Declaration is not allowed", buffer.expression, offset);
-                }
-            }
-            case '!' -> {
-                if (next != null && next == '=') {
-                    iterator.next();
-                    yield OperatorType.NOT_EQUALS.getToken(offset);
-                }
-
-                yield OperatorType.NOT.getToken(offset);
+        if (scalarType == null) {
+            if ("=".contentEquals(operator)) {
+                return new SimpleToken(DeclarationType.DECLARATION_TERMINAL, operator, start);
             }
 
-            default -> throw new UnknownOperatorException(current, buffer.expression, offset);
-        };
+            throw new UnknownOperatorException(operator, buffer.expression, start);
+        }
+
+        return scalarType.getToken(start);
     }
 
     protected Token handleSymbols(Buffer buffer) throws TokenizeException {
         ExpressionIterator iterator = buffer.iterator;
-
         StringBuilder symbols = new StringBuilder();
-
         final int start = iterator.getCursor();
 
         while (iterator.hasNext() && iterator.isLetter()) {

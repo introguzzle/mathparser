@@ -22,7 +22,7 @@ public class PrefixNotationParser implements Parser<Double> {
     private final TokenProcessor processor;
 
     public PrefixNotationParser(@NotNull Tokenizer tokenizer) {
-        this(tokenizer, new PrefixTokenProcessor());
+        this(tokenizer, new PrefixTokenProcessor(tokenizer.getOperators()));
     }
 
     public PrefixNotationParser(@NotNull Tokenizer tokenizer, @NotNull TokenProcessor processor) {
@@ -56,7 +56,7 @@ public class PrefixNotationParser implements Parser<Double> {
             Token token = infix.getNextToken();
             Type type = token.getType();
 
-            if (type instanceof OperatorType operator) {
+            if (type instanceof ScalarOperatorType operator) {
                 processOperator(stack, operator, tokens, position);
                 position++;
                 continue;

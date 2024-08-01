@@ -1,13 +1,12 @@
 package ru.introguzzle.mathparser.tokenize.token.type;
 
 import org.jetbrains.annotations.NotNull;
-import ru.introguzzle.mathparser.operator.Operator;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public enum OperatorType implements ScalarType, Operator<Double> {
+public enum OperatorType implements ScalarOperatorType {
     ADDITION("+", Priorities.ADDITION_PRIORITY) {
         @Override
         public int operands() {
@@ -314,9 +313,6 @@ public enum OperatorType implements ScalarType, Operator<Double> {
         }
     };
 
-    public static final int BINARY = 2;
-    public static final int UNARY = 1;
-
     private final String representation;
     private final int priority;
 
@@ -335,11 +331,6 @@ public enum OperatorType implements ScalarType, Operator<Double> {
         return Arrays.stream(OperatorType.values())
                 .map(OperatorType::getRepresentation)
                 .toList();
-    }
-
-    @Override
-    public Category getCategory() {
-        return Category.OPERATOR;
     }
 
     @Override
