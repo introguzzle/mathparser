@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class FunctionReflector {
 
-    private static final Map<String, Function> functionMap = new HashMap<>();
+    private static final Map<String, Function> FUNCTIONS = new HashMap<>();
     @NotNull
     private static Map<String, Function> load() {
         Map<String, Function> functionMap = new HashMap<>();
@@ -36,10 +36,10 @@ public class FunctionReflector {
     }
 
     public static Map<String, Function> get() {
-        if (FunctionReflector.functionMap.isEmpty()) {
-            FunctionReflector.functionMap.putAll(FunctionReflector.load());
+        if (FunctionReflector.FUNCTIONS.isEmpty()) {
+            FunctionReflector.FUNCTIONS.putAll(FunctionReflector.load());
         }
 
-        return FunctionReflector.functionMap;
+        return FunctionReflector.FUNCTIONS;
     }
 }

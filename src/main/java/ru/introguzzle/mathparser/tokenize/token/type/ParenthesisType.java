@@ -1,6 +1,7 @@
 package ru.introguzzle.mathparser.tokenize.token.type;
 
 import org.jetbrains.annotations.NotNull;
+import ru.introguzzle.mathparser.operator.Priorities;
 
 public enum ParenthesisType implements ScalarType, Priorable {
     LEFT("("),

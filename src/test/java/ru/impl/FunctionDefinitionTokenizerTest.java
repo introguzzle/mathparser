@@ -42,7 +42,7 @@ public class FunctionDefinitionTokenizerTest {
 
         var definition = new FunctionDefinition("f(z) = z + a", new Variable("z", 0));
         var result = tokenizer.tokenize(definition, context);
-        assertEquals(FunctionDefinitionType.EXPLICIT_FUNCTION_WITH_PARAMETERS, result.getType());
+        assertEquals(FunctionDefinitionType.EXPLICIT_FUNCTION_WITH_PARAMETERS, result.type());
     }
 
     @Test
@@ -52,7 +52,7 @@ public class FunctionDefinitionTokenizerTest {
         var definition = new FunctionDefinition("sin(t)", new Variable("t", 0));
         var result = tokenizer.tokenize(definition, context);
 
-        assertEquals(FunctionDefinitionType.PARAMETRIC_FUNCTION, result.getType());
+        assertEquals(FunctionDefinitionType.PARAMETRIC_FUNCTION, result.type());
     }
 
     @Test
@@ -61,7 +61,7 @@ public class FunctionDefinitionTokenizerTest {
 
         var definition = new FunctionDefinition("g(x) = x^2", new Variable("x", 0));
         var result = tokenizer.tokenize(definition, context);
-        assertEquals(FunctionDefinitionType.EXPLICIT_FUNCTION, result.getType());
+        assertEquals(FunctionDefinitionType.EXPLICIT_FUNCTION, result.type());
     }
 
     @Test
@@ -71,7 +71,7 @@ public class FunctionDefinitionTokenizerTest {
         var definition = new FunctionDefinition("cos(t) + b", new Variable("t", 0));
         var result = tokenizer.tokenize(definition, context);
 
-        assertEquals(FunctionDefinitionType.PARAMETRIC_FUNCTION_WITH_PARAMETERS, result.getType());
+        assertEquals(FunctionDefinitionType.PARAMETRIC_FUNCTION_WITH_PARAMETERS, result.type());
     }
 }
 

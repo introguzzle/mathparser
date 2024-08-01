@@ -6,6 +6,8 @@ import ru.introguzzle.mathparser.common.NamingContext;
 import ru.introguzzle.mathparser.common.SyntaxException;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.function.Function;
+import ru.introguzzle.mathparser.operator.OperatorType;
+import ru.introguzzle.mathparser.operator.ScalarOperatorType;
 import ru.introguzzle.mathparser.symbol.ImmutableSymbol;
 import ru.introguzzle.mathparser.tokenize.*;
 import ru.introguzzle.mathparser.tokenize.token.Token;
@@ -115,7 +117,7 @@ public class MathParser implements Parser<Double>, Serializable {
 
             default:
                 if (token.getType() instanceof ScalarOperatorType op) {
-                    if (op.operands() == ScalarOperatorType.UNARY) {
+                    if (op.getRequiredOperands() == ScalarOperatorType.UNARY) {
                         return op.apply(List.of(parseFactor(tokens, context)));
                     }
                 }

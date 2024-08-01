@@ -1,4 +1,4 @@
-package ru.introguzzle.mathparser.tokenize.token.type;
+package ru.introguzzle.mathparser.operator;
 
 public final class Priorities {
     // First are functions, last are comparison operators

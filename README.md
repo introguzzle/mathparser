@@ -34,8 +34,8 @@ import ru.introguzzle.mathparser.symbol.Variable;
 import ru.introguzzle.mathparser.tokenize.MathTokenizer;
 import ru.introguzzle.mathparser.tokenize.Tokenizer;
 import ru.introguzzle.mathparser.tokenize.token.type.FunctionType;
-import ru.introguzzle.mathparser.tokenize.token.type.Priorities;
-import ru.introguzzle.mathparser.tokenize.token.type.ScalarOperatorType;
+import ru.introguzzle.mathparser.operator.Priorities;
+import ru.introguzzle.mathparser.operator.ScalarOperatorType;
 
 import java.util.List;
 

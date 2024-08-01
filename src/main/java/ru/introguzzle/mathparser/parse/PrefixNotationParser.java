@@ -8,6 +8,8 @@ import ru.introguzzle.mathparser.common.SyntaxException;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.function.Function;
 import ru.introguzzle.mathparser.operator.Operator;
+import ru.introguzzle.mathparser.operator.OperatorType;
+import ru.introguzzle.mathparser.operator.ScalarOperatorType;
 import ru.introguzzle.mathparser.symbol.ImmutableSymbol;
 import ru.introguzzle.mathparser.symbol.MutableSymbol;
 import ru.introguzzle.mathparser.tokenize.*;
@@ -113,7 +115,7 @@ public class PrefixNotationParser implements Parser<Double> {
                                  Operator<Double> operator,
                                  Tokens tokens,
                                  int position) throws SyntaxException {
-        int operandCount = operator.operands();
+        int operandCount = operator.getRequiredOperands();
         if (operator == OperatorType.SUBTRACTION && stack.size() == 1) {
             // Handle special case of unary minus
             // We can't define enum for this operation for various reasons,

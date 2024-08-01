@@ -8,7 +8,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class ConstantReflector {
-    private static final Map<String, ImmutableSymbol> constants = new HashMap<>();
+    private static final Map<String, ImmutableSymbol> CONSTANTS = new HashMap<>();
     @NotNull
     private static Map<String, ImmutableSymbol> load() {
         Map<String, ImmutableSymbol> constants = new HashMap<>();
@@ -34,10 +34,10 @@ public class ConstantReflector {
     }
 
     public static Map<String, ImmutableSymbol> get() {
-        if (ConstantReflector.constants.isEmpty()) {
-            ConstantReflector.constants.putAll(ConstantReflector.load());
+        if (ConstantReflector.CONSTANTS.isEmpty()) {
+            ConstantReflector.CONSTANTS.putAll(ConstantReflector.load());
         }
 
-        return ConstantReflector.constants;
+        return ConstantReflector.CONSTANTS;
     }
 }

@@ -10,10 +10,8 @@ import ru.introguzzle.mathparser.parse.MathParser;
 import ru.introguzzle.mathparser.parse.Parser;
 import ru.introguzzle.mathparser.symbol.Variable;
 import ru.introguzzle.mathparser.tokenize.MathTokenizer;
-import ru.introguzzle.mathparser.tokenize.Tokenizer;
-import ru.introguzzle.mathparser.tokenize.token.type.FunctionType;
-import ru.introguzzle.mathparser.tokenize.token.type.Priorities;
-import ru.introguzzle.mathparser.tokenize.token.type.ScalarOperatorType;
+import ru.introguzzle.mathparser.operator.Priorities;
+import ru.introguzzle.mathparser.operator.ScalarOperatorType;
 
 import java.util.List;
 
@@ -24,7 +22,7 @@ public class Example {
 
         tokenizer.addOperator(new ScalarOperatorType() {
             @Override
-            public int operands() {
+            public int getRequiredOperands() {
                 return 2;
             }
 
@@ -85,7 +83,7 @@ public class Example {
         context.addSymbol(new Variable("x", 3));
         context.addSymbol(new Variable("y", 9));
 
-        Expression expression = new MathExpression("1 &&&& 4 + example(1, 3) << x << y");
+        Expression expression = new MathExpression("1 &&&& 4 + example(1, 3) >>> x << y");
         System.out.println(parser.tryParse(expression, context));
     }
 }

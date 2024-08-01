@@ -1,6 +1,6 @@
-package ru.introguzzle.mathparser.tokenize.token.type;
+package ru.introguzzle.mathparser.operator;
 
-import ru.introguzzle.mathparser.operator.Operator;
+import ru.introguzzle.mathparser.tokenize.token.type.ScalarType;
 
 public interface ScalarOperatorType extends ScalarType, Operator<Double> {
     int BINARY = 2;

@@ -8,6 +8,8 @@ import ru.introguzzle.mathparser.definition.FunctionDefinition;
 import ru.introguzzle.mathparser.expression.ExpressionIterator;
 import ru.introguzzle.mathparser.function.AbstractFunction;
 import ru.introguzzle.mathparser.function.Function;
+import ru.introguzzle.mathparser.operator.OperatorType;
+import ru.introguzzle.mathparser.operator.ScalarOperatorType;
 import ru.introguzzle.mathparser.symbol.*;
 import ru.introguzzle.mathparser.constant.Constant;
 import ru.introguzzle.mathparser.constant.ConstantReflector;

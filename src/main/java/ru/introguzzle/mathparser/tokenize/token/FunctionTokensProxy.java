@@ -11,18 +11,7 @@ import java.util.List;
 /**
  * Adapter class
  */
-public class FunctionTokensProxy implements Tokens {
-    private final FunctionDefinitionType type;
-    private final Tokens tokens;
-
-    public FunctionTokensProxy(Tokens tokens, FunctionDefinitionType type) {
-        this.tokens = tokens;
-        this.type = type;
-    }
-
-    public FunctionDefinitionType getType() {
-        return type;
-    }
+public record FunctionTokensProxy(Tokens tokens, FunctionDefinitionType type) implements Tokens {
 
     @Override
     public void add(Token token) {
@@ -62,10 +51,6 @@ public class FunctionTokensProxy implements Tokens {
     @Override
     public List<Token> getTokenList() {
         return tokens.getTokenList();
-    }
-
-    public Tokens getTokens() {
-        return tokens;
     }
 
     @Override

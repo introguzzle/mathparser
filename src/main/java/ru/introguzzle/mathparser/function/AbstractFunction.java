@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public abstract class AbstractFunction implements Function {
-
     private final String name;
     private final int requiredArguments;
 
@@ -16,12 +15,12 @@ public abstract class AbstractFunction implements Function {
 
     @Override
     public @NotNull String getName() {
-        return this.name;
+        return name;
     }
 
     @Override
     public int getRequiredArguments() {
-        return this.requiredArguments;
+        return requiredArguments;
     }
 
     @Override

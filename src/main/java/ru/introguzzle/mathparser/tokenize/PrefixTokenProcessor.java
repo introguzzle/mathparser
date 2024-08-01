@@ -1,6 +1,8 @@
 package ru.introguzzle.mathparser.tokenize;
 
 import org.jetbrains.annotations.NotNull;
+import ru.introguzzle.mathparser.operator.Priorities;
+import ru.introguzzle.mathparser.operator.ScalarOperatorType;
 import ru.introguzzle.mathparser.tokenize.token.*;
 import ru.introguzzle.mathparser.tokenize.token.type.*;
 
@@ -69,7 +71,7 @@ public class PrefixTokenProcessor implements TokenProcessor {
     private static @NotNull ScalarOperatorType createDummy() {
         return new ScalarOperatorType() {
             @Override
-            public int operands() {
+            public int getRequiredOperands() {
                 return Integer.MAX_VALUE;
             }
 

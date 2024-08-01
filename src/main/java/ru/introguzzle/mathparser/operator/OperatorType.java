@@ -1,4 +1,4 @@
-package ru.introguzzle.mathparser.tokenize.token.type;
+package ru.introguzzle.mathparser.operator;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -9,7 +9,7 @@ import java.util.Objects;
 public enum OperatorType implements ScalarOperatorType {
     ADDITION("+", Priorities.ADDITION_PRIORITY) {
         @Override
-        public int operands() {
+        public int getRequiredOperands() {
             return BINARY;
         }
 
@@ -26,7 +26,7 @@ public enum OperatorType implements ScalarOperatorType {
 
     SUBTRACTION("-", Priorities.ADDITION_PRIORITY) {
         @Override
-        public int operands() {
+        public int getRequiredOperands() {
             return BINARY;
         }
 
@@ -43,7 +43,7 @@ public enum OperatorType implements ScalarOperatorType {
 
     MULTIPLICATION("*", Priorities.MULTIPLICATION_PRIORITY) {
         @Override
-        public int operands() {
+        public int getRequiredOperands() {
             return BINARY;
         }
 
@@ -60,7 +60,7 @@ public enum OperatorType implements ScalarOperatorType {
 
     DIVISION("/", Priorities.MULTIPLICATION_PRIORITY) {
         @Override
-        public int operands() {
+        public int getRequiredOperands() {
             return BINARY;
         }
 
@@ -77,7 +77,7 @@ public enum OperatorType implements ScalarOperatorType {
 
     EXPONENT("**", Priorities.EXPONENT_PRIORITY) {
         @Override
-        public int operands() {
+        public int getRequiredOperands() {
             return BINARY;
         }
 
@@ -94,7 +94,7 @@ public enum OperatorType implements ScalarOperatorType {
 
     AND("&", Priorities.AND_PRIORITY) {
         @Override
-        public int operands() {
+        public int getRequiredOperands() {
             return BINARY;
         }
 
@@ -111,7 +111,7 @@ public enum OperatorType implements ScalarOperatorType {
 
     OR("|", Priorities.OR_PRIORITY) {
         @Override
-        public int operands() {
+        public int getRequiredOperands() {
             return BINARY;
         }
 
@@ -128,7 +128,7 @@ public enum OperatorType implements ScalarOperatorType {
 
     XOR("^", Priorities.XOR_PRIORITY) {
         @Override
-        public int operands() {
+        public int getRequiredOperands() {
             return BINARY;
         }
 
@@ -145,7 +145,7 @@ public enum OperatorType implements ScalarOperatorType {
 
     NOT("!", Priorities.UNARY_PRIORITY) {
         @Override
-        public int operands() {
+        public int getRequiredOperands() {
             return UNARY;
         }
 
@@ -162,7 +162,7 @@ public enum OperatorType implements ScalarOperatorType {
 
     BITWISE_NOT("~", Priorities.UNARY_PRIORITY) {
         @Override
-        public int operands() {
+        public int getRequiredOperands() {
             return UNARY;
         }
 
@@ -179,7 +179,7 @@ public enum OperatorType implements ScalarOperatorType {
 
     LEFT_SHIFT("<<", Priorities.SHIFT_PRIORITY) {
         @Override
-        public int operands() {
+        public int getRequiredOperands() {
             return BINARY;
         }
 
@@ -194,9 +194,26 @@ public enum OperatorType implements ScalarOperatorType {
         }
     },
 
+    RIGHT_UNSIGNED_SHIFT(">>>", Priorities.SHIFT_PRIORITY) {
+        @Override
+        public Association getAssociation() {
+            return Association.LEFT;
+        }
+
+        @Override
+        public Double apply(List<Double> operands) {
+            return (double) (operands.get(0).longValue() >>> operands.get(1).longValue());
+        }
+
+        @Override
+        public int getRequiredOperands() {
+            return BINARY;
+        }
+    },
+
     RIGHT_SHIFT(">>", Priorities.SHIFT_PRIORITY) {
         @Override
-        public int operands() {
+        public int getRequiredOperands() {
             return BINARY;
         }
 
@@ -213,7 +230,7 @@ public enum OperatorType implements ScalarOperatorType {
 
     EQUALS("==", Priorities.COMPARISON_PRIORITY) {
         @Override
-        public int operands() {
+        public int getRequiredOperands() {
             return BINARY;
         }
 
@@ -230,7 +247,7 @@ public enum OperatorType implements ScalarOperatorType {
 
     NOT_EQUALS("!=", Priorities.COMPARISON_PRIORITY) {
         @Override
-        public int operands() {
+        public int getRequiredOperands() {
             return BINARY;
         }
 
@@ -247,7 +264,7 @@ public enum OperatorType implements ScalarOperatorType {
 
     GREATER(">", Priorities.COMPARISON_PRIORITY) {
         @Override
-        public int operands() {
+        public int getRequiredOperands() {
             return BINARY;
         }
 
@@ -264,7 +281,7 @@ public enum OperatorType implements ScalarOperatorType {
 
     LESS("<", Priorities.COMPARISON_PRIORITY) {
         @Override
-        public int operands() {
+        public int getRequiredOperands() {
             return BINARY;
         }
 
@@ -281,7 +298,7 @@ public enum OperatorType implements ScalarOperatorType {
 
     GREATER_OR_EQUALS(">=", Priorities.COMPARISON_PRIORITY) {
         @Override
-        public int operands() {
+        public int getRequiredOperands() {
             return BINARY;
         }
 
@@ -298,7 +315,7 @@ public enum OperatorType implements ScalarOperatorType {
 
     LESS_OR_EQUALS("<=", Priorities.COMPARISON_PRIORITY) {
         @Override
-        public int operands() {
+        public int getRequiredOperands() {
             return BINARY;
         }
 

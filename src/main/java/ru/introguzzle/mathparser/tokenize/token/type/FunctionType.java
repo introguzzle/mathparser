@@ -1,5 +1,7 @@
 package ru.introguzzle.mathparser.tokenize.token.type;
 
+import ru.introguzzle.mathparser.operator.Priorities;
+
 public enum FunctionType implements Priorable, Type {
     FUNCTION;
 

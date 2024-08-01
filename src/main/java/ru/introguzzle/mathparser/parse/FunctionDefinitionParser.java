@@ -61,12 +61,12 @@ public class FunctionDefinitionParser implements Parser<Double> {
 
         FunctionTokensProxy proxy = tokenizer.tokenize(definition, context);
         double value = parse(proxy, context);
-        FunctionDefinitionType type = proxy.getType();
+        FunctionDefinitionType type = proxy.type();
 
         return new ParserResult(value, type);
     }
 
     private double parse(FunctionTokensProxy proxy, Context context) throws SyntaxException {
-        return parse(proxy.getTokens(), context);
+        return parse(proxy.tokens(), context);
     }
 }

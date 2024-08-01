@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.common.Nameable;
 import ru.introguzzle.mathparser.operator.Operator;
 import ru.introguzzle.mathparser.tokenize.token.type.FunctionType;
-import ru.introguzzle.mathparser.tokenize.token.type.Priorities;
+import ru.introguzzle.mathparser.operator.Priorities;
 import ru.introguzzle.mathparser.tokenize.token.type.Type;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public interface Function extends java.util.function.Function<List<Double>, Doub
             }
 
             @Override
-            public int operands() {
+            public int getRequiredOperands() {
                 return getRequiredArguments();
             }
 

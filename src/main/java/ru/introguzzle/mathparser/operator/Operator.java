@@ -8,8 +8,8 @@ import java.util.function.Function;
 public interface Operator<T extends Number> extends Priorable, Function<List<T>, T> {
     int VARIADIC = -1;
 
-    int operands();
+    int getRequiredOperands();
     default boolean isVariadic() {
-        return operands() == VARIADIC;
+        return getRequiredOperands() == VARIADIC;
     }
 }

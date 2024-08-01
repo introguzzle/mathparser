@@ -4,7 +4,6 @@ import java.util.List;
 
 public class NaturalRoot extends AbstractFunction {
 
-
     public NaturalRoot() {
         super("root", 2);
     }
