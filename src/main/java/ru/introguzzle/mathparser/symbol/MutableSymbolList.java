@@ -8,7 +8,7 @@ import java.util.*;
 
 public abstract class MutableSymbolList<T extends MutableSymbol> {
 
-    private final Map<String, T> map = new HashMap<>();
+    private final Map<String, T> values = new HashMap<>();
 
     public MutableSymbolList() {
     }
@@ -27,48 +27,48 @@ public abstract class MutableSymbolList<T extends MutableSymbol> {
     }
 
     private void checkUnique(@NotNull T item) {
-        if (map.containsKey(item.getName())) {
-            throw new NotUniqueNamingException(item.getName(), map.keySet());
+        if (values.containsKey(item.getName())) {
+            throw new NotUniqueNamingException(item.getName(), values.keySet());
         }
     }
 
     public Optional<? extends T> find(@NotNull String name) {
-        return Optional.ofNullable(map.getOrDefault(name, null));
+        return Optional.ofNullable(values.getOrDefault(name, null));
     }
 
     public void setValue(@NotNull String name, double value) {
         find(name)
-                .orElseThrow(() -> new NoSuchNameException(name, map.keySet()))
+                .orElseThrow(() -> new NoSuchNameException(name, values.keySet()))
                 .setValue(value);
     }
 
     public void add(T item) {
         checkUnique(item);
-        map.put(item.getName(), item);
+        values.put(item.getName(), item);
     }
 
     public void addAll(MutableSymbolList<? extends T> items) {
-        map.putAll(items.map);
+        values.putAll(items.values);
     }
 
     public void clear() {
-        map.clear();
+        values.clear();
     }
 
     public boolean remove(T item) {
-        return map.remove(item.getName()) != null;
+        return values.remove(item.getName()) != null;
     }
 
     public boolean remove(String name) {
-        return map.remove(name) != null;
+        return values.remove(name) != null;
     }
 
-    public Map<String, T> getMap() {
-        return map;
+    public Map<String, T> getValues() {
+        return values;
     }
 
     public Set<String> getNames() {
-        return new HashSet<>(map.keySet());
+        return new HashSet<>(values.keySet());
     }
 
     @Override
@@ -76,20 +76,20 @@ public abstract class MutableSymbolList<T extends MutableSymbol> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MutableSymbolList<?> that = (MutableSymbolList<?>) o;
-        return size() == that.size() && Objects.equals(map, that.map);
+        return size() == that.size() && Objects.equals(values, that.values);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(map);
+        return Objects.hash(values);
     }
 
     @Override
     public String toString() {
-        return map.toString();
+        return values.toString();
     }
 
     public int size() {
-        return map.size();
+        return values.size();
     }
 }

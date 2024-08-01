@@ -1,5 +1,7 @@
 package ru.introguzzle.mathparser.symbol;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
@@ -17,7 +19,7 @@ public abstract class ImmutableSymbol implements Symbol<Double>, Serializable {
         this.value = value;
     }
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return name;
     }
 

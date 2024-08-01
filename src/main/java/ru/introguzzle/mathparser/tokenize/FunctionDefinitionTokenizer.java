@@ -84,7 +84,7 @@ public abstract class FunctionDefinitionTokenizer
             context.setParent(new NamingContext());
         }
 
-        MutableSymbol symbol = context.getSymbols().getMap().values()
+        MutableSymbol symbol = context.getSymbols().getValues().values()
                 .stream()
                 .filter(Nameable.match(symbols))
                 .findFirst()

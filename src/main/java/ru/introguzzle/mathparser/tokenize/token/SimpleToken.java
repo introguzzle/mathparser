@@ -1,6 +1,7 @@
 package ru.introguzzle.mathparser.tokenize.token;
 
 import org.jetbrains.annotations.NotNull;
+import ru.introguzzle.mathparser.tokenize.token.type.Type;
 
 import java.io.Serial;
 import java.io.Serializable;

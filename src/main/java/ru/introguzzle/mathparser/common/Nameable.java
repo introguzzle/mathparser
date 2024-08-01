@@ -1,12 +1,17 @@
 package ru.introguzzle.mathparser.common;
 
-import ru.introguzzle.mathparser.tokenize.token.Type;
+import org.jetbrains.annotations.NotNull;
+import ru.introguzzle.mathparser.tokenize.token.type.Type;
+
+import java.util.Collection;
+import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public interface Nameable extends Cloneable {
-    String getName();
+    @NotNull String getName();
 
-    default String describe() {
+    @NotNull default String describe() {
         return getClass().getSimpleName();
     }
 
@@ -22,7 +27,11 @@ public interface Nameable extends Cloneable {
         return s -> s.contentEquals(nameable.getName());
     }
 
-    Type type();
+    static Map<String, Nameable> toMap(Collection<? extends Nameable> nameables) {
+        return nameables.stream().collect(Collectors.toMap(Nameable::getName, n -> n));
+    }
+
+    @NotNull Type type();
 
     boolean equals(Object o);
 }

@@ -16,6 +16,7 @@ import ru.introguzzle.mathparser.constant.ConstantReflector;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.function.FunctionReflector;
 import ru.introguzzle.mathparser.tokenize.token.*;
+import ru.introguzzle.mathparser.tokenize.token.type.*;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -147,7 +148,6 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return this;
     }
 
-
     public MathTokenizer clearFunctions() {
         nameableMap.entrySet()
                 .removeIf(entry -> entry.getValue() instanceof Function);
@@ -170,7 +170,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
         Buffer buffer = new Buffer(iterator, expression, context);
 
         if (expression.getString().isBlank() || expression.getString().isEmpty()) {
-            return new SimpleTokens(new SimpleToken(TokenType.EOF, " ", 0));
+            return new SimpleTokens(new SimpleToken(TerminalType.TERMINAL, " ", 0));
         }
 
         if (expression instanceof FunctionDefinition definition) {
@@ -185,12 +185,12 @@ public class MathTokenizer implements Tokenizer, Serializable {
                     iterator.next();
                     continue;
                 case '(':
-                    tokens.add(TokenType.LEFT_PARENTHESIS, current, iterator.getCursor());
+                    tokens.add(ParenthesisType.LEFT, current, iterator.getCursor());
                     parenthesisStack.push(current);
                     iterator.next();
                     continue;
                 case ')':
-                    tokens.add(TokenType.RIGHT_PARENTHESIS, current, iterator.getCursor());
+                    tokens.add(ParenthesisType.RIGHT, current, iterator.getCursor());
                     if (parenthesisStack.isEmpty()) {
                         throw new IllegalBracketStartException(expression, iterator.getCursor());
                     } else {
@@ -219,7 +219,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
                     iterator.next();
                     continue;
                 case ',':
-                    tokens.add(TokenType.COMMA, current, iterator.getCursor());
+                    tokens.add(SpecialType.COMMA, current, iterator.getCursor());
                     iterator.next();
                     continue;
                 default:
@@ -249,12 +249,12 @@ public class MathTokenizer implements Tokenizer, Serializable {
             throw new BracketMismatchException(expression, iterator.getCursor());
         }
 
-        tokens.add(TokenType.EOF, "", iterator.getCursor());
+        tokens.add(TerminalType.TERMINAL, "", iterator.getCursor());
         return tokens;
     }
 
     @Override
-    public List<ImmutableSymbol> getConstants() {
+    public @NotNull List<ImmutableSymbol> getConstants() {
         return nameableMap.values()
                 .stream()
                 .filter(n -> n instanceof ImmutableSymbol)
@@ -263,7 +263,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
     }
 
     @Override
-    public List<Function> getFunctions() {
+    public @NotNull List<Function> getFunctions() {
         return nameableMap.values()
                 .stream()
                 .filter(n -> n instanceof Function)
@@ -281,7 +281,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
 
         buffer.iterator.setCursor(split);
         return new SimpleToken(
-                TokenType.DECLARATION,
+                DeclarationType.DECLARATION,
                 definition.getString().substring(split),
                 0
         );
@@ -304,7 +304,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
             current = iterator.current();
         }
 
-        return new SimpleToken(TokenType.NUMBER, number, start);
+        return new SimpleToken(NumberType.NUMBER, number, start);
     }
 
     protected Token handleOperator(Buffer buffer)
@@ -316,52 +316,52 @@ public class MathTokenizer implements Tokenizer, Serializable {
         final int offset = iterator.getCursor();
 
         return switch (current) {
-            case '+' -> new SimpleToken(TokenType.OPERATOR_ADD, current, offset);
-            case '-' -> new SimpleToken(TokenType.OPERATOR_SUB, current, offset);
+            case '+' -> OperatorType.ADDITION.getToken(offset);
+            case '-' -> OperatorType.SUBTRACTION.getToken(offset);
             case '*' -> {
                 if (next != null && next == '*') {
                     iterator.next();
-                    yield new SimpleToken(TokenType.OPERATOR_EXP, "**", offset);
+                    yield OperatorType.EXPONENT.getToken(offset);
                 }
 
-                yield new SimpleToken(TokenType.OPERATOR_MUL, current, offset);
+                yield OperatorType.MULTIPLICATION.getToken(offset);
             }
-            case '/' -> new SimpleToken(TokenType.OPERATOR_DIV, current, offset);
-            case '^' -> new SimpleToken(TokenType.OPERATOR_XOR, current, offset);
-            case '&' -> new SimpleToken(TokenType.OPERATOR_AND, current, offset);
-            case '|' -> new SimpleToken(TokenType.OPERATOR_OR, current, offset);
-            case '~' -> new SimpleToken(TokenType.OPERATOR_BITWISE_NOT, current, offset);
+            case '/' -> OperatorType.DIVISION.getToken(offset);
+            case '^' -> OperatorType.XOR.getToken(offset);
+            case '&' -> OperatorType.AND.getToken(offset);
+            case '|' -> OperatorType.OR.getToken(offset);
+            case '~' -> OperatorType.BITWISE_NOT.getToken(offset);
             case '<' -> {
                 if (next != null && next == '<') {
                     iterator.next();
-                    yield new SimpleToken(TokenType.OPERATOR_LEFT_SHIFT, "<<", offset);
+                    yield OperatorType.LEFT_SHIFT.getToken(offset);
                 } else if (iterator.peekNext() == '=') {
                     iterator.next();
-                    yield new SimpleToken(TokenType.OPERATOR_LESS_OR_EQUALS, "<=", offset);
+                    yield OperatorType.LESS_OR_EQUALS.getToken(offset);
                 }
 
-                yield new SimpleToken(TokenType.OPERATOR_LESS, current, offset);
+                yield OperatorType.LESS.getToken(offset);
             }
             case '>' -> {
                 if (next != null && next == '>') {
                     iterator.next();
-                    yield new SimpleToken(TokenType.OPERATOR_RIGHT_SHIFT, ">>", offset);
+                    yield OperatorType.RIGHT_SHIFT.getToken(offset);
 
                 } else if (next != null && next == '=') {
                     iterator.next();
-                    yield new SimpleToken(TokenType.OPERATOR_GREATER_OR_EQUALS, ">=", offset);
+                    yield OperatorType.GREATER_OR_EQUALS.getToken(offset);
                 }
 
-                yield new SimpleToken(TokenType.OPERATOR_GREATER, current, offset);
+                yield OperatorType.GREATER.getToken(offset);
             }
             case '=' -> {
                 if (next != null && next == '=') {
                     iterator.next();
-                    yield new SimpleToken(TokenType.OPERATOR_EQUALS, "==", offset);
+                    yield OperatorType.EQUALS.getToken(offset);
                 }
 
                 if (buffer.expression instanceof FunctionDefinition) {
-                    yield new SimpleToken(TokenType.DECLARATION_END, current, offset);
+                    yield new SimpleToken(DeclarationType.DECLARATION_TERMINAL, current, offset);
                 } else {
                     throw new FunctionDefinitionException("Declaration is not allowed", buffer.expression, offset);
                 }
@@ -369,10 +369,10 @@ public class MathTokenizer implements Tokenizer, Serializable {
             case '!' -> {
                 if (next != null && next == '=') {
                     iterator.next();
-                    yield new SimpleToken(TokenType.OPERATOR_NOT_EQUALS, "!=", offset);
+                    yield OperatorType.NOT_EQUALS.getToken(offset);
                 }
 
-                yield new SimpleToken(TokenType.OPERATOR_NOT, "!", offset);
+                yield OperatorType.NOT.getToken(offset);
             }
 
             default -> throw new UnknownOperatorException(current, buffer.expression, offset);
@@ -430,7 +430,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
         Result result = new Result();
 
         context.getSymbols()
-                .getMap()
+                .getValues()
                 .values()
                 .stream()
                 .parallel()

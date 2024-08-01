@@ -1,10 +1,14 @@
-package ru.introguzzle.mathparser.tokenize.token;
+package ru.introguzzle.mathparser.tokenize.token.type;
 
 public interface Type {
     int ordinal();
     Category getCategory();
 
     String name();
+
+    default boolean isTerminal() {
+        return getCategory().isTerminal();
+    }
 
     enum Category implements Type {
         OPERATOR,
@@ -13,11 +17,17 @@ public interface Type {
         SPECIAL,
         FUNCTION,
         DECLARATION,
-        SYMBOL;
+        SYMBOL,
+        TERMINAL,
+        COMMA;
 
         @Override
         public Category getCategory() {
             return this;
+        }
+
+        public boolean isTerminal() {
+            return this == TERMINAL;
         }
     }
 }

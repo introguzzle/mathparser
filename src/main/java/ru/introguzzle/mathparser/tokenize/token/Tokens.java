@@ -1,6 +1,7 @@
 package ru.introguzzle.mathparser.tokenize.token;
 
 import ru.introguzzle.mathparser.expression.Expression;
+import ru.introguzzle.mathparser.tokenize.token.type.Type;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface Tokens extends Iterable<Token> {
     Token getNextToken();
     void returnBack();
     int getPosition();
-    List<Token> getTokens();
+    List<Token> getTokenList();
     int getVariableCount();
     int getConstantCount();
     int getCoefficientCount();

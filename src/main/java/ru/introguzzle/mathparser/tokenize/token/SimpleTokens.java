@@ -3,6 +3,9 @@ package ru.introguzzle.mathparser.tokenize.token;
 import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.expression.MathExpression;
+import ru.introguzzle.mathparser.tokenize.token.type.DeclarationType;
+import ru.introguzzle.mathparser.tokenize.token.type.SymbolType;
+import ru.introguzzle.mathparser.tokenize.token.type.Type;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -74,7 +77,7 @@ public class SimpleTokens implements Tokens, Serializable {
     }
 
     @Override
-    public List<Token> getTokens() {
+    public List<Token> getTokenList() {
         return tokens;
     }
 
@@ -96,7 +99,7 @@ public class SimpleTokens implements Tokens, Serializable {
     @Override
     public void skipDeclaration() {
         for (int i = 0; i < tokens.size(); i++) {
-            if (tokens.get(i).getType() == TokenType.DECLARATION_END) {
+            if (tokens.get(i).getType() == DeclarationType.DECLARATION_TERMINAL) {
                 this.position = i + 1;
                 break;
             }
@@ -105,7 +108,7 @@ public class SimpleTokens implements Tokens, Serializable {
 
     private int computeVariableCount() {
         variableCount = (int) tokens.stream()
-                .filter(token -> token.getType() == TokenType.VARIABLE)
+                .filter(token -> token.getType() == SymbolType.VARIABLE)
                 .count();
 
         return variableCount;
@@ -113,7 +116,7 @@ public class SimpleTokens implements Tokens, Serializable {
 
     private int computeConstantCount() {
         constantCount = (int) tokens.stream()
-                .filter(token -> token.getType() == TokenType.CONSTANT)
+                .filter(token -> token.getType() == SymbolType.CONSTANT)
                 .count();
 
         return constantCount;
@@ -121,7 +124,7 @@ public class SimpleTokens implements Tokens, Serializable {
 
     private int computeCoefficientCount() {
         coefficientCount = (int) tokens.stream()
-                .filter(token -> token.getType() == TokenType.COEFFICIENT)
+                .filter(token -> token.getType() == SymbolType.COEFFICIENT)
                 .count();
 
         return coefficientCount;

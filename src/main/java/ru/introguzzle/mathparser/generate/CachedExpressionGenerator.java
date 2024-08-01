@@ -6,6 +6,7 @@ import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.expression.MathExpression;
 import ru.introguzzle.mathparser.tokenize.*;
 import ru.introguzzle.mathparser.tokenize.token.*;
+import ru.introguzzle.mathparser.tokenize.token.type.NumberType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class CachedExpressionGenerator implements Generator<Expression> {
             Tokens changed = swapNumbers(tokens);
 
             return new MathExpression(
-                    changed.getTokens()
+                    changed.getTokenList()
                     .stream()
                     .map(t -> t.getData() + " ")
                     .collect(Collectors.joining())
@@ -56,9 +57,9 @@ public class CachedExpressionGenerator implements Generator<Expression> {
         List<Token> result = new ArrayList<>();
 
         for (Token token: tokens) {
-            if (token.getType() == TokenType.NUMBER) {
+            if (token.getType() == NumberType.NUMBER) {
                 float f = Random.randomFloat(options.min, options.max);
-                result.add(new SimpleToken(TokenType.NUMBER, Float.toString(f), token.getOffset()));
+                result.add(new SimpleToken(NumberType.NUMBER, Float.toString(f), token.getOffset()));
                 continue;
             }
 

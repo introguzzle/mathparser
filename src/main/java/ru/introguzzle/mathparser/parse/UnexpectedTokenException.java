@@ -11,4 +11,12 @@ public class UnexpectedTokenException extends ParseException {
                 token.getOffset()
         );
     }
+
+    public UnexpectedTokenException(Tokens tokens, int position) {
+        super(
+                "Unexpected token: '" + tokens.get(position).getType() + "' at pos " + position + " in expression",
+                tokens.toExpression(),
+                tokens.get(position).getOffset()
+        );
+    }
 }

@@ -1,8 +1,9 @@
 package ru.introguzzle.mathparser.constant;
 
+import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.symbol.ImmutableSymbol;
-import ru.introguzzle.mathparser.tokenize.token.TokenType;
-import ru.introguzzle.mathparser.tokenize.token.Type;
+import ru.introguzzle.mathparser.tokenize.token.type.SymbolType;
+import ru.introguzzle.mathparser.tokenize.token.type.Type;
 
 public abstract class Constant extends ImmutableSymbol {
 
@@ -11,7 +12,7 @@ public abstract class Constant extends ImmutableSymbol {
     }
 
     @Override
-    public Type type() {
-        return TokenType.CONSTANT;
+    public @NotNull Type type() {
+        return SymbolType.CONSTANT;
     }
 }

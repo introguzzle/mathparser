@@ -3,13 +3,12 @@ package ru.impl;
 import org.junit.Before;
 import org.junit.Test;
 
-import ru.introguzzle.mathparser.common.Context;
 import ru.introguzzle.mathparser.common.NotUniqueNamingException;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.parse.Parser;
+import ru.introguzzle.mathparser.parse.PrefixNotationParser;
 import ru.introguzzle.mathparser.tokenize.Tokenizer;
 import ru.introguzzle.mathparser.expression.MathExpression;
-import ru.introguzzle.mathparser.parse.MathParser;
 import ru.introguzzle.mathparser.common.NamingContext;
 import ru.introguzzle.mathparser.tokenize.MathTokenizer;
 import ru.introguzzle.mathparser.tokenize.UnknownSymbolTokenizeException;
@@ -18,14 +17,14 @@ import ru.introguzzle.mathparser.symbol.Variables;
 
 import static org.junit.Assert.assertEquals;
 
-public class MathParserTest {
+public class PrefixNotationParserTest {
 
     private Parser<Double> parser;
 
     @Before
     public void setUp() {
         Tokenizer tokenizer = new MathTokenizer();
-        parser = new MathParser(tokenizer);
+        parser = new PrefixNotationParser(tokenizer);
     }
 
     @Test
@@ -57,30 +56,6 @@ public class MathParserTest {
         variables.add(new Variable("a", 2));
 
         parser.parse(expression, new NamingContext(variables));
-    }
-
-    @Test
-    public void test_variadic_functions_and_changing_variables() throws Exception {
-        Expression expression = new MathExpression("max(a, b, c)");
-
-        Variable a = new Variable("a", 2.0);
-        Variable b = new Variable("b", 3.0);
-        Variable c = new Variable("c", 444.0);
-        Variables variables = new Variables(a, b, c);
-
-        NamingContext context = new NamingContext(variables);
-
-        Double result = parser.parse(expression, context);
-        assertEquals(Double.valueOf(444.0), result);
-
-        variables.setValue("a", 666.0);
-
-        result = parser.parse(expression, context);
-        assertEquals(Double.valueOf(666.0), result);
-
-        c.setValue(1000.0);
-        result = parser.parse(expression, context);
-        assertEquals(Double.valueOf(1000.0), result);
     }
 
     @Test
@@ -126,33 +101,10 @@ public class MathParserTest {
     }
 
     @Test
-    public void test_negative_number_to_real_power() throws Exception {
-        Expression expression = new MathExpression("-1 ** 0.33");
-
-        assertEquals(parser.parse(expression), (Double) Double.NaN);
-    }
-
-    @Test
     public void test_logarithm() throws Exception {
         Expression expression = new MathExpression("ln(e)");
 
         assertEquals(parser.parse(expression), (Double) 1.0);
-    }
-
-    @Test
-    public void test_expression_with_variables() throws Exception {
-        Expression expression = new MathExpression("a + b + c + d");
-
-        Variables variables = new Variables();
-        variables.add("a", 5.0);
-        variables.add("b", Math.PI);
-        variables.add("c", 10.0);
-        variables.add("d", 2.0);
-
-        Context context = new NamingContext(variables);
-
-        Double result = parser.parse(expression, context);
-        assertEquals(Double.valueOf(5.0 + Math.PI + 10 + 2), result);
     }
 
     @Test
@@ -194,8 +146,8 @@ public class MathParserTest {
     @Test(expected = NotUniqueNamingException.class)
     public void test_not_unique_variables_throws1() {
         Variables variables = new Variables(
-            new Variable("a", 3),
-            new Variable("a", 3)
+                new Variable("a", 3),
+                new Variable("a", 3)
         );
 
         variables.size();

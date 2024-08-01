@@ -3,6 +3,7 @@ package ru.introguzzle.mathparser.tokenize.token;
 import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.definition.FunctionDefinitionType;
 import ru.introguzzle.mathparser.expression.Expression;
+import ru.introguzzle.mathparser.tokenize.token.type.Type;
 
 import java.util.Iterator;
 import java.util.List;
@@ -59,8 +60,12 @@ public class FunctionTokensProxy implements Tokens {
     }
 
     @Override
-    public List<Token> getTokens() {
-        return tokens.getTokens();
+    public List<Token> getTokenList() {
+        return tokens.getTokenList();
+    }
+
+    public Tokens getTokens() {
+        return tokens;
     }
 
     @Override

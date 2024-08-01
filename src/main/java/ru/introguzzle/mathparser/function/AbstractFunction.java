@@ -1,5 +1,7 @@
 package ru.introguzzle.mathparser.function;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public abstract class AbstractFunction implements Function {
@@ -13,7 +15,7 @@ public abstract class AbstractFunction implements Function {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return this.name;
     }
 

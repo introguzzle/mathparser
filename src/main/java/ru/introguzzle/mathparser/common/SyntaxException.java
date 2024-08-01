@@ -11,7 +11,7 @@ public abstract class SyntaxException extends Exception {
         this.expression = expression;
     }
 
-    public Expression getExpression() {
+    public final Expression getExpression() {
         return expression;
     }
 }

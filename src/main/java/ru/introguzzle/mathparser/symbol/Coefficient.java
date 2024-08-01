@@ -1,7 +1,8 @@
 package ru.introguzzle.mathparser.symbol;
 
-import ru.introguzzle.mathparser.tokenize.token.TokenType;
-import ru.introguzzle.mathparser.tokenize.token.Type;
+import org.jetbrains.annotations.NotNull;
+import ru.introguzzle.mathparser.tokenize.token.type.SymbolType;
+import ru.introguzzle.mathparser.tokenize.token.type.Type;
 
 public class Coefficient extends MutableSymbol {
 
@@ -10,7 +11,7 @@ public class Coefficient extends MutableSymbol {
     }
 
     @Override
-    public Type type() {
-        return TokenType.COEFFICIENT;
+    public @NotNull Type type() {
+        return SymbolType.COEFFICIENT;
     }
 }
