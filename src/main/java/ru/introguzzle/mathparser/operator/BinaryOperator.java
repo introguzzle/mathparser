@@ -1,8 +1,8 @@
 package ru.introguzzle.mathparser.operator;
 
-public interface BinaryOperator<T extends Number> extends Operator<T> {
+public interface BinaryOperator extends Operator {
     @Override
     default int getRequiredOperands() {
-        return 2;
+        return BINARY;
     }
 }

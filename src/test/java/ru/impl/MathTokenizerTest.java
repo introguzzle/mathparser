@@ -8,7 +8,7 @@ import ru.introguzzle.mathparser.constant.Constant;
 import ru.introguzzle.mathparser.constant.ConstantReflector;
 import ru.introguzzle.mathparser.definition.FunctionDefinition;
 import ru.introguzzle.mathparser.function.FunctionReflector;
-import ru.introguzzle.mathparser.operator.OperatorType;
+import ru.introguzzle.mathparser.tokenize.token.type.OperatorType;
 import ru.introguzzle.mathparser.symbol.Coefficient;
 import ru.introguzzle.mathparser.tokenize.*;
 import ru.introguzzle.mathparser.expression.Expression;
@@ -53,13 +53,13 @@ public class MathTokenizerTest {
         assertEquals(NumberType.NUMBER, tokens.get(0).getType());
         assertEquals("2", tokens.get(0).getData());
 
-        assertEquals(OperatorType.EXPONENT, tokens.get(1).getType());
+        assertEquals(OperatorType.OPERATOR, tokens.get(1).getType());
         assertEquals("**", tokens.get(1).getData());
 
         assertEquals(NumberType.NUMBER, tokens.get(2).getType());
         assertEquals("3", tokens.get(2).getData());
 
-        assertEquals(OperatorType.MULTIPLICATION, tokens.get(3).getType());
+        assertEquals(OperatorType.OPERATOR, tokens.get(3).getType());
         assertEquals("*", tokens.get(3).getData());
 
         assertEquals(ParenthesisType.LEFT, tokens.get(4).getType());
@@ -87,7 +87,7 @@ public class MathTokenizerTest {
         assertEquals(NumberType.NUMBER, tokens.get(0).getType());
         assertEquals("2", tokens.get(0).getData());
 
-        assertEquals(OperatorType.ADDITION, tokens.get(1).getType());
+        assertEquals(OperatorType.OPERATOR, tokens.get(1).getType());
         assertEquals("+", tokens.get(1).getData());
 
         assertEquals(NumberType.NUMBER, tokens.get(2).getType());
@@ -117,7 +117,7 @@ public class MathTokenizerTest {
         assertEquals(ParenthesisType.RIGHT, tokens.get(3).getType());
         assertEquals(")", tokens.get(3).getData());
 
-        assertEquals(OperatorType.ADDITION, tokens.get(4).getType());
+        assertEquals(OperatorType.OPERATOR, tokens.get(4).getType());
         assertEquals("+", tokens.get(4).getData());
 
         assertEquals(FunctionType.FUNCTION, tokens.get(5).getType());
@@ -157,7 +157,7 @@ public class MathTokenizerTest {
         assertEquals(SymbolType.VARIABLE, tokens.get(0).getType());
         assertEquals("x", tokens.get(0).getData());
 
-        assertEquals(OperatorType.ADDITION, tokens.get(1).getType());
+        assertEquals(OperatorType.OPERATOR, tokens.get(1).getType());
         assertEquals("+", tokens.get(1).getData());
 
         assertEquals(SymbolType.COEFFICIENT, tokens.get(2).getType());
@@ -237,7 +237,7 @@ public class MathTokenizerTest {
         assertEquals(NumberType.NUMBER, tokens.get(0).getType());
         assertEquals("2.344", tokens.get(0).getData());
 
-        assertEquals(OperatorType.MULTIPLICATION, tokens.get(1).getType());
+        assertEquals(OperatorType.OPERATOR, tokens.get(1).getType());
         assertEquals("*", tokens.get(1).getData());
 
         assertEquals(TerminalType.TERMINAL, tokens.get(2).getType());
@@ -340,25 +340,25 @@ public class MathTokenizerTest {
         assertEquals(NumberType.NUMBER, tokens.get(0).getType());
         assertEquals("1", tokens.get(0).getData());
 
-        assertEquals(OperatorType.RIGHT_SHIFT, tokens.get(1).getType());
+        assertEquals(OperatorType.OPERATOR, tokens.get(1).getType());
         assertEquals(">>", tokens.get(1).getData());
 
         assertEquals(NumberType.NUMBER, tokens.get(2).getType());
         assertEquals("2", tokens.get(2).getData());
 
-        assertEquals(OperatorType.OR, tokens.get(3).getType());
+        assertEquals(OperatorType.OPERATOR, tokens.get(3).getType());
         assertEquals("|", tokens.get(3).getData());
 
         assertEquals(NumberType.NUMBER, tokens.get(4).getType());
         assertEquals("3", tokens.get(4).getData());
 
-        assertEquals(OperatorType.AND, tokens.get(5).getType());
+        assertEquals(OperatorType.OPERATOR, tokens.get(5).getType());
         assertEquals("&", tokens.get(5).getData());
 
         assertEquals(NumberType.NUMBER, tokens.get(6).getType());
         assertEquals("4", tokens.get(6).getData());
 
-        assertEquals(OperatorType.LEFT_SHIFT, tokens.get(7).getType());
+        assertEquals(OperatorType.OPERATOR, tokens.get(7).getType());
         assertEquals("<<", tokens.get(7).getData());
 
         assertEquals(NumberType.NUMBER, tokens.get(8).getType());
@@ -378,25 +378,25 @@ public class MathTokenizerTest {
         assertEquals(NumberType.NUMBER, tokens.get(0).getType());
         assertEquals("0", tokens.get(0).getData());
 
-        assertEquals(OperatorType.LESS, tokens.get(1).getType());
+        assertEquals(OperatorType.OPERATOR, tokens.get(1).getType());
         assertEquals("<", tokens.get(1).getData());
 
         assertEquals(NumberType.NUMBER, tokens.get(2).getType());
         assertEquals("1", tokens.get(2).getData());
 
-        assertEquals(OperatorType.LESS_OR_EQUALS, tokens.get(3).getType());
+        assertEquals(OperatorType.OPERATOR, tokens.get(3).getType());
         assertEquals("<=", tokens.get(3).getData());
 
         assertEquals(NumberType.NUMBER, tokens.get(4).getType());
         assertEquals("2", tokens.get(4).getData());
 
-        assertEquals(OperatorType.GREATER_OR_EQUALS, tokens.get(5).getType());
+        assertEquals(OperatorType.OPERATOR, tokens.get(5).getType());
         assertEquals(">=", tokens.get(5).getData());
 
         assertEquals(NumberType.NUMBER, tokens.get(6).getType());
         assertEquals("3", tokens.get(6).getData());
 
-        assertEquals(OperatorType.GREATER, tokens.get(7).getType());
+        assertEquals(OperatorType.OPERATOR, tokens.get(7).getType());
         assertEquals(">", tokens.get(7).getData());
 
         assertEquals(NumberType.NUMBER, tokens.get(8).getType());

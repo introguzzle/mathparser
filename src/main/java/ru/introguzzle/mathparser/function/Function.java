@@ -23,26 +23,31 @@ public interface Function extends java.util.function.Function<List<Double>, Doub
         return FunctionType.FUNCTION;
     }
 
-    default Operator<Double> toOperator() {
-        return new Operator<>() {
-            @Override
-            public int getPriority() {
-                return Priorities.FUNCTION_PRIORITY;
-            }
-
+    default Operator toOperator() {
+        return new Operator() {
             @Override
             public int getRequiredOperands() {
-                return getRequiredArguments();
+                return Function.this.getRequiredArguments();
             }
 
             @Override
-            public Double apply(List<Double> arguments) {
-                return Function.this.apply(arguments);
+            public Double apply(List<Double> doubles) {
+                return Function.this.apply(doubles);
+            }
+
+            @Override
+            public @NotNull String getName() {
+                return Function.this.getName();
             }
 
             @Override
             public Association getAssociation() {
                 return Association.LEFT;
+            }
+
+            @Override
+            public int getPriority() {
+                return Priorities.FUNCTION_PRIORITY;
             }
         };
     }

@@ -1,21 +1,16 @@
 package ru.introguzzle.mathparser.tokenize.token.type;
 
 import org.jetbrains.annotations.NotNull;
-import ru.introguzzle.mathparser.operator.Priorities;
+import ru.introguzzle.mathparser.common.Nameable;
 
-public enum ParenthesisType implements ScalarType, Priorable {
+public enum ParenthesisType implements Type, Nameable {
     LEFT("("),
     RIGHT(")");
 
-    private final String representation;
+    private final String name;
 
-    ParenthesisType(String representation) {
-        this.representation = representation;
-    }
-
-    @Override
-    public @NotNull String getRepresentation() {
-        return representation;
+    ParenthesisType(String name) {
+        this.name = name;
     }
 
     @Override
@@ -24,12 +19,12 @@ public enum ParenthesisType implements ScalarType, Priorable {
     }
 
     @Override
-    public int getPriority() {
-        return Priorities.PARENTHESIS_PRIORITY;
+    public @NotNull String getName() {
+        return name;
     }
 
     @Override
-    public Association getAssociation() {
-        return Association.NONE;
+    public @NotNull Type type() {
+        return this;
     }
 }

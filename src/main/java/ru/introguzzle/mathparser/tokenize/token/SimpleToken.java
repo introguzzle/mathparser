@@ -19,6 +19,10 @@ public class SimpleToken implements
     private final int offset;
     private final int length;
 
+    public static Token of(Type type, CharSequence data, int offset) {
+        return new SimpleToken(type, data, offset);
+    }
+
     public SimpleToken(Type type, CharSequence data, int offset) {
         this.type = type;
         this.data = data.toString();

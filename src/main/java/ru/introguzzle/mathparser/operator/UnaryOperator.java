@@ -1,8 +1,8 @@
 package ru.introguzzle.mathparser.operator;
 
-public interface UnaryOperator<T extends Number> extends Operator<T> {
+public interface UnaryOperator extends Operator {
     @Override
     default int getRequiredOperands() {
-        return 1;
+        return UNARY;
     }
 }

@@ -1,10 +1,10 @@
 package ru.introguzzle.mathparser.tokenize.token.type;
 
-public enum FunctionType implements Type {
-    FUNCTION;
+public enum OperatorType implements Type {
+    OPERATOR;
 
     @Override
     public Category getCategory() {
-        return Category.FUNCTION;
+        return Category.OPERATOR;
     }
 }

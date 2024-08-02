@@ -1,6 +1,8 @@
 package ru.introguzzle.mathparser.common;
 
 import org.jetbrains.annotations.NotNull;
+import ru.introguzzle.mathparser.tokenize.token.SimpleToken;
+import ru.introguzzle.mathparser.tokenize.token.Token;
 import ru.introguzzle.mathparser.tokenize.token.type.Type;
 
 import java.util.Collection;
@@ -29,6 +31,10 @@ public interface Nameable extends Cloneable {
 
     static Map<String, Nameable> toMap(Collection<? extends Nameable> nameables) {
         return nameables.stream().collect(Collectors.toMap(Nameable::getName, n -> n));
+    }
+
+    default Token getToken(int offset) {
+        return SimpleToken.of(type(), getName(), offset);
     }
 
     @NotNull Type type();

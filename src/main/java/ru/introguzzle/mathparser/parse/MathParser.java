@@ -6,8 +6,10 @@ import ru.introguzzle.mathparser.common.NamingContext;
 import ru.introguzzle.mathparser.common.SyntaxException;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.function.Function;
-import ru.introguzzle.mathparser.operator.OperatorType;
-import ru.introguzzle.mathparser.operator.ScalarOperatorType;
+import ru.introguzzle.mathparser.operator.Operator;
+import ru.introguzzle.mathparser.operator.UnaryOperator;
+import ru.introguzzle.mathparser.operator.standard.AdditionOperator;
+import ru.introguzzle.mathparser.operator.standard.SubtractionOperator;
 import ru.introguzzle.mathparser.symbol.ImmutableSymbol;
 import ru.introguzzle.mathparser.tokenize.*;
 import ru.introguzzle.mathparser.tokenize.token.Token;
@@ -20,6 +22,8 @@ import java.util.*;
 
 public class MathParser implements Parser<Double>, Serializable {
     protected final Tokenizer tokenizer;
+    private static final Operator SPECIAL_UNARY_MINUS = new SubtractionOperator();
+    private static final Operator SPECIAL_UNARY_PLUS = new AdditionOperator();
 
     public MathParser(Tokenizer tokenizer) {
         this.tokenizer = tokenizer;
@@ -39,7 +43,7 @@ public class MathParser implements Parser<Double>, Serializable {
 
     @Override
     public Double parse(@NotNull Expression expression, @NotNull Context context) throws SyntaxException {
-        Tokens tokens = this.tokenize(expression, context);
+        Tokens tokens = tokenize(expression, context);
         return parse(tokens, context);
     }
 
@@ -61,12 +65,14 @@ public class MathParser implements Parser<Double>, Serializable {
 
         while (true) {
             Token token = tokens.getNextToken();
-            ScalarOperatorType operator = tokenizer.getOperators().get(token.getData());
+            Optional<Operator> optional = tokenizer.findOperator(token.getData());
 
-            if (operator == null || operator.getPriority() >= priority) {
+            if (optional.isEmpty() || optional.get().getPriority() >= priority) {
                 tokens.returnBack();
                 break;
             }
+
+            Operator operator = optional.get();
 
             int nextPriority = operator.isRightAssociative()
                     ? operator.getPriority() + 1
@@ -87,13 +93,15 @@ public class MathParser implements Parser<Double>, Serializable {
                 tokens.returnBack();
                 return parseFunction(tokens, context);
 
-            // Special case of unary minus on level of factor
-            case OperatorType.SUBTRACTION:
-                return -parseFactor(tokens, context);
+            // Special case of unary minus and unary plus on level of factor
+            case OperatorType.OPERATOR:
+                if (token.getData().equals(SPECIAL_UNARY_MINUS.getName())) {
+                    return -parseFactor(tokens, context);
+                }
 
-            // Special case of unary plus on level of factor
-            case OperatorType.ADDITION:
-                return parseFactor(tokens, context);
+                if (token.getData().equals(SPECIAL_UNARY_PLUS.getName())) {
+                    return parseFactor(tokens, context);
+                }
 
             case NumberType.NUMBER:
                 return Double.parseDouble(token.getData());
@@ -116,9 +124,10 @@ public class MathParser implements Parser<Double>, Serializable {
                 return value;
 
             default:
-                if (token.getType() instanceof ScalarOperatorType op) {
-                    if (op.getRequiredOperands() == ScalarOperatorType.UNARY) {
-                        return op.apply(List.of(parseFactor(tokens, context)));
+                if (token.getType() instanceof OperatorType) {
+                    Operator operator = tokenizer.findOperator(token.getData()).orElseThrow();
+                    if (operator instanceof UnaryOperator) {
+                        return operator.apply(List.of(parseFactor(tokens, context)));
                     }
                 }
 

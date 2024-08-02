@@ -3,13 +3,12 @@ package ru.introguzzle.mathparser.parse;
 import org.jetbrains.annotations.NotNull;
 
 import ru.introguzzle.mathparser.common.Context;
+import ru.introguzzle.mathparser.common.Nameable;
 import ru.introguzzle.mathparser.common.NamingContext;
 import ru.introguzzle.mathparser.common.SyntaxException;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.function.Function;
 import ru.introguzzle.mathparser.operator.Operator;
-import ru.introguzzle.mathparser.operator.OperatorType;
-import ru.introguzzle.mathparser.operator.ScalarOperatorType;
 import ru.introguzzle.mathparser.symbol.ImmutableSymbol;
 import ru.introguzzle.mathparser.symbol.MutableSymbol;
 import ru.introguzzle.mathparser.tokenize.*;
@@ -18,13 +17,16 @@ import ru.introguzzle.mathparser.tokenize.token.Tokens;
 import ru.introguzzle.mathparser.tokenize.token.type.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PrefixNotationParser implements Parser<Double> {
     private final Tokenizer tokenizer;
     private final TokenProcessor processor;
 
     public PrefixNotationParser(@NotNull Tokenizer tokenizer) {
-        this(tokenizer, new PrefixTokenProcessor(tokenizer.getOperators()));
+        this(tokenizer, new PrefixTokenProcessor(tokenizer.getOperators().stream()
+                .collect(Collectors.toMap(Nameable::getName, o -> o))
+        ));
     }
 
     public PrefixNotationParser(@NotNull Tokenizer tokenizer, @NotNull TokenProcessor processor) {
@@ -58,7 +60,8 @@ public class PrefixNotationParser implements Parser<Double> {
             Token token = infix.getNextToken();
             Type type = token.getType();
 
-            if (type instanceof ScalarOperatorType operator) {
+            if (type instanceof OperatorType) {
+                Operator operator = tokenizer.findOperator(token.getData()).orElseThrow();
                 processOperator(stack, operator, tokens, position);
                 position++;
                 continue;
@@ -112,11 +115,11 @@ public class PrefixNotationParser implements Parser<Double> {
     }
 
     private void processOperator(Stack<Double> stack,
-                                 Operator<Double> operator,
+                                 Operator operator,
                                  Tokens tokens,
                                  int position) throws SyntaxException {
         int operandCount = operator.getRequiredOperands();
-        if (operator == OperatorType.SUBTRACTION && stack.size() == 1) {
+        if (operator.getName().equals("-") && stack.size() == 1) {
             // Handle special case of unary minus
             // We can't define enum for this operation for various reasons,
             // mostly because unary and binary minuses have same symbol representation

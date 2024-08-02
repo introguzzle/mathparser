@@ -8,8 +8,8 @@ import ru.introguzzle.mathparser.definition.FunctionDefinition;
 import ru.introguzzle.mathparser.expression.ExpressionIterator;
 import ru.introguzzle.mathparser.function.AbstractFunction;
 import ru.introguzzle.mathparser.function.Function;
-import ru.introguzzle.mathparser.operator.OperatorType;
-import ru.introguzzle.mathparser.operator.ScalarOperatorType;
+import ru.introguzzle.mathparser.operator.Operator;
+import ru.introguzzle.mathparser.operator.OperatorReflector;
 import ru.introguzzle.mathparser.symbol.*;
 import ru.introguzzle.mathparser.constant.Constant;
 import ru.introguzzle.mathparser.constant.ConstantReflector;
@@ -79,22 +79,24 @@ public class MathTokenizer implements Tokenizer, Serializable {
 
     @NotNull
     private final transient Map<String, Nameable> nameableMap = new HashMap<>();
-    private final transient Map<String, ScalarOperatorType> operators = Arrays.stream(OperatorType.values())
-            .collect(Collectors.toMap(OperatorType::getRepresentation, o -> o));
 
     private String allowedOperatorSymbols;
 
-    public void setAllowedOperatorSymbols(String allowedOperatorSymbols) {
+    public MathTokenizer setAllowedOperatorSymbols(String allowedOperatorSymbols) {
         this.allowedOperatorSymbols = allowedOperatorSymbols;
+        return this;
     }
 
     public MathTokenizer() {
         nameableMap.putAll(FunctionReflector.get());
         nameableMap.putAll(ConstantReflector.get());
+        nameableMap.putAll(OperatorReflector.get());
     }
 
     public MathTokenizer(@NotNull Map<String, ? extends Function> functions) {
         nameableMap.putAll(functions);
+        nameableMap.putAll(ConstantReflector.get());
+        nameableMap.putAll(OperatorReflector.get());
     }
 
     private static Map<String, Nameable> toMap(@NotNull Collection<? extends Nameable> collection) {
@@ -111,11 +113,8 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return this;
     }
 
-    public MathTokenizer withOperators(@NotNull Collection<? extends ScalarOperatorType> operators) {
-        this.operators.putAll(operators.stream()
-                .collect(Collectors.toMap(ScalarType::getRepresentation, o -> o))
-        );
-
+    public MathTokenizer withOperators(@NotNull Collection<? extends Operator> operators) {
+        nameableMap.putAll(toMap(operators));
         return this;
     }
 
@@ -150,12 +149,12 @@ public class MathTokenizer implements Tokenizer, Serializable {
     }
 
     public MathTokenizer addFunction(@NotNull Function function) {
-        nameableMap.put(function.getName(), function);
+        addName(function);
         return this;
     }
 
     public MathTokenizer addConstant(@NotNull Constant constant) {
-        nameableMap.put(constant.getName(), constant);
+        addName(constant);
         return this;
     }
 
@@ -164,8 +163,8 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return this;
     }
 
-    public MathTokenizer addOperator(@NotNull ScalarOperatorType operator) {
-        operators.put(operator.getRepresentation(), operator);
+    public MathTokenizer addOperator(@NotNull Operator operator) {
+        addName(operator);
         return this;
     }
 
@@ -179,6 +178,13 @@ public class MathTokenizer implements Tokenizer, Serializable {
     public MathTokenizer clearConstants() {
         nameableMap.entrySet()
                 .removeIf(entry -> entry.getValue() instanceof ImmutableSymbol);
+
+        return this;
+    }
+
+    public MathTokenizer clearOperators() {
+        nameableMap.entrySet()
+                .removeIf(entry -> entry.getValue() instanceof Operator);
 
         return this;
     }
@@ -282,13 +288,16 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return nameableMap.values()
                 .stream()
                 .filter(n -> n instanceof Function)
-                .map(Function.class::cast)
+                .map(n -> (Function) n)
                 .toList();
     }
 
-    @Override
-    public Map<String, ? extends ScalarOperatorType> getOperators() {
-        return operators;
+    public @NotNull List<Operator> getOperators() {
+        return nameableMap.values()
+                .stream()
+                .filter(n -> n instanceof Operator)
+                .map(n -> (Operator) n)
+                .toList();
     }
 
     protected Token handleDefinition(Buffer buffer, FunctionDefinition definition) {
@@ -340,9 +349,9 @@ public class MathTokenizer implements Tokenizer, Serializable {
             }
         }
 
-        ScalarType scalarType = operators.get(operator.toString());
+        Result operatorResult = find(operator, start);
 
-        if (scalarType == null) {
+        if (operatorResult.token == null) {
             if ("=".contentEquals(operator)) {
                 return new SimpleToken(DeclarationType.DECLARATION_TERMINAL, operator, start);
             }
@@ -350,7 +359,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
             throw new UnknownOperatorException(operator, buffer.expression, start);
         }
 
-        return scalarType.getToken(start);
+        return operatorResult.token;
     }
 
     protected Token handleSymbols(Buffer buffer) throws TokenizeException {
@@ -401,13 +410,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
     protected Result findFromContext(Context context, CharSequence symbols, int start) {
         Result result = new Result();
 
-        context.getSymbols()
-                .getValues()
-                .values()
-                .stream()
-                .parallel()
-                .filter(s -> s.getName().contentEquals(symbols))
-                .findFirst()
+        context.getSymbol(symbols.toString())
                 .ifPresent(s -> {
                     result.token = new SimpleToken(s.type(), symbols, start);
                     result.match = true;

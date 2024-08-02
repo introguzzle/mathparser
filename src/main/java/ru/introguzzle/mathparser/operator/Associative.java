@@ -1,9 +1,11 @@
-package ru.introguzzle.mathparser.tokenize.token.type;
+package ru.introguzzle.mathparser.operator;
 
-public interface Priorable {
-    int getPriority();
-
+public interface Associative {
     Association getAssociation();
+
+    enum Association {
+        LEFT, RIGHT, NONE
+    }
 
     default boolean isLeftAssociative() {
         return getAssociation() == Association.LEFT;
@@ -11,9 +13,5 @@ public interface Priorable {
 
     default boolean isRightAssociative() {
         return getAssociation() == Association.RIGHT;
-    }
-
-    enum Association {
-        LEFT, RIGHT, NONE
     }
 }

@@ -1,8 +1,7 @@
 package ru.introguzzle.mathparser.tokenize;
 
 import org.jetbrains.annotations.NotNull;
-import ru.introguzzle.mathparser.operator.Priorities;
-import ru.introguzzle.mathparser.operator.ScalarOperatorType;
+import ru.introguzzle.mathparser.operator.Operator;
 import ru.introguzzle.mathparser.tokenize.token.*;
 import ru.introguzzle.mathparser.tokenize.token.type.*;
 
@@ -10,9 +9,9 @@ import java.util.*;
 
 public class PrefixTokenProcessor implements TokenProcessor {
 
-    private final Map<String, ScalarOperatorType> operators = new HashMap<>();
+    private final Map<String, Operator> operators = new HashMap<>();
 
-    public PrefixTokenProcessor(Map<String, ? extends ScalarOperatorType> operators) {
+    public PrefixTokenProcessor(Map<String, ? extends Operator> operators) {
         this.operators.putAll(operators);
     }
 
@@ -37,7 +36,7 @@ public class PrefixTokenProcessor implements TokenProcessor {
                     operatorTokens.pop();
                 }
             } else if (type instanceof FunctionType || operators.containsKey(string)) {
-                ScalarOperatorType op = operators.get(string);
+                Operator op = operators.get(string);
 
                 if (op == null && type instanceof FunctionType) {
                     op = createDummy();
@@ -68,46 +67,31 @@ public class PrefixTokenProcessor implements TokenProcessor {
         return output;
     }
 
-    private static @NotNull ScalarOperatorType createDummy() {
-        return new ScalarOperatorType() {
+    private static @NotNull Operator createDummy() {
+        return new Operator() {
             @Override
             public int getRequiredOperands() {
-                return Integer.MAX_VALUE;
-            }
-
-            @Override
-            public Double apply(List<Double> doubles) {
-                return Double.NaN;
-            }
-
-            @Override
-            public int getPriority() {
-                return Priorities.FUNCTION_PRIORITY;
-            }
-
-            @Override
-            public Association getAssociation() {
-                return Association.LEFT;
-            }
-
-            @Override
-            public @NotNull String getRepresentation() {
-                return "___";
-            }
-
-            @Override
-            public int ordinal() {
                 return 0;
             }
 
             @Override
-            public Category getCategory() {
+            public Double apply(List<Double> doubles) {
+                return 0.0;
+            }
+
+            @Override
+            public @NotNull String getName() {
+                return "";
+            }
+
+            @Override
+            public Association getAssociation() {
                 return null;
             }
 
             @Override
-            public String name() {
-                return "";
+            public int getPriority() {
+                return 0;
             }
         };
     }
