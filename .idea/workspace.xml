@@ -5,48 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="79a95465-1031-4eea-b760-ac48f6778d10" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/Reflector.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/OperatorReflector.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/Priorable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/comparison/EqualityOperator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/comparison/GreaterOperator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/comparison/InclusiveGreaterOperator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/comparison/InclusiveLessOperator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/comparison/InequalityOperator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/comparison/LessOperator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/logical/BitwiseNegationOperator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/logical/ConjuctionOperator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/logical/DisjunctionOperator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/logical/ExclusiveDisjunctionOperator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/shift/LeftBitwiseShiftOperator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/shift/RightBitwiseShiftOperator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/shift/RightBitwiseUnsignedShiftOperator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/standard/DivisionOperator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/standard/ExponentOperator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/standard/MultiplicationOperator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/standard/SubtractionOperator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/Example.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/Example.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/Nameable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/Nameable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/constant/ConstantReflector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/constant/ConstantReflector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/Function.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/Function.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/FunctionReflector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/FunctionReflector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/BinaryOperator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/BinaryOperator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/Operator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/Operator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/OperatorType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/OperatorType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/ScalarOperatorType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/UnaryOperator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/UnaryOperator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/MathParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/MathParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/PrefixNotationParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/PrefixNotationParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/MathTokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/MathTokenizer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/PrefixTokenProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/PrefixTokenProcessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/Tokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/Tokenizer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/SimpleToken.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/SimpleToken.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/FunctionType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/FunctionType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/ParenthesisType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/ParenthesisType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/Priorable.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/ScalarType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/SpecialType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/SpecialType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/ru/impl/MathTokenizerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ru/impl/MathTokenizerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -126,6 +87,7 @@
     "JUnit.MathParserTest.executor": "Run",
     "JUnit.MathParserTest.test_expression_with_variables.executor": "Run",
     "JUnit.MathTokenizerTest.executor": "Run",
+    "JUnit.MathTokenizerTest.test_binary_operators.executor": "Run",
     "JUnit.MathTokenizerTest.test_function_definition.executor": "Run",
     "JUnit.MathTokenizerTest.test_long_symbols.executor": "Debug",
     "JUnit.MathTokenizerTest.test_multiple_arguments_in_functions.executor": "Run",
@@ -190,14 +152,6 @@
     </key>
   </component>
   <component name="RunManager" selected="JUnit.impl in mathparser">
-    <configuration name="All in mathparser" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="mathparser" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="TEST_OBJECT" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="MathParserTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="mathparser" />
       <extension name="coverage">
@@ -224,6 +178,22 @@
       <option name="PACKAGE_NAME" value="ru.impl" />
       <option name="MAIN_CLASS_NAME" value="ru.impl.MathTokenizerTest" />
       <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MathTokenizerTest.test_binary_operators" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="mathparser" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ru.impl.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="ru.impl" />
+      <option name="MAIN_CLASS_NAME" value="ru.impl.MathTokenizerTest" />
+      <option name="METHOD_NAME" value="test_binary_operators" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -255,10 +225,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.impl in mathparser" />
+        <item itemvalue="JUnit.MathTokenizerTest.test_binary_operators" />
         <item itemvalue="JUnit.MathParserTest" />
         <item itemvalue="JUnit.MathTokenizerTest" />
         <item itemvalue="JUnit.MathTokenizerTest.test_function_definition" />
-        <item itemvalue="JUnit.All in mathparser" />
       </list>
     </recent_temporary>
   </component>
@@ -315,7 +285,7 @@
       <workItem from="1722495735093" duration="10852000" />
       <workItem from="1722520839001" duration="3000" />
       <workItem from="1722531209840" duration="466000" />
-      <workItem from="1722594668720" duration="9641000" />
+      <workItem from="1722594668720" duration="10527000" />
     </task>
     <servers />
   </component>

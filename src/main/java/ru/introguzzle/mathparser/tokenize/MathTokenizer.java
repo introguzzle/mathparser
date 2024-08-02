@@ -118,10 +118,11 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return this;
     }
 
-    public MathTokenizer overrideFunction(@NotNull String name,
-                                          int requiredArguments,
-                                          boolean variadic,
-                                          @NotNull java.util.function.Function<List<Double>, Double> replace) {
+    public
+    MathTokenizer overrideFunction(@NotNull String name,
+                                   int requiredArguments,
+                                   boolean variadic,
+                                   @NotNull java.util.function.Function<List<Double>, Double> replace) {
         if (!nameableMap.containsKey(name)) {
             throw new NoSuchNameException(name, nameableMap.keySet());
         }
@@ -139,6 +140,17 @@ public class MathTokenizer implements Tokenizer, Serializable {
         };
 
         nameableMap.replace(name, newFunction);
+        return this;
+    }
+
+    public
+    MathTokenizer overrideOperator(@NotNull String name,
+                                   Operator operator) {
+        if (!nameableMap.containsKey(name)) {
+            throw new NoSuchNameException(name, nameableMap.keySet());
+        }
+
+        nameableMap.replace(name, operator);
         return this;
     }
 
@@ -168,25 +180,22 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return this;
     }
 
-    public MathTokenizer clearFunctions() {
+    private <X extends Nameable> MathTokenizer clearNameables(Class<X> cls) {
         nameableMap.entrySet()
-                .removeIf(entry -> entry.getValue() instanceof Function);
-
+                .removeIf(cls::isInstance);
         return this;
+    }
+
+    public MathTokenizer clearFunctions() {
+        return clearNameables(Function.class);
     }
 
     public MathTokenizer clearConstants() {
-        nameableMap.entrySet()
-                .removeIf(entry -> entry.getValue() instanceof ImmutableSymbol);
-
-        return this;
+        return clearNameables(Constant.class);
     }
 
     public MathTokenizer clearOperators() {
-        nameableMap.entrySet()
-                .removeIf(entry -> entry.getValue() instanceof Operator);
-
-        return this;
+        return clearNameables(Operator.class);
     }
 
     @Override
@@ -274,30 +283,26 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return tokens;
     }
 
-    @Override
-    public @NotNull List<ImmutableSymbol> getConstants() {
+    private <X extends Nameable> List<X> getFromNameables(Class<X> cls) {
         return nameableMap.values()
                 .stream()
-                .filter(n -> n instanceof ImmutableSymbol)
-                .map(nameable -> (ImmutableSymbol) nameable)
+                .filter(cls::isInstance)
+                .map(cls::cast)
                 .collect(Collectors.toList());
     }
 
     @Override
+    public @NotNull List<ImmutableSymbol> getConstants() {
+        return getFromNameables(ImmutableSymbol.class);
+    }
+
+    @Override
     public @NotNull List<Function> getFunctions() {
-        return nameableMap.values()
-                .stream()
-                .filter(n -> n instanceof Function)
-                .map(n -> (Function) n)
-                .toList();
+        return getFromNameables(Function.class);
     }
 
     public @NotNull List<Operator> getOperators() {
-        return nameableMap.values()
-                .stream()
-                .filter(n -> n instanceof Operator)
-                .map(n -> (Operator) n)
-                .toList();
+        return getFromNameables(Operator.class);
     }
 
     protected Token handleDefinition(Buffer buffer, FunctionDefinition definition) {
@@ -400,7 +405,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
                 .filter(Nameable.match(symbols))
                 .findFirst()
                 .ifPresent(s -> {
-                    result.token = new SimpleToken(s.type(), symbols, start);
+                    result.token = s.getToken(start);
                     result.match = true;
                 });
 
@@ -412,7 +417,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
 
         context.getSymbol(symbols.toString())
                 .ifPresent(s -> {
-                    result.token = new SimpleToken(s.type(), symbols, start);
+                    result.token = s.getToken(start);
                     result.match = true;
                 });
 

@@ -334,7 +334,6 @@ public class MathTokenizerTest {
         Expression expression = new MathExpression("1 >> 2 | 3 & 4 << 5");
         Context context = new NamingContext();
         Tokens tokens = tokenizer.tokenize(expression, context);
-
         assertEquals(tokens.size(), 10);
 
         assertEquals(NumberType.NUMBER, tokens.get(0).getType());
