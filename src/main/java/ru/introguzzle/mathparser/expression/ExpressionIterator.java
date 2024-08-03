@@ -1,39 +1,16 @@
 package ru.introguzzle.mathparser.expression;
 
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.function.Predicate;
 
 public class ExpressionIterator implements Iterator<Character> {
-    private static final char DECIMAL = '.';
-    private static final char IMAGINARY_UNIT = 'i';
-    private static final char UNDERSCORE = '_';
-
     private final Expression expression;
     private int cursor = 0;
 
     public int getCursor() {
         return cursor;
-    }
-
-    private static class Char {
-        private static boolean isLetter(Character c) {
-            if (c == null) {
-                return false;
-            }
-
-            return c == UNDERSCORE || Character.isLetter(c);
-        }
-
-        private static boolean isDigit(Character c) {
-            if (c == null) {
-                return false;
-            }
-
-            return c == DECIMAL || c == IMAGINARY_UNIT || Character.isDigit(c);
-        }
     }
 
     public ExpressionIterator(Expression expression) {
@@ -67,43 +44,32 @@ public class ExpressionIterator implements Iterator<Character> {
     }
 
     private static final String SPECIAL_CHARS = "+-/*~!@#$%^&*()\"{}_[]|\\?/<>,.=";
-    public boolean isSpecial(@Nullable String specialChars) {
-        return Objects
-                .requireNonNullElse(specialChars, SPECIAL_CHARS)
-                .indexOf(at(cursor)) != -1;
-
+    public boolean isSpecial(@NotNull String specialChars) {
+        return specialChars.indexOf(at(cursor)) != -1;
     }
 
-    public boolean isDigit(Predicate<Character> digitPredicate) {
-        return digitPredicate == null
-                ? Char.isDigit(at(cursor))
-                : digitPredicate.test(at(cursor));
+    public boolean isDigit(@NotNull Predicate<Character> digitPredicate) {
+        return digitPredicate.test(at(cursor));
     }
 
-    public boolean isLetter(Predicate<Character> letterPredicate) {
-        return letterPredicate == null
-                ? Char.isLetter(at(cursor))
-                : letterPredicate.test(at(cursor));
+    public boolean isLetter(@NotNull Predicate<Character> letterPredicate) {
+        return letterPredicate.test(at(cursor));
     }
 
-    public boolean isNextDigit(Predicate<Character> digitPredicate) {
+    public boolean isNextDigit(@NotNull Predicate<Character> digitPredicate) {
         if (!hasNext()) {
             return false;
         }
 
-        return digitPredicate == null
-                ? Char.isDigit(peekNext())
-                : digitPredicate.test(peekNext());
+        return digitPredicate.test(peekNext());
     }
 
-    public boolean isNextLetter(Predicate<Character> letterPredicate) {
+    public boolean isNextLetter(@NotNull Predicate<Character> letterPredicate) {
         if (!hasNext()) {
             return false;
         }
 
-        return letterPredicate == null
-                ? Char.isLetter(peekNext())
-                : letterPredicate.test(peekNext());
+        return letterPredicate.test(peekNext());
     }
 
     @Override

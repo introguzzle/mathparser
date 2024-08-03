@@ -131,11 +131,11 @@ public abstract class FunctionDefinitionTokenizer
     @Override
     protected Result find(CharSequence symbols, int start) {
         Result result = super.find(symbols, start);
-        Result another = new Result(
-                "=".contentEquals(symbols),
-                new SimpleToken(DeclarationType.DECLARATION_TERMINAL, symbols, start)
-        );
 
-        return Result.reduce(result, another);
+        return "=".contentEquals(symbols)
+                ? Result.reduce(result, new Result(
+                    true,
+                    new SimpleToken(DeclarationType.DECLARATION_TERMINAL, symbols, start)))
+                : result;
     }
 }

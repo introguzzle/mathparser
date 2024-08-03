@@ -7,22 +7,22 @@ import java.lang.reflect.Modifier;
 import java.util.Map;
 import java.util.Set;
 
-public class Reflector<X extends Nameable> {
+public class Reflector<N extends Nameable> {
 
     @NotNull
-    public Map<String, X> getInstances(Class<X> cls,
-                                       @Mutates Map<String, X> map,
+    public Map<String, N> getInstances(Class<N> cls,
+                                       @Mutates Map<String, N> map,
                                        String packageName) {
         Reflections reflections = new Reflections(packageName);
-        Set<Class<? extends X>> classes = reflections.getSubTypesOf(cls);
+        Set<Class<? extends N>> classes = reflections.getSubTypesOf(cls);
 
-        for (Class<? extends X> clazz : classes) {
+        for (Class<? extends N> clazz : classes) {
             try {
                 if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
                     continue;
                 }
 
-                X instance = clazz.getDeclaredConstructor().newInstance();
+                N instance = clazz.getDeclaredConstructor().newInstance();
                 map.put(instance.getName(), instance);
             } catch (Exception e) {
                 System.err.println("An error occurred while scanning classes: " + e.getMessage());

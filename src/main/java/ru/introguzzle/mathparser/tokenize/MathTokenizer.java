@@ -26,6 +26,9 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class MathTokenizer implements Tokenizer, Serializable {
+    private static final char DECIMAL = '.';
+    private static final char IMAGINARY_UNIT = 'i';
+    private static final char UNDERSCORE = '_';
 
     private TokenizerOptions options = new TokenizerOptions() {};
 
@@ -82,9 +85,12 @@ public class MathTokenizer implements Tokenizer, Serializable {
     @NotNull
     private final transient Map<String, Nameable> nameableMap = new HashMap<>();
 
-    private String allowedOperatorSymbols;
-    private Predicate<Character> digitPredicate;
-    private Predicate<Character> letterPredicate;
+    private String allowedOperatorSymbols = "+-/*~!@#$%^&*()\"{}_[]|\\?/<>,.=";
+    private Predicate<Character> digitPredicate = c ->
+            c != null && (c == DECIMAL || c == IMAGINARY_UNIT || Character.isDigit(c));
+
+    private Predicate<Character> letterPredicate = c ->
+            c != null && (c == UNDERSCORE || Character.isLetter(c));
 
     public MathTokenizer setAllowedOperatorSymbols(String allowedOperatorSymbols) {
         this.allowedOperatorSymbols = allowedOperatorSymbols;
@@ -108,9 +114,8 @@ public class MathTokenizer implements Tokenizer, Serializable {
     }
 
     public MathTokenizer(@NotNull Map<String, ? extends Function> functions) {
+        this();
         nameableMap.putAll(functions);
-        nameableMap.putAll(ConstantReflector.get());
-        nameableMap.putAll(OperatorReflector.get());
     }
 
     private static Map<String, Nameable> toMap(@NotNull Collection<? extends Nameable> collection) {
@@ -194,7 +199,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return this;
     }
 
-    private <X extends Nameable> MathTokenizer clearNameables(Class<X> cls) {
+    private <N extends Nameable> MathTokenizer clearNameables(Class<N> cls) {
         nameableMap.entrySet()
                 .removeIf(cls::isInstance);
         return this;
@@ -331,11 +336,11 @@ public class MathTokenizer implements Tokenizer, Serializable {
         int decimalPointCount = 0;
 
         while (iterator.hasNext() && iterator.isDigit(digitPredicate)) {
-            if (current == 'i') {
+            if (current == IMAGINARY_UNIT) {
                 imaginaryUnitCount++;
             }
 
-            if (current == '.') {
+            if (current == DECIMAL) {
                 decimalPointCount++;
             }
 
