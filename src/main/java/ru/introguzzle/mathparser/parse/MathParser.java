@@ -33,7 +33,7 @@ public class MathParser implements Parser<Double>, Serializable {
     private static final long serialVersionUID = -2443784738437783L;
 
     protected Tokens tokenize(Expression expression, Context context) throws TokenizeException {
-        return tokenizer.tokenize(expression, context);
+        return tokenizer.tokenize(expression, context).getTokens();
     }
 
     @Override
@@ -49,7 +49,6 @@ public class MathParser implements Parser<Double>, Serializable {
 
     @Override
     public Double parse(@NotNull Tokens tokens, Context context) throws SyntaxException {
-        tokens.skipDeclaration();
         Token token = tokens.getNextToken();
 
         if (token.getType().isTerminal()) {

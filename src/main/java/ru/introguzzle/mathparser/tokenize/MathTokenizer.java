@@ -4,10 +4,11 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.introguzzle.mathparser.common.*;
-import ru.introguzzle.mathparser.definition.FunctionDefinition;
 import ru.introguzzle.mathparser.expression.ExpressionIterator;
 import ru.introguzzle.mathparser.function.AbstractFunction;
 import ru.introguzzle.mathparser.function.Function;
+import ru.introguzzle.mathparser.group.Group;
+import ru.introguzzle.mathparser.group.TokenGroup;
 import ru.introguzzle.mathparser.operator.Operator;
 import ru.introguzzle.mathparser.operator.OperatorReflector;
 import ru.introguzzle.mathparser.symbol.*;
@@ -21,6 +22,7 @@ import ru.introguzzle.mathparser.tokenize.token.type.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class MathTokenizer implements Tokenizer, Serializable {
@@ -81,9 +83,21 @@ public class MathTokenizer implements Tokenizer, Serializable {
     private final transient Map<String, Nameable> nameableMap = new HashMap<>();
 
     private String allowedOperatorSymbols;
+    private Predicate<Character> digitPredicate;
+    private Predicate<Character> letterPredicate;
 
     public MathTokenizer setAllowedOperatorSymbols(String allowedOperatorSymbols) {
         this.allowedOperatorSymbols = allowedOperatorSymbols;
+        return this;
+    }
+
+    public MathTokenizer setDigitPredicate(Predicate<Character> digitPredicate) {
+        this.digitPredicate = digitPredicate;
+        return this;
+    }
+
+    public MathTokenizer setLetterPredicate(Predicate<Character> letterPredicate) {
+        this.letterPredicate = letterPredicate;
         return this;
     }
 
@@ -199,19 +213,20 @@ public class MathTokenizer implements Tokenizer, Serializable {
     }
 
     @Override
-    public synchronized @NotNull Tokens tokenize(@NotNull Expression expression, @NotNull Context context) throws TokenizeException {
+    public synchronized
+    @NotNull Group tokenize(@NotNull Expression expression,
+                            @NotNull Context context) throws TokenizeException {
+        return new TokenGroup(start(new Buffer(expression.iterator(), expression, context)));
+    }
+
+    protected @NotNull Tokens start(@NotNull Buffer buffer) throws TokenizeException {
         Stack<Character> parenthesisStack = new Stack<>();
         Tokens tokens = new SimpleTokens();
-        ExpressionIterator iterator = expression.iterator();
-        Buffer buffer = new Buffer(iterator, expression, context);
+        ExpressionIterator iterator = buffer.iterator;
+        Expression expression = buffer.expression;
 
         if (expression.getString().isBlank() || expression.getString().isEmpty()) {
             return new SimpleTokens(new SimpleToken(TerminalType.TERMINAL, " ", 0));
-        }
-
-        if (expression instanceof FunctionDefinition definition) {
-            Token declarationToken = handleDefinition(buffer, definition);
-            tokens.add(declarationToken);
         }
 
         while (iterator.hasNext()) {
@@ -253,7 +268,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
                         continue;
                     }
 
-                    if (iterator.isDigit()) {
+                    if (iterator.isDigit(digitPredicate)) {
                         tokens.add(handleNumber(buffer));
                         if (!iterator.hasNext()) {
                             break;
@@ -262,7 +277,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
                         continue;
                     }
 
-                    if (iterator.isLetter()) {
+                    if (iterator.isLetter(letterPredicate)) {
                         tokens.add(handleSymbols(buffer));
                         if (!iterator.hasNext()) {
                             break;
@@ -305,30 +320,29 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return getFromNameables(Operator.class);
     }
 
-    protected Token handleDefinition(Buffer buffer, FunctionDefinition definition) {
-        int split = definition.getDefinitionSpliterator();
-        Variable variable = definition.getVariable();
-
-        if (!buffer.context.contains(variable.getName())) {
-            buffer.context.addSymbol(variable);
-        }
-
-        buffer.iterator.setCursor(split);
-        return new SimpleToken(
-                DeclarationType.DECLARATION,
-                definition.getString().substring(split),
-                0
-        );
-    }
-
-    protected Token handleNumber(Buffer buffer) {
+    protected Token handleNumber(Buffer buffer) throws InvalidNumberFormatException {
         StringBuilder number = new StringBuilder();
 
         ExpressionIterator iterator = buffer.iterator;
         char current = iterator.current();
         final int start = iterator.getCursor();
 
-        while (iterator.hasNext() && iterator.isDigit()) {
+        int imaginaryUnitCount = 0;
+        int decimalPointCount = 0;
+
+        while (iterator.hasNext() && iterator.isDigit(digitPredicate)) {
+            if (current == 'i') {
+                imaginaryUnitCount++;
+            }
+
+            if (current == '.') {
+                decimalPointCount++;
+            }
+
+            if (imaginaryUnitCount > 1 || decimalPointCount > 1) {
+                throw new InvalidNumberFormatException(number, buffer.expression, iterator.getCursor());
+            }
+
             number.append(current);
             iterator.next();
             if (!iterator.hasNext()) {
@@ -336,6 +350,10 @@ public class MathTokenizer implements Tokenizer, Serializable {
             }
 
             current = iterator.current();
+        }
+
+        if (imaginaryUnitCount > 0) {
+            return new SimpleToken(NumberType.COMPLEX_NUMBER, number, start);
         }
 
         return new SimpleToken(NumberType.NUMBER, number, start);
@@ -357,10 +375,6 @@ public class MathTokenizer implements Tokenizer, Serializable {
         Result operatorResult = find(operator, start);
 
         if (operatorResult.token == null) {
-            if ("=".contentEquals(operator)) {
-                return new SimpleToken(DeclarationType.DECLARATION_TERMINAL, operator, start);
-            }
-
             throw new UnknownOperatorException(operator, buffer.expression, start);
         }
 
@@ -372,7 +386,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
         StringBuilder symbols = new StringBuilder();
         final int start = iterator.getCursor();
 
-        while (iterator.hasNext() && iterator.isLetter()) {
+        while (iterator.hasNext() && iterator.isLetter(letterPredicate)) {
             symbols.append(iterator.next());
             if (!iterator.hasNext()) {
                 break;

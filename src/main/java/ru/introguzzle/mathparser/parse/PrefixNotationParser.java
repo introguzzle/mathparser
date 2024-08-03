@@ -41,7 +41,7 @@ public class PrefixNotationParser implements Parser<Double> {
 
     @Override
     public Double parse(@NotNull Expression expression, @NotNull Context context) throws SyntaxException {
-        Tokens tokens = tokenizer.tokenize(expression, context);
+        Tokens tokens = tokenizer.tokenize(expression, context).getTokens();
         if (tokens.get(0).getType().isTerminal()) {
             return Double.NaN;
         }

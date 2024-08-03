@@ -4,8 +4,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 public class ExpressionIterator implements Iterator<Character> {
+    private static final char DECIMAL = '.';
+    private static final char IMAGINARY_UNIT = 'i';
+    private static final char UNDERSCORE = '_';
 
     private final Expression expression;
     private int cursor = 0;
@@ -20,7 +24,7 @@ public class ExpressionIterator implements Iterator<Character> {
                 return false;
             }
 
-            return c == '_' || Character.isLetter(c);
+            return c == UNDERSCORE || Character.isLetter(c);
         }
 
         private static boolean isDigit(Character c) {
@@ -28,7 +32,7 @@ public class ExpressionIterator implements Iterator<Character> {
                 return false;
             }
 
-            return c == '.' || Character.isDigit(c);
+            return c == DECIMAL || c == IMAGINARY_UNIT || Character.isDigit(c);
         }
     }
 
@@ -70,28 +74,36 @@ public class ExpressionIterator implements Iterator<Character> {
 
     }
 
-    public boolean isDigit() {
-        return Char.isDigit(at(cursor));
+    public boolean isDigit(Predicate<Character> digitPredicate) {
+        return digitPredicate == null
+                ? Char.isDigit(at(cursor))
+                : digitPredicate.test(at(cursor));
     }
 
-    public boolean isLetter() {
-        return Char.isLetter(at(cursor));
+    public boolean isLetter(Predicate<Character> letterPredicate) {
+        return letterPredicate == null
+                ? Char.isLetter(at(cursor))
+                : letterPredicate.test(at(cursor));
     }
 
-    public boolean isNextDigit() {
+    public boolean isNextDigit(Predicate<Character> digitPredicate) {
         if (!hasNext()) {
             return false;
         }
 
-        return Char.isDigit(peekNext());
+        return digitPredicate == null
+                ? Char.isDigit(peekNext())
+                : digitPredicate.test(peekNext());
     }
 
-    public boolean isNextLetter() {
+    public boolean isNextLetter(Predicate<Character> letterPredicate) {
         if (!hasNext()) {
             return false;
         }
 
-        return Char.isLetter(peekNext());
+        return letterPredicate == null
+                ? Char.isLetter(peekNext())
+                : letterPredicate.test(peekNext());
     }
 
     @Override

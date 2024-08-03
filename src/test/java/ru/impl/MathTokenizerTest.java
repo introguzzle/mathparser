@@ -8,6 +8,7 @@ import ru.introguzzle.mathparser.constant.Constant;
 import ru.introguzzle.mathparser.constant.ConstantReflector;
 import ru.introguzzle.mathparser.definition.FunctionDefinition;
 import ru.introguzzle.mathparser.function.FunctionReflector;
+import ru.introguzzle.mathparser.operator.standard.AdditionOperator;
 import ru.introguzzle.mathparser.tokenize.token.type.OperatorType;
 import ru.introguzzle.mathparser.symbol.Coefficient;
 import ru.introguzzle.mathparser.tokenize.*;
@@ -36,17 +37,10 @@ public class MathTokenizerTest {
     }
 
     @Test
-    public void test_function_definition() throws Exception {
-        Expression expression = new FunctionDefinition("f(x)    = x + x^3", new Variable("x", 0));
-        Context context = new NamingContext();
-        tokenizer.tokenize(expression, context).forEach(System.out::println);
-    }
-
-    @Test
     public void test_tokenize_exponentiation() throws Exception {
         Expression expression = new MathExpression("2 ** 3 * (4.5)");
         Context context = new NamingContext();
-        Tokens tokens = this.tokenizer.tokenize(expression, context);
+        Tokens tokens = this.tokenizer.tokenize(expression, context).getTokens();
 
         assertEquals(tokens.getPosition(), 0);
         assertEquals(8, tokens.size());
@@ -78,7 +72,7 @@ public class MathTokenizerTest {
     public void test_tokenize_simple_expression() throws Exception {
         Expression expression = new MathExpression("2 + 2");
         Context context = new NamingContext();
-        Tokens tokens = tokenizer.tokenize(expression, context);
+        Tokens tokens = tokenizer.tokenize(expression, context).getTokens();
 
         assertEquals(tokens.getPosition(), 0);
 
@@ -100,7 +94,7 @@ public class MathTokenizerTest {
     public void test_tokenize_expression_with_functions() throws Exception {
         Expression expression = new MathExpression("sin(1) + cos(1)");
         Context context = new NamingContext();
-        Tokens tokens = tokenizer.tokenize(expression, context);
+        Tokens tokens = tokenizer.tokenize(expression, context).getTokens();
 
         assertEquals(tokens.getPosition(), 0);
         assertEquals(10, tokens.size());
@@ -150,7 +144,7 @@ public class MathTokenizerTest {
         context.getSymbols().add(new Variable("x", 4));
         context.getSymbols().add(new Coefficient("A", 4));
 
-        Tokens tokens = tokenizer.tokenize(expression, context);
+        Tokens tokens = tokenizer.tokenize(expression, context).getTokens();
 
         assertEquals(4, tokens.size());
 
@@ -189,7 +183,7 @@ public class MathTokenizerTest {
     public void test_multiple_arguments_in_functions() throws Exception {
         Expression expression = new MathExpression("sin(1, 3, 4)");
         Context context = new NamingContext();
-        Tokens tokens = tokenizer.tokenize(expression, context);
+        Tokens tokens = tokenizer.tokenize(expression, context).getTokens();
 
         assertEquals(9, tokens.size());
         assertEquals(FunctionType.FUNCTION, tokens.get(0).getType());
@@ -231,7 +225,7 @@ public class MathTokenizerTest {
     public void test_last_operator() throws Exception {
         Expression expression = new MathExpression("2.344*");
         Context context = new NamingContext();
-        Tokens tokens = tokenizer.tokenize(expression, context);
+        Tokens tokens = tokenizer.tokenize(expression, context).getTokens();
 
         assertEquals(3, tokens.size());
         assertEquals(NumberType.NUMBER, tokens.get(0).getType());
@@ -253,7 +247,7 @@ public class MathTokenizerTest {
         context.addSymbol(new Variable("c", 0));
         context.addSymbol(new Variable("d", 0));
 
-        Tokens tokens = tokenizer.tokenize(expression, context);
+        Tokens tokens = tokenizer.tokenize(expression, context).getTokens();
 
         assertEquals(tokens.getConstantCount(), 2);
         assertEquals(tokens.getVariableCount(), 4);
@@ -285,7 +279,7 @@ public class MathTokenizerTest {
 
         Expression expression = new MathExpression("test_function(3) ^ test_function(clown()) * clown()");
         Context context = new NamingContext();
-        Tokens tokens = tokenizer.tokenize(expression, context);
+        Tokens tokens = tokenizer.tokenize(expression, context).getTokens();
 
         assertEquals(FunctionType.FUNCTION, tokens.get(0).getType());
         assertEquals("test_function", tokens.get(0).getData());
@@ -333,7 +327,7 @@ public class MathTokenizerTest {
     public void test_binary_operators() throws Exception {
         Expression expression = new MathExpression("1 >> 2 | 3 & 4 << 5");
         Context context = new NamingContext();
-        Tokens tokens = tokenizer.tokenize(expression, context);
+        Tokens tokens = tokenizer.tokenize(expression, context).getTokens();
         assertEquals(tokens.size(), 10);
 
         assertEquals(NumberType.NUMBER, tokens.get(0).getType());
@@ -367,10 +361,27 @@ public class MathTokenizerTest {
     }
 
     @Test
+    public void supress() {
+        MathTokenizer t = new MathTokenizer();
+        t.setDigitPredicate(null)
+                .setAllowedOperatorSymbols(null)
+                .setLetterPredicate(null)
+                .setDigitPredicate(null)
+                .withFunctions(List.of())
+                .withOperators(List.of())
+                .overrideOperator("+", new AdditionOperator())
+                .addName(new Variable("x", 3))
+                .addOperator(new AdditionOperator())
+                .clearConstants()
+                .clearOperators()
+                .setOptions(null);
+    }
+
+    @Test
     public void test_comparison_operators() throws Exception {
         Expression expression = new MathExpression("0 < 1 <= 2 >= 3 > 4");
         Context context = new NamingContext();
-        Tokens tokens = tokenizer.tokenize(expression, context);
+        Tokens tokens = tokenizer.tokenize(expression, context).getTokens();
 
         assertEquals(tokens.size(), 10);
 

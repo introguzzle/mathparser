@@ -69,8 +69,8 @@ public class NamingContext implements Context {
     }
 
     @Override
-    public Optional<? extends MutableSymbol> getSymbol(String name) {
-        Optional<? extends MutableSymbol> optional = symbols.find(name);
+    public Optional<MutableSymbol> getSymbol(String name) {
+        Optional<MutableSymbol> optional = symbols.find(name);
 
         if (optional.isEmpty() && parent != null) {
             return parent.getSymbol(name);

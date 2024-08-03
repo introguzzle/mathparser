@@ -6,10 +6,10 @@ import ru.introguzzle.mathparser.common.SyntaxException;
 import ru.introguzzle.mathparser.definition.FunctionDefinition;
 import ru.introguzzle.mathparser.definition.FunctionDefinitionType;
 import ru.introguzzle.mathparser.expression.Expression;
+import ru.introguzzle.mathparser.group.FunctionGroup;
 import ru.introguzzle.mathparser.symbol.Coefficient;
 import ru.introguzzle.mathparser.symbol.MutableSymbol;
 import ru.introguzzle.mathparser.tokenize.FunctionDefinitionTokenizer;
-import ru.introguzzle.mathparser.tokenize.token.FunctionTokensProxy;
 import ru.introguzzle.mathparser.tokenize.token.Tokens;
 
 import java.util.function.Supplier;
@@ -19,8 +19,7 @@ public class FunctionDefinitionParser implements Parser<Double> {
     private final FunctionDefinitionTokenizer tokenizer;
     private final Parser<Double> parser;
 
-    public FunctionDefinitionParser(Parser<Double> parser) {
-        this.parser = parser;
+    public FunctionDefinitionParser() {
         this.tokenizer = new FunctionDefinitionTokenizer() {
             @Override
             public double getDefaultValue() {
@@ -34,6 +33,8 @@ public class FunctionDefinitionParser implements Parser<Double> {
                 return () -> new Coefficient(name.toString(), value);
             }
         };
+
+        this.parser = new MathParser(tokenizer);
     }
 
     @Override
@@ -55,18 +56,18 @@ public class FunctionDefinitionParser implements Parser<Double> {
                                FunctionDefinitionType type) {}
 
     public
-    ParserResult parse(FunctionDefinition definition,
-                       Context context)
+    ParserResult parseDefinition(FunctionDefinition definition,
+                                 Context context)
             throws SyntaxException {
 
-        FunctionTokensProxy proxy = tokenizer.tokenize(definition, context);
-        double value = parse(proxy, context);
-        FunctionDefinitionType type = proxy.type();
+        FunctionGroup group = tokenizer.tokenizeDefinition(definition, context);
+        double value = parse(group, context);
+        FunctionDefinitionType type = group.getType();
 
         return new ParserResult(value, type);
     }
 
-    private double parse(FunctionTokensProxy proxy, Context context) throws SyntaxException {
-        return parse(proxy.tokens(), context);
+    private double parse(FunctionGroup group, Context context) throws SyntaxException {
+        return parse(group.getTokens(), context);
     }
 }

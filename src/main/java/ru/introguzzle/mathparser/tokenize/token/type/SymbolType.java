@@ -1,7 +1,7 @@
 package ru.introguzzle.mathparser.tokenize.token.type;
 
 public enum SymbolType implements Type {
-    CONSTANT, VARIABLE, COEFFICIENT;
+    CONSTANT, VARIABLE, COEFFICIENT, IMAGINARY_UNIT;
 
     @Override
     public Category getCategory() {

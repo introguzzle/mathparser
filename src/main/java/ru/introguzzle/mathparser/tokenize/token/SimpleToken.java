@@ -23,18 +23,30 @@ public class SimpleToken implements
         return new SimpleToken(type, data, offset);
     }
 
+    public static Token of(Type type, CharSequence data, int offset, int length) {
+        return new SimpleToken(type, data, offset, length);
+    }
+
     public SimpleToken(Type type, CharSequence data, int offset) {
-        this.type = type;
-        this.data = data.toString();
-        this.offset = offset;
-        this.length = data.length();
+        this(type, data, offset, data.length());
     }
 
     public SimpleToken(Type type, Character data, int offset) {
+        this(type, data, offset, 1);
+    }
+
+    public SimpleToken(Type type, CharSequence data, int offset, int length) {
         this.type = type;
         this.data = data.toString();
         this.offset = offset;
-        this.length = 1;
+        this.length = length;
+    }
+
+    public SimpleToken(Type type, Character data, int offset, int length) {
+        this.type = type;
+        this.data = data.toString();
+        this.offset = offset;
+        this.length = length;
     }
 
     @Override

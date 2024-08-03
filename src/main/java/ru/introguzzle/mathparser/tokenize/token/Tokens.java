@@ -13,6 +13,7 @@ public interface Tokens extends Iterable<Token> {
     Token getNextToken();
     void returnBack();
     int getPosition();
+    void setPosition(int position);
     List<Token> getTokenList();
     int getVariableCount();
     int getConstantCount();
@@ -22,4 +23,5 @@ public interface Tokens extends Iterable<Token> {
     Token get(int index);
     String reduce();
     Expression toExpression();
+    void merge(Tokens other);
 }

@@ -32,7 +32,7 @@ public abstract class MutableSymbolList<T extends MutableSymbol> {
         }
     }
 
-    public Optional<? extends T> find(@NotNull String name) {
+    public Optional<T> find(@NotNull String name) {
         return Optional.ofNullable(values.getOrDefault(name, null));
     }
 

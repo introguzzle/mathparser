@@ -5,9 +5,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="79a95465-1031-4eea-b760-ac48f6778d10" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/complex/Complex.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/group/FunctionGroup.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/group/Group.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/group/TokenGroup.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/EquationTokenizer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/InvalidNumberFormatException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/Context.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/Context.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/Nameable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/Nameable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/NamingContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/NamingContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/expression/ExpressionIterator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/expression/ExpressionIterator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/generate/CachedExpressionGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/generate/CachedExpressionGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/FunctionDefinitionParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/FunctionDefinitionParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/MathParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/MathParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/PrefixNotationParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/PrefixNotationParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/symbol/MutableSymbolList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/symbol/MutableSymbolList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/FunctionDefinitionTokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/FunctionDefinitionTokenizer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/MathTokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/MathTokenizer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/SpecialType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/SpecialType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/Tokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/Tokenizer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/UnknownOperatorException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/UnknownOperatorException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/FunctionTokensProxy.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/SimpleToken.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/SimpleToken.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/SimpleTokens.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/SimpleTokens.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/Tokens.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/Tokens.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/NumberType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/NumberType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/SymbolType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/SymbolType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/ru/impl/FunctionDefinitionTokenizerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ru/impl/FunctionDefinitionTokenizerTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/ru/impl/MathTokenizerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ru/impl/MathTokenizerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -47,85 +71,89 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.CachedExpressionGenerator.executor": "Run",
-    "Application.Constants.executor": "Run",
-    "Application.ContextlessMathTokenizer.executor": "Run",
-    "Application.Example.executor": "Run",
-    "Application.ExpressionGenerator.executor": "Run",
-    "Application.ExpressionStorage.executor": "Run",
-    "Application.FunctionDefinitionParser.executor": "Run",
-    "Application.FunctionDefinitionTokenizer.executor": "Run",
-    "Application.FunctionReflector.executor": "Run",
-    "Application.FunctionTokens.executor": "Run",
-    "Application.FunctionTokensProxy.executor": "Run",
-    "Application.Functions.executor": "Run",
-    "Application.Generator.executor": "Run",
-    "Application.InfixTokenProcessor.executor": "Run",
-    "Application.MathParser.executor": "Run",
-    "Application.MathTokenizer.executor": "Run",
-    "Application.Nameable.executor": "Run",
-    "Application.NamingContext.executor": "Run",
-    "Application.OperatorReflector.executor": "Run",
-    "Application.P.executor": "Run",
-    "Application.ParenthesisType.executor": "Run",
-    "Application.ParserContext.executor": "Run",
-    "Application.PolishNotationParser.executor": "Run",
-    "Application.PostfixNotationParser.executor": "Run",
-    "Application.ShuntingYard.executor": "Run",
-    "Application.SimpleTokens.executor": "Run",
-    "Application.SubtractionOperator.executor": "Run",
-    "Application.TokenProcessor.executor": "Run",
-    "Application.TokenType.executor": "Run",
-    "Application.Variable.executor": "Run",
-    "Application.VariableMismatchException.executor": "Run",
-    "Application.Variables.executor": "Run",
-    "JUnit.All in mathparser.executor": "Run",
-    "JUnit.ContextTest.executor": "Run",
-    "JUnit.FunctionDefinitionTokenizerTest.executor": "Run",
-    "JUnit.MathParserTest.executor": "Run",
-    "JUnit.MathParserTest.test_expression_with_variables.executor": "Run",
-    "JUnit.MathTokenizerTest.executor": "Run",
-    "JUnit.MathTokenizerTest.test_binary_operators.executor": "Run",
-    "JUnit.MathTokenizerTest.test_function_definition.executor": "Run",
-    "JUnit.MathTokenizerTest.test_long_symbols.executor": "Debug",
-    "JUnit.MathTokenizerTest.test_multiple_arguments_in_functions.executor": "Run",
-    "JUnit.PolishNotationParserTest.executor": "Run",
-    "JUnit.impl in mathparser.executor": "Run",
-    "JUnit.java in mathparser.executor": "Run",
-    "JUnit.ru.impl in mathparser.executor": "Run",
-    "Maven.mathparser [deploy].executor": "Run",
-    "Maven.mathparser [install].executor": "Run",
-    "Maven.mathparser [org.apache.maven.plugins:maven-clean-plugin:3.2.0:clean].executor": "Run",
-    "Maven.mathparser [org.apache.maven.plugins:maven-deploy-plugin:3.1.1:deploy].executor": "Run",
-    "Maven.mathparser [org.apache.maven.plugins:maven-install-plugin:3.1.1:install].executor": "Run",
-    "Maven.mathparser [org.apache.maven.plugins:maven-jar-plugin:3.3.0:jar].executor": "Run",
-    "Maven.mathparser [test].executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit4",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit4": "",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_directory_selection": "C:/Users/666/IdeaProjects/mathparser/src/test/java/ru/implementation",
-    "last_opened_file_path": "C:/Users/666/IdeaProjects/mathparser",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.44921467",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.keymap",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.CachedExpressionGenerator.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Complex.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Constants.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ContextlessMathTokenizer.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Example.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ExpressionGenerator.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ExpressionStorage.executor&quot;: &quot;Run&quot;,
+    &quot;Application.FunctionDefinitionParser.executor&quot;: &quot;Run&quot;,
+    &quot;Application.FunctionDefinitionTokenizer.executor&quot;: &quot;Run&quot;,
+    &quot;Application.FunctionReflector.executor&quot;: &quot;Run&quot;,
+    &quot;Application.FunctionTokens.executor&quot;: &quot;Run&quot;,
+    &quot;Application.FunctionTokensProxy.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Functions.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Generator.executor&quot;: &quot;Run&quot;,
+    &quot;Application.InfixTokenProcessor.executor&quot;: &quot;Run&quot;,
+    &quot;Application.MathParser.executor&quot;: &quot;Run&quot;,
+    &quot;Application.MathTokenizer.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Nameable.executor&quot;: &quot;Run&quot;,
+    &quot;Application.NamingContext.executor&quot;: &quot;Run&quot;,
+    &quot;Application.OperatorReflector.executor&quot;: &quot;Run&quot;,
+    &quot;Application.P.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ParenthesisType.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ParserContext.executor&quot;: &quot;Run&quot;,
+    &quot;Application.PolishNotationParser.executor&quot;: &quot;Run&quot;,
+    &quot;Application.PostfixNotationParser.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ShuntingYard.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SimpleTokens.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SubtractionOperator.executor&quot;: &quot;Run&quot;,
+    &quot;Application.TokenProcessor.executor&quot;: &quot;Run&quot;,
+    &quot;Application.TokenType.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Variable.executor&quot;: &quot;Run&quot;,
+    &quot;Application.VariableMismatchException.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Variables.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.All in mathparser.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ContextTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FunctionDefinitionTokenizerTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FunctionDefinitionTokenizerTest.test_explicit_function_with_parameters.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FunctionDefinitionTokenizerTest.test_function_definition.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FunctionDefinitionTokenizerTest.test_parametric_function_with_parameters.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.MathParserTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.MathParserTest.test_expression_with_variables.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.MathTokenizerTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.MathTokenizerTest.test_binary_operators.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.MathTokenizerTest.test_function_definition.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.MathTokenizerTest.test_long_symbols.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.MathTokenizerTest.test_multiple_arguments_in_functions.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.PolishNotationParserTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.impl in mathparser.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.java in mathparser.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ru.impl in mathparser.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.mathparser [deploy].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.mathparser [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.mathparser [org.apache.maven.plugins:maven-clean-plugin:3.2.0:clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.mathparser [org.apache.maven.plugins:maven-deploy-plugin:3.1.1:deploy].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.mathparser [org.apache.maven.plugins:maven-install-plugin:3.1.1:install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.mathparser [org.apache.maven.plugins:maven-jar-plugin:3.3.0:jar].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.mathparser [test].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit4&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit4&quot;: &quot;&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_directory_selection&quot;: &quot;C:/Users/666/IdeaProjects/mathparser/src/test/java/ru/implementation&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/666/IdeaProjects/mathparser&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.44921467&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="ru.introguzzle.mathparser.tokenize" />
@@ -152,7 +180,7 @@
     </key>
   </component>
   <component name="RunManager" selected="JUnit.impl in mathparser">
-    <configuration name="MathParserTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="FunctionDefinitionTokenizerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="mathparser" />
       <extension name="coverage">
         <pattern>
@@ -161,13 +189,13 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="ru.impl" />
-      <option name="MAIN_CLASS_NAME" value="ru.impl.MathParserTest" />
+      <option name="MAIN_CLASS_NAME" value="ru.impl.FunctionDefinitionTokenizerTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MathTokenizerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="FunctionDefinitionTokenizerTest.test_explicit_function_with_parameters" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="mathparser" />
       <extension name="coverage">
         <pattern>
@@ -176,29 +204,14 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="ru.impl" />
-      <option name="MAIN_CLASS_NAME" value="ru.impl.MathTokenizerTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MathTokenizerTest.test_binary_operators" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="mathparser" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="ru.impl.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="ru.impl" />
-      <option name="MAIN_CLASS_NAME" value="ru.impl.MathTokenizerTest" />
-      <option name="METHOD_NAME" value="test_binary_operators" />
+      <option name="MAIN_CLASS_NAME" value="ru.impl.FunctionDefinitionTokenizerTest" />
+      <option name="METHOD_NAME" value="test_explicit_function_with_parameters" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MathTokenizerTest.test_function_definition" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="FunctionDefinitionTokenizerTest.test_function_definition" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="mathparser" />
       <extension name="coverage">
         <pattern>
@@ -207,9 +220,26 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="ru.impl" />
-      <option name="MAIN_CLASS_NAME" value="ru.impl.MathTokenizerTest" />
+      <option name="MAIN_CLASS_NAME" value="ru.impl.FunctionDefinitionTokenizerTest" />
       <option name="METHOD_NAME" value="test_function_definition" />
       <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FunctionDefinitionTokenizerTest.test_parametric_function_with_parameters" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="mathparser" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ru.impl.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="ru.impl" />
+      <option name="MAIN_CLASS_NAME" value="ru.impl.FunctionDefinitionTokenizerTest" />
+      <option name="METHOD_NAME" value="test_parametric_function_with_parameters" />
+      <option name="TEST_OBJECT" value="method" />
+      <dir value="$PROJECT_DIR$/src/test/java/ru/impl" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -225,10 +255,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.impl in mathparser" />
-        <item itemvalue="JUnit.MathTokenizerTest.test_binary_operators" />
-        <item itemvalue="JUnit.MathParserTest" />
-        <item itemvalue="JUnit.MathTokenizerTest" />
-        <item itemvalue="JUnit.MathTokenizerTest.test_function_definition" />
+        <item itemvalue="JUnit.FunctionDefinitionTokenizerTest" />
+        <item itemvalue="JUnit.FunctionDefinitionTokenizerTest.test_explicit_function_with_parameters" />
+        <item itemvalue="JUnit.FunctionDefinitionTokenizerTest.test_parametric_function_with_parameters" />
+        <item itemvalue="JUnit.FunctionDefinitionTokenizerTest.test_function_definition" />
       </list>
     </recent_temporary>
   </component>
@@ -285,7 +315,10 @@
       <workItem from="1722495735093" duration="10852000" />
       <workItem from="1722520839001" duration="3000" />
       <workItem from="1722531209840" duration="466000" />
-      <workItem from="1722594668720" duration="10527000" />
+      <workItem from="1722594668720" duration="16275000" />
+      <workItem from="1722628221366" duration="2959000" />
+      <workItem from="1722642594290" duration="44000" />
+      <workItem from="1722670137931" duration="8457000" />
     </task>
     <servers />
   </component>

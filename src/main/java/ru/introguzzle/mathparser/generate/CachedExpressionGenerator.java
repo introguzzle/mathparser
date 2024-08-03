@@ -36,7 +36,7 @@ public class CachedExpressionGenerator implements Generator<Expression> {
         Context context = pair.getValue();
 
         try {
-            Tokens tokens = this.tokenizer.tokenize(expression, context);
+            Tokens tokens = this.tokenizer.tokenize(expression, context).getTokens();
             Tokens changed = swapNumbers(tokens);
 
             return new MathExpression(

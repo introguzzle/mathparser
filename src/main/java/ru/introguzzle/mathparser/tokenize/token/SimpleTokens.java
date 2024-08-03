@@ -1,6 +1,7 @@
 package ru.introguzzle.mathparser.tokenize.token;
 
 import org.jetbrains.annotations.NotNull;
+import ru.introguzzle.mathparser.common.primitive.IntegerReference;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.expression.MathExpression;
 import ru.introguzzle.mathparser.tokenize.token.type.DeclarationType;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class SimpleTokens implements Tokens, Serializable {
 
@@ -77,6 +79,11 @@ public class SimpleTokens implements Tokens, Serializable {
     }
 
     @Override
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    @Override
     public List<Token> getTokenList() {
         return tokens;
     }
@@ -98,12 +105,26 @@ public class SimpleTokens implements Tokens, Serializable {
 
     @Override
     public void skipDeclaration() {
-        for (int i = 0; i < tokens.size(); i++) {
-            if (tokens.get(i).getType() == DeclarationType.DECLARATION_TERMINAL) {
-                this.position = i + 1;
-                break;
+        int result = findType(DeclarationType.DECLARATION);
+        if (result == -1) {
+            int then = findType(DeclarationType.DECLARATION_TERMINAL);
+            if (then != -1) {
+                position = result;
             }
+        } else {
+            position = result;
         }
+    }
+
+    private int findType(Type type) {
+        IntegerReference ref = new IntegerReference(-1);
+
+        IntStream.range(0, tokens.size())
+                .filter(i -> tokens.get(i).getType() == type)
+                .findFirst()
+                .ifPresent(i -> ref.setValue(i + 1));
+
+        return ref.getValue();
     }
 
     private int computeVariableCount() {
@@ -163,6 +184,13 @@ public class SimpleTokens implements Tokens, Serializable {
     @Override
     public Expression toExpression() {
         return new MathExpression(reduce());
+    }
+
+    @Override
+    public void merge(Tokens other) {
+        for (Token token: other) {
+            this.add(token);
+        }
     }
 
     @Override

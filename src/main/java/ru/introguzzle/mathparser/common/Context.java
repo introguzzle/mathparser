@@ -10,7 +10,7 @@ public interface Context {
     void setParent(Context parent);
 
     MutableSymbolList<MutableSymbol> getSymbols();
-    Optional<? extends MutableSymbol> getSymbol(String name);
+    Optional<MutableSymbol> getSymbol(String name);
     void addSymbol(MutableSymbol symbol);
     boolean removeSymbol(String name);
     boolean removeSymbol(MutableSymbol symbol);

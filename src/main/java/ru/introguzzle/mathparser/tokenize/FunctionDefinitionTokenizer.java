@@ -5,12 +5,13 @@ import org.jetbrains.annotations.Nullable;
 import ru.introguzzle.mathparser.common.*;
 import ru.introguzzle.mathparser.definition.FunctionDefinition;
 import ru.introguzzle.mathparser.definition.FunctionDefinitionType;
+import ru.introguzzle.mathparser.expression.ExpressionIterator;
 import ru.introguzzle.mathparser.function.Function;
+import ru.introguzzle.mathparser.group.FunctionGroup;
 import ru.introguzzle.mathparser.symbol.MutableSymbol;
-import ru.introguzzle.mathparser.tokenize.token.FunctionTokensProxy;
-import ru.introguzzle.mathparser.tokenize.token.SimpleToken;
-import ru.introguzzle.mathparser.tokenize.token.Token;
-import ru.introguzzle.mathparser.tokenize.token.Tokens;
+import ru.introguzzle.mathparser.symbol.Variable;
+import ru.introguzzle.mathparser.tokenize.token.*;
+import ru.introguzzle.mathparser.tokenize.token.type.DeclarationType;
 
 import java.util.Map;
 import java.util.function.Supplier;
@@ -45,19 +46,46 @@ public abstract class FunctionDefinitionTokenizer
     }
 
     public synchronized
-    @NotNull FunctionTokensProxy tokenize(@NotNull FunctionDefinition definition,
-                                          @NotNull Context context)
+    @NotNull FunctionGroup tokenizeDefinition(@NotNull FunctionDefinition definition,
+                                              @NotNull Context context)
             throws TokenizeException {
+        ExpressionIterator iterator = definition.iterator();
+        Buffer buffer = new Buffer(iterator, definition, context);
 
-        Tokens tokens = super.tokenize(definition, context);
-        FunctionDefinitionType type = resolve(definition, tokens);
+        Tokens declarationTokens = new SimpleTokens();
+        declarationTokens.add(handleDefinition(buffer, definition));
 
-        return new FunctionTokensProxy(tokens, type);
+        Tokens mainTokens = super.start(buffer);
+
+        if (mainTokens.get(0).getType() == DeclarationType.DECLARATION_TERMINAL) {
+            declarationTokens.add(mainTokens.getTokenList().removeFirst());
+        }
+
+        return new FunctionGroup(declarationTokens, mainTokens, resolve(definition, mainTokens));
+    }
+
+    protected Token handleDefinition(Buffer buffer,
+                                     FunctionDefinition definition) {
+        int split = definition.getDefinitionSpliterator();
+        Variable variable = definition.getVariable();
+
+        if (!buffer.context().contains(variable.getName())) {
+            setContextParent(buffer.context());
+            buffer.context().addSymbol(variable);
+        }
+
+        buffer.iterator().setCursor(split);
+
+        return new SimpleToken(
+                DeclarationType.DECLARATION,
+                definition.getString().substring(0, split),
+                0
+        );
     }
 
     protected
     FunctionDefinitionType resolve(FunctionDefinition definition,
-                                             Tokens tokens) {
+                                   Tokens tokens) {
         if (resolver != null) {
             return resolver.resolve(definition);
         }
@@ -80,14 +108,10 @@ public abstract class FunctionDefinitionTokenizer
     Result findFromContext(@Mutates Context context,
                            CharSequence symbols,
                            int start) {
-        if (context.getParent() == null) {
-            context.setParent(new NamingContext());
-        }
+        setContextParent(context);
 
-        MutableSymbol symbol = context.getSymbols().getValues().values()
-                .stream()
-                .filter(Nameable.match(symbols))
-                .findFirst()
+        MutableSymbol symbol = context
+                .getSymbol(symbols.toString())
                 .orElseGet(() -> {
                     MutableSymbol fromSupplier = getDefaultFactory(symbols, getDefaultValue()).get();
                     context.getParent().addSymbol(fromSupplier);
@@ -96,5 +120,22 @@ public abstract class FunctionDefinitionTokenizer
 
         Token token = new SimpleToken(symbol.type(), symbols, start);
         return new Result(true, token);
+    }
+
+    private void setContextParent(Context context) {
+        if (context.getParent() == null) {
+            context.setParent(new NamingContext());
+        }
+    }
+
+    @Override
+    protected Result find(CharSequence symbols, int start) {
+        Result result = super.find(symbols, start);
+        Result another = new Result(
+                "=".contentEquals(symbols),
+                new SimpleToken(DeclarationType.DECLARATION_TERMINAL, symbols, start)
+        );
+
+        return Result.reduce(result, another);
     }
 }

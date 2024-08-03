@@ -6,6 +6,7 @@ import ru.introguzzle.mathparser.common.Context;
 import ru.introguzzle.mathparser.common.NamingContext;
 import ru.introguzzle.mathparser.definition.FunctionDefinition;
 import ru.introguzzle.mathparser.definition.FunctionDefinitionType;
+import ru.introguzzle.mathparser.group.FunctionGroup;
 import ru.introguzzle.mathparser.symbol.Coefficient;
 import ru.introguzzle.mathparser.symbol.MutableSymbol;
 import ru.introguzzle.mathparser.symbol.Variable;
@@ -37,12 +38,22 @@ public class FunctionDefinitionTokenizerTest {
     }
 
     @Test
+    public void test_function_definition() throws Exception {
+        FunctionDefinition definition = new FunctionDefinition("f(x)    = x + x ** 3", new Variable("x", 0));
+        Context context = new NamingContext();
+        FunctionGroup group = tokenizer.tokenizeDefinition(definition, context);
+        System.out.println(group.getTokens().toExpression());
+        group.getTokens().forEach(System.out::println);
+    }
+
+    @Test
     public void test_explicit_function_with_parameters() throws TokenizeException {
         Context context = new NamingContext();
 
         var definition = new FunctionDefinition("f(z) = z + a", new Variable("z", 0));
-        var result = tokenizer.tokenize(definition, context);
-        assertEquals(FunctionDefinitionType.EXPLICIT_FUNCTION_WITH_PARAMETERS, result.type());
+        var group = tokenizer.tokenizeDefinition(definition, context);
+        System.out.println(context);
+        assertEquals(FunctionDefinitionType.EXPLICIT_FUNCTION_WITH_PARAMETERS, group.getType());
     }
 
     @Test
@@ -50,9 +61,9 @@ public class FunctionDefinitionTokenizerTest {
         Context context = new NamingContext();
 
         var definition = new FunctionDefinition("sin(t)", new Variable("t", 0));
-        var result = tokenizer.tokenize(definition, context);
+        var group = tokenizer.tokenizeDefinition(definition, context);
 
-        assertEquals(FunctionDefinitionType.PARAMETRIC_FUNCTION, result.type());
+        assertEquals(FunctionDefinitionType.PARAMETRIC_FUNCTION, group.getType());
     }
 
     @Test
@@ -60,8 +71,9 @@ public class FunctionDefinitionTokenizerTest {
         Context context = new NamingContext();
 
         var definition = new FunctionDefinition("g(x) = x^2", new Variable("x", 0));
-        var result = tokenizer.tokenize(definition, context);
-        assertEquals(FunctionDefinitionType.EXPLICIT_FUNCTION, result.type());
+        var group = tokenizer.tokenizeDefinition(definition, context);
+        System.out.println(group.getTokens().get(0));
+        assertEquals(FunctionDefinitionType.EXPLICIT_FUNCTION, group.getType());
     }
 
     @Test
@@ -69,9 +81,9 @@ public class FunctionDefinitionTokenizerTest {
         Context context = new NamingContext();
 
         var definition = new FunctionDefinition("cos(t) + b", new Variable("t", 0));
-        var result = tokenizer.tokenize(definition, context);
+        var group = tokenizer.tokenizeDefinition(definition, context);
 
-        assertEquals(FunctionDefinitionType.PARAMETRIC_FUNCTION_WITH_PARAMETERS, result.type());
+        assertEquals(FunctionDefinitionType.PARAMETRIC_FUNCTION_WITH_PARAMETERS, group.getType());
     }
 }
 
