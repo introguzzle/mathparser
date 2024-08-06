@@ -6,14 +6,14 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
-public abstract class MutableSymbol implements Symbol<Double>, Serializable {
+public abstract class MutableSymbol<N extends Number> implements Symbol<N>, Serializable {
 
     @Serial
     private static final long serialVersionUID = 282184201759219L;
     private final String name;
-    private transient double value;
+    private N value;
 
-    public MutableSymbol(String name, double value) {
+    public MutableSymbol(String name, N value) {
         this.name = name;
         this.value = value;
     }
@@ -24,18 +24,13 @@ public abstract class MutableSymbol implements Symbol<Double>, Serializable {
     }
 
     @Override
-    public Double getValue() {
+    public N getValue() {
         return value;
     }
 
-    public MutableSymbol setValue(double value) {
+    public MutableSymbol<N> setValue(N value) {
         this.value = value;
         return this;
-    }
-
-    @Override
-    public MutableSymbol clone() throws CloneNotSupportedException {
-        return (MutableSymbol) super.clone();
     }
 
     @Override
@@ -50,9 +45,8 @@ public abstract class MutableSymbol implements Symbol<Double>, Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MutableSymbol mutableSymbol = (MutableSymbol) o;
-        return Double.compare(value, mutableSymbol.value) == 0
-                && Objects.equals(name, mutableSymbol.name);
+        MutableSymbol<?> mutableSymbol = (MutableSymbol<?>) o;
+        return Objects.equals(name, mutableSymbol.name);
     }
 
     @Override

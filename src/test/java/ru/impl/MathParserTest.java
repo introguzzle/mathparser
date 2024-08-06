@@ -53,22 +53,22 @@ public class MathParserTest {
     public void test_illegal_variables() throws Exception {
         Expression expression = new MathExpression("max(a, b, c)");
 
-        Variables variables = new Variables();
-        variables.add(new Variable("a", 2));
+        Variables<Double> variables = new Variables<>();
+        variables.add(new Variable<>("a", 2.0));
 
-        parser.parse(expression, new NamingContext(variables));
+        parser.parse(expression, new NamingContext<>(variables));
     }
 
     @Test
     public void test_variadic_functions_and_changing_variables() throws Exception {
         Expression expression = new MathExpression("max(a, b, c)");
 
-        Variable a = new Variable("a", 2.0);
-        Variable b = new Variable("b", 3.0);
-        Variable c = new Variable("c", 444.0);
-        Variables variables = new Variables(a, b, c);
+        Variable<Double> a = new Variable<>("a", 2.0);
+        Variable<Double> b = new Variable<>("b", 3.0);
+        Variable<Double> c = new Variable<>("c", 444.0);
+        Variables<Double> variables = new Variables<>(a, b, c);
 
-        NamingContext context = new NamingContext(variables);
+        NamingContext<Double> context = new NamingContext<>(variables);
 
         Double result = parser.parse(expression, context);
         assertEquals(Double.valueOf(444.0), result);
@@ -143,13 +143,13 @@ public class MathParserTest {
     public void test_expression_with_variables() throws Exception {
         Expression expression = new MathExpression("a + b + c + d");
 
-        Variables variables = new Variables();
+        Variables<Double> variables = new Variables<>();
         variables.add("a", 5.0);
         variables.add("b", Math.PI);
         variables.add("c", 10.0);
         variables.add("d", 2.0);
 
-        Context context = new NamingContext(variables);
+        Context<Double> context = new NamingContext<>(variables);
 
         Double result = parser.parse(expression, context);
         assertEquals(Double.valueOf(5.0 + Math.PI + 10 + 2), result);
@@ -179,13 +179,13 @@ public class MathParserTest {
     @Test
     @SuppressWarnings("unused")
     public void test_unique_variables() {
-        Variables variables = new Variables();
+        Variables<Double> variables = new Variables<>();
         variables.add("a", 1.43);
-        variables.add("b", 21221);
+        variables.add("b", 21221.0);
 
-        variables = new Variables(
-                new Variable("a", 9),
-                new Variable("b", 4)
+        variables = new Variables<>(
+                new Variable<>("a", 9.0),
+                new Variable<>("b", 4.0)
         );
 
         variables.size();
@@ -193,9 +193,9 @@ public class MathParserTest {
 
     @Test(expected = NotUniqueNamingException.class)
     public void test_not_unique_variables_throws1() {
-        Variables variables = new Variables(
-            new Variable("a", 3),
-            new Variable("a", 3)
+        Variables<Double> variables = new Variables<>(
+            new Variable<>("a", 3.0),
+            new Variable<>("a", 3.0)
         );
 
         variables.size();
@@ -203,9 +203,9 @@ public class MathParserTest {
 
     @Test(expected = NotUniqueNamingException.class)
     public void test_not_unique_variables_throws2() {
-        Variables variables = new Variables();
+        Variables<Double> variables = new Variables<>();
 
-        variables.add(new Variable("a", 3));
-        variables.add(new Variable("a", 4));
+        variables.add(new Variable<>("a", 3.0));
+        variables.add(new Variable<>("a", 4.0));
     }
 }

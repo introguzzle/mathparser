@@ -22,15 +22,14 @@ public class FunctionDefinitionParser implements Parser<Double> {
     public FunctionDefinitionParser() {
         this.tokenizer = new FunctionDefinitionTokenizer() {
             @Override
-            public double getDefaultValue() {
-                return 0;
+            public Supplier<MutableSymbol<?>> getDefaultFactory(CharSequence name,
+                                                                Number value) {
+                return () -> new Coefficient<>(name.toString(), value);
             }
 
             @Override
-            public
-            Supplier<MutableSymbol> getDefaultFactory(CharSequence name,
-                                                      double value) {
-                return () -> new Coefficient(name.toString(), value);
+            public Number getDefaultValue() {
+                return 0;
             }
         };
 
@@ -43,12 +42,12 @@ public class FunctionDefinitionParser implements Parser<Double> {
     }
 
     @Override
-    public Double parse(@NotNull Expression expression, @NotNull Context context) throws SyntaxException {
+    public Double parse(@NotNull Expression expression, @NotNull Context<Double> context) throws SyntaxException {
         return parser.parse(expression, context);
     }
 
     @Override
-    public Double parse(@NotNull Tokens tokens, Context context) throws SyntaxException {
+    public Double parse(@NotNull Tokens tokens, Context<Double> context) throws SyntaxException {
         return parser.parse(tokens, context);
     }
 
@@ -57,7 +56,7 @@ public class FunctionDefinitionParser implements Parser<Double> {
 
     public
     ParserResult parseDefinition(FunctionDefinition definition,
-                                 Context context)
+                                 Context<Double> context)
             throws SyntaxException {
 
         FunctionGroup group = tokenizer.tokenizeDefinition(definition, context);
@@ -67,7 +66,7 @@ public class FunctionDefinitionParser implements Parser<Double> {
         return new ParserResult(value, type);
     }
 
-    private double parse(FunctionGroup group, Context context) throws SyntaxException {
+    private double parse(FunctionGroup group, Context<Double> context) throws SyntaxException {
         return parse(group.getTokens(), context);
     }
 }

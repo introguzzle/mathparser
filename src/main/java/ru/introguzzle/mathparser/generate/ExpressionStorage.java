@@ -13,11 +13,11 @@ import java.util.Map;
 
 public class ExpressionStorage {
 
-    public static class Pair implements Map.Entry<Expression, Context> {
+    public static class Pair implements Map.Entry<Expression, Context<Double>> {
         private final Expression expression;
-        private Context context;
+        private Context<Double> context;
 
-        public Pair(Expression expression, Context context) {
+        public Pair(Expression expression, Context<Double> context) {
             this.expression = expression;
             this.context = context;
         }
@@ -28,26 +28,27 @@ public class ExpressionStorage {
         }
 
         @Override
-        public Context getValue() {
+        public Context<Double> getValue() {
             return this.context;
         }
 
         @Override
-        public Context setValue(Context context) {
+        public Context<Double> setValue(Context<Double> context) {
             this.context = context;
             return this.context;
         }
     }
 
-    private static Pair pair(String string, Variable... variables) {
+    @SafeVarargs
+    private static Pair pair(String string, Variable<Double>... variables) {
         return new Pair(
                 new MathExpression(string),
-                new NamingContext(new Variables(variables))
+                new NamingContext<>(new Variables<>(variables))
         );
     }
 
-    private static Variable v(String name) {
-        return new Variable(name, 0);
+    private static Variable<Double> v(String name) {
+        return new Variable<>(name, 0.0);
     }
 
     public static final Collection<? extends Pair> EXPRESSIONS = List.of(

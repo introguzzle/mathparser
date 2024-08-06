@@ -10,25 +10,25 @@ import java.util.Set;
 /**
  *
  */
-public class NamingContext implements Context {
-    private final MutableSymbolList<MutableSymbol> symbols = new MutableSymbolList<>() {};
+public class NamingContext<N extends Number> implements Context<N> {
+    private final MutableSymbolList<MutableSymbol<N>, N> symbols = new MutableSymbolList<>() {};
     private final Set<String> names = new HashSet<>();
-    private Context parent;
+    private Context<N> parent;
 
     public NamingContext() {
 
     }
 
-    public NamingContext(Context parent) {
+    public NamingContext(Context<N> parent) {
         registerParent(parent);
     }
 
-    public NamingContext(@NotNull MutableSymbolList<? extends MutableSymbol> symbols) {
+    public NamingContext(@NotNull MutableSymbolList<? extends MutableSymbol<N>, N> symbols) {
         names.addAll(symbols.getNames());
         this.symbols.addAll(symbols);
     }
 
-    private void registerParent(Context parent) {
+    private void registerParent(Context<N> parent) {
         if (parent != null) {
             this.parent = parent;
             this.names.addAll(parent.getNames());
@@ -37,24 +37,24 @@ public class NamingContext implements Context {
     }
 
     @Override
-    public MutableSymbolList<MutableSymbol> getSymbols() {
+    public MutableSymbolList<MutableSymbol<N>, N> getSymbols() {
         return symbols;
     }
 
     @Override
-    public Context getParent() {
+    public Context<N> getParent() {
         return parent;
     }
 
     @Override
-    public void addSymbol(MutableSymbol symbol) {
+    public void addSymbol(MutableSymbol<? extends Number> symbol) {
         String name;
         boolean added = names.add(name = symbol.getName());
         if (!added) {
             throw new NotUniqueNamingException(name, names);
         }
 
-        symbols.add(symbol);
+        symbols.add(symbol.getName(), symbol);
     }
 
     @Override
@@ -64,13 +64,13 @@ public class NamingContext implements Context {
     }
 
     @Override
-    public boolean removeSymbol(MutableSymbol symbol) {
+    public boolean removeSymbol(MutableSymbol<N> symbol) {
         return symbols.remove(symbol) & names.remove(symbol.getName());
     }
 
     @Override
-    public Optional<MutableSymbol> getSymbol(String name) {
-        Optional<MutableSymbol> optional = symbols.find(name);
+    public Optional<MutableSymbol<N>> getSymbol(String name) {
+        Optional<MutableSymbol<N>> optional = symbols.find(name);
 
         if (optional.isEmpty() && parent != null) {
             return parent.getSymbol(name);
@@ -82,7 +82,7 @@ public class NamingContext implements Context {
     @Override
     public Set<String> getNames() {
         Set<String> names = this.names;
-        Context parent = this.parent;
+        Context<N> parent = this.parent;
 
         while (parent != null) {
             names.addAll(parent.getNames());
@@ -93,12 +93,12 @@ public class NamingContext implements Context {
     }
 
     @Override
-    public void setParent(Context parent) {
+    public void setParent(Context<N> parent) {
         registerParent(parent);
     }
 
     @Override
-    public void setSymbols(MutableSymbolList<? extends MutableSymbol> symbols) {
+    public void setSymbols(MutableSymbolList<? extends MutableSymbol<N>, N> symbols) {
         this.symbols.clear();
         this.symbols.addAll(symbols);
     }

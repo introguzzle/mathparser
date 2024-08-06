@@ -2,6 +2,8 @@ package ru.introguzzle.mathparser.function;
 
 import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.common.Nameable;
+import ru.introguzzle.mathparser.function.real.FunctionUtilities;
+import ru.introguzzle.mathparser.function.real.IllegalFunctionInvocationException;
 import ru.introguzzle.mathparser.operator.Operator;
 import ru.introguzzle.mathparser.tokenize.token.type.FunctionType;
 import ru.introguzzle.mathparser.operator.Priorities;
@@ -9,7 +11,9 @@ import ru.introguzzle.mathparser.tokenize.token.type.Type;
 
 import java.util.List;
 
-public interface Function extends java.util.function.Function<List<Double>, Double>, Nameable {
+public interface Function<T extends Number> extends
+        java.util.function.Function<List<T>, T>,
+        Nameable {
     int getRequiredArguments();
 
     boolean isVariadic();
@@ -23,16 +27,16 @@ public interface Function extends java.util.function.Function<List<Double>, Doub
         return FunctionType.FUNCTION;
     }
 
-    default Operator toOperator() {
-        return new Operator() {
+    default Operator<T> toOperator() {
+        return new Operator<>() {
             @Override
             public int getRequiredOperands() {
                 return Function.this.getRequiredArguments();
             }
 
             @Override
-            public Double apply(List<Double> doubles) {
-                return Function.this.apply(doubles);
+            public T apply(List<T> operands) {
+                return Function.this.apply(operands);
             }
 
             @Override

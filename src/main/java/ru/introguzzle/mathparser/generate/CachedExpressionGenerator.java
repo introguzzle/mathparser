@@ -33,7 +33,7 @@ public class CachedExpressionGenerator implements Generator<Expression> {
     public Expression generate() {
         var pair = Random.pickFromCollection(ExpressionStorage.EXPRESSIONS);
         Expression expression = pair.getKey();
-        Context context = pair.getValue();
+        Context<Double> context = pair.getValue();
 
         try {
             Tokens tokens = this.tokenizer.tokenize(expression, context).getTokens();

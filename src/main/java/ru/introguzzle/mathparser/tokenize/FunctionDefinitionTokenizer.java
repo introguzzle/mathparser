@@ -9,19 +9,19 @@ import ru.introguzzle.mathparser.expression.ExpressionIterator;
 import ru.introguzzle.mathparser.function.Function;
 import ru.introguzzle.mathparser.group.FunctionGroup;
 import ru.introguzzle.mathparser.symbol.MutableSymbol;
-import ru.introguzzle.mathparser.symbol.Variable;
 import ru.introguzzle.mathparser.tokenize.token.*;
 import ru.introguzzle.mathparser.tokenize.token.type.DeclarationType;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public abstract class FunctionDefinitionTokenizer
         extends MathTokenizer {
     private Resolver<FunctionDefinition, FunctionDefinitionType> resolver;
 
-    public abstract Supplier<MutableSymbol> getDefaultFactory(CharSequence name, double value);
-    public abstract double getDefaultValue();
+    public abstract Supplier<MutableSymbol<?>> getDefaultFactory(CharSequence name, Number value);
+    public abstract Number getDefaultValue();
 
     public
     FunctionDefinitionTokenizer setResolver(Resolver<FunctionDefinition, FunctionDefinitionType> resolver) {
@@ -39,7 +39,7 @@ public abstract class FunctionDefinitionTokenizer
     }
 
     public
-    FunctionDefinitionTokenizer(@NotNull Map<String, ? extends Function> functions,
+    FunctionDefinitionTokenizer(@NotNull Map<String, ? extends Function<?>> functions,
                                 @Nullable Resolver<FunctionDefinition, FunctionDefinitionType> resolver) {
         super(functions);
         this.resolver = resolver;
@@ -47,7 +47,7 @@ public abstract class FunctionDefinitionTokenizer
 
     public synchronized
     @NotNull FunctionGroup tokenizeDefinition(@NotNull FunctionDefinition definition,
-                                              @NotNull Context context)
+                                              @NotNull Context<Double> context)
             throws TokenizeException {
         ExpressionIterator iterator = definition.iterator();
         Buffer buffer = new Buffer(iterator, definition, context);
@@ -67,7 +67,7 @@ public abstract class FunctionDefinitionTokenizer
     protected Token handleDefinition(Buffer buffer,
                                      FunctionDefinition definition) {
         int split = definition.getDefinitionSpliterator();
-        Variable variable = definition.getVariable();
+        MutableSymbol<? extends Number> variable = definition.getVariable();
 
         if (!buffer.context().contains(variable.getName())) {
             setContextParent(buffer.context());
@@ -105,26 +105,27 @@ public abstract class FunctionDefinitionTokenizer
 
     @Override
     protected
-    Result findFromContext(@Mutates Context context,
+    Result findFromContext(@Mutates Context<?> context,
                            CharSequence symbols,
                            int start) {
         setContextParent(context);
+        Optional<? extends MutableSymbol<?>> optional = context.getSymbol(symbols.toString());
+        MutableSymbol<?> symbol;
 
-        MutableSymbol symbol = context
-                .getSymbol(symbols.toString())
-                .orElseGet(() -> {
-                    MutableSymbol fromSupplier = getDefaultFactory(symbols, getDefaultValue()).get();
-                    context.getParent().addSymbol(fromSupplier);
-                    return fromSupplier;
-                });
+        if (optional.isPresent()) {
+            symbol = optional.get();
+        } else {
+            symbol = getDefaultFactory(symbols, getDefaultValue()).get();
+            context.getParent().addSymbol(symbol);
+        }
 
         Token token = new SimpleToken(symbol.type(), symbols, start);
         return new Result(true, token);
     }
 
-    private void setContextParent(Context context) {
+    private void setContextParent(Context<?> context) {
         if (context.getParent() == null) {
-            context.setParent(new NamingContext());
+            context.setParent(new NamingContext<>());
         }
     }
 

@@ -2,11 +2,11 @@ package ru.introguzzle.mathparser.operator.logical;
 
 import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.operator.Priorities;
-import ru.introguzzle.mathparser.operator.UnaryOperator;
+import ru.introguzzle.mathparser.operator.DoubleUnaryOperator;
 
 import java.util.List;
 
-public class BitwiseNegationOperator implements UnaryOperator {
+public class BitwiseNegationOperator implements DoubleUnaryOperator {
     @Override
     public Double apply(List<Double> operands) {
         return (double) (~operands.getFirst().longValue());

@@ -1,7 +1,7 @@
 package ru.introguzzle.mathparser.generate;
 
 import org.jetbrains.annotations.Nullable;
-import ru.introguzzle.mathparser.constant.Constant;
+import ru.introguzzle.mathparser.constant.real.DoubleConstant;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.function.Function;
 import ru.introguzzle.mathparser.expression.MathExpression;
@@ -107,7 +107,7 @@ public class ExpressionGenerator implements Generator<Expression> {
         }
 
         ExpressionBuilder appendFunction(Depth depth) {
-            Function function = Random.pickFromCollection(tokenizer.getFunctions());
+            Function<?> function = Random.pickFromMap(tokenizer.getFunctions());
 
             if (function == null) {
                 throw new EmptyFunctionListException("No registered functions");
@@ -176,7 +176,7 @@ public class ExpressionGenerator implements Generator<Expression> {
         int i = Random.randomInteger(97, 122);
         String s = Character.toString((char) i);
 
-        for (var symbol: tokenizer.getConstants()) {
+        for (var symbol: tokenizer.getConstants().values()) {
             if (symbol.getName().contentEquals(s)) {
                 return createVariable();
             }
@@ -186,7 +186,7 @@ public class ExpressionGenerator implements Generator<Expression> {
     }
 
     private String createConstant() {
-        Constant constant = (Constant) Random.pickFromCollection(tokenizer.getConstants());
+        DoubleConstant constant = (DoubleConstant) Random.pickFromMap(tokenizer.getConstants());
         if (constant == null) {
             throw new EmptyConstantListException("No constant present in tokenizer");
         }

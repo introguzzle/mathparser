@@ -2,21 +2,22 @@ package ru.introguzzle.mathparser.symbol;
 
 import java.util.List;
 
-public class Variables extends MutableSymbolList<Variable> {
+public class Variables<N extends Number> extends MutableSymbolList<Variable<N>, N> {
 
     public Variables() {
         super();
     }
 
-    public Variables(List<Variable> variableList) {
+    public Variables(List<Variable<N>> variableList) {
         super(variableList);
     }
 
-    public Variables(Variable... variables) {
+    @SafeVarargs
+    public Variables(Variable<N>... variables) {
         super(variables);
     }
 
-    public void add(String name, double value) {
-        this.add(new Variable(name, value));
+    public void add(String name, N value) {
+        this.add(new Variable<>(name, value));
     }
 }

@@ -2,13 +2,10 @@ package ru.introguzzle.mathparser.operator.comparison;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.Objects;
-
 public class EqualityOperator extends ComparingOperator {
     @Override
-    public Double apply(List<Double> operands) {
-        return Objects.equals(operands.get(0), operands.get(1)) ? 1.0 : 0.0;
+    public boolean compare(double left, double right) {
+        return Double.compare(left, right) == 0;
     }
 
     @Override

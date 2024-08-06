@@ -1,6 +1,7 @@
 package ru.introguzzle.mathparser.tokenize;
 
 import org.jetbrains.annotations.NotNull;
+import ru.introguzzle.mathparser.operator.DoubleOperator;
 import ru.introguzzle.mathparser.operator.Operator;
 import ru.introguzzle.mathparser.tokenize.token.*;
 import ru.introguzzle.mathparser.tokenize.token.type.*;
@@ -9,9 +10,9 @@ import java.util.*;
 
 public class PrefixTokenProcessor implements TokenProcessor {
 
-    private final Map<String, Operator> operators = new HashMap<>();
+    private final Map<String, Operator<?>> operators = new HashMap<>();
 
-    public PrefixTokenProcessor(Map<String, ? extends Operator> operators) {
+    public PrefixTokenProcessor(Map<String, ? extends Operator<?>> operators) {
         this.operators.putAll(operators);
     }
 
@@ -36,7 +37,7 @@ public class PrefixTokenProcessor implements TokenProcessor {
                     operatorTokens.pop();
                 }
             } else if (type instanceof FunctionType || operators.containsKey(string)) {
-                Operator op = operators.get(string);
+                Operator<?> op = operators.get(string);
 
                 if (op == null && type instanceof FunctionType) {
                     op = createDummy();
@@ -67,8 +68,8 @@ public class PrefixTokenProcessor implements TokenProcessor {
         return output;
     }
 
-    private static @NotNull Operator createDummy() {
-        return new Operator() {
+    private static @NotNull DoubleOperator createDummy() {
+        return new DoubleOperator() {
             @Override
             public int getRequiredOperands() {
                 return 0;

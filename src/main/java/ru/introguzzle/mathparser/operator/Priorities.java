@@ -2,6 +2,9 @@ package ru.introguzzle.mathparser.operator;
 
 public final class Priorities {
     // First are functions, last are comparison operators
+    private Priorities() {
+
+    }
 
     public static final int FUNCTION_PRIORITY = 1;
     public static final int PARENTHESIS_PRIORITY = 1;

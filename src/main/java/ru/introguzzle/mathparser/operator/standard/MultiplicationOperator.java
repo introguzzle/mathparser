@@ -1,12 +1,12 @@
 package ru.introguzzle.mathparser.operator.standard;
 
 import org.jetbrains.annotations.NotNull;
-import ru.introguzzle.mathparser.operator.BinaryOperator;
+import ru.introguzzle.mathparser.operator.DoubleBinaryOperator;
 import ru.introguzzle.mathparser.operator.Priorities;
 
 import java.util.List;
 
-public class MultiplicationOperator implements BinaryOperator {
+public class MultiplicationOperator implements DoubleBinaryOperator {
     @Override
     public Double apply(List<Double> operands) {
         return operands.get(0) * operands.get(1);

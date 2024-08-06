@@ -5,17 +5,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.introguzzle.mathparser.common.*;
 import ru.introguzzle.mathparser.expression.ExpressionIterator;
-import ru.introguzzle.mathparser.function.AbstractFunction;
+import ru.introguzzle.mathparser.function.real.DoubleFunction;
 import ru.introguzzle.mathparser.function.Function;
+import ru.introguzzle.mathparser.function.real.DoubleFunctionReflector;
 import ru.introguzzle.mathparser.group.Group;
 import ru.introguzzle.mathparser.group.TokenGroup;
 import ru.introguzzle.mathparser.operator.Operator;
-import ru.introguzzle.mathparser.operator.OperatorReflector;
+import ru.introguzzle.mathparser.operator.DoubleOperatorReflector;
 import ru.introguzzle.mathparser.symbol.*;
-import ru.introguzzle.mathparser.constant.Constant;
-import ru.introguzzle.mathparser.constant.ConstantReflector;
+import ru.introguzzle.mathparser.constant.real.DoubleConstant;
+import ru.introguzzle.mathparser.constant.real.DoubleConstantReflector;
 import ru.introguzzle.mathparser.expression.Expression;
-import ru.introguzzle.mathparser.function.FunctionReflector;
 import ru.introguzzle.mathparser.tokenize.token.*;
 import ru.introguzzle.mathparser.tokenize.token.type.*;
 
@@ -76,14 +76,18 @@ public class MathTokenizer implements Tokenizer, Serializable {
 
     public record Buffer(@NotNull ExpressionIterator iterator,
                          @NotNull Expression expression,
-                         @NotNull Context context) {
+                         @NotNull Context<?> context) {
     }
 
     @Serial
     private static final long serialVersionUID = -54943912839L;
 
     @NotNull
-    private final transient Map<String, Nameable> nameableMap = new HashMap<>();
+    private final transient Map<String, Nameable> names = new HashMap<>();
+
+    private final Map<String, Operator<?>> operators = new HashMap<>();
+    private final Map<String, Function<?>> functions = new HashMap<>();
+    private final Map<String, ImmutableSymbol<?>> constants = new HashMap<>();
 
     private String allowedOperatorSymbols = "+-/*~!@#$%^&*()\"{}_[]|\\?/<>,.=";
     private Predicate<Character> digitPredicate = c ->
@@ -108,32 +112,32 @@ public class MathTokenizer implements Tokenizer, Serializable {
     }
 
     public MathTokenizer() {
-        nameableMap.putAll(FunctionReflector.get());
-        nameableMap.putAll(ConstantReflector.get());
-        nameableMap.putAll(OperatorReflector.get());
+        names.putAll(DoubleFunctionReflector.get());
+        names.putAll(DoubleConstantReflector.get());
+        names.putAll(DoubleOperatorReflector.get());
     }
 
-    public MathTokenizer(@NotNull Map<String, ? extends Function> functions) {
+    public MathTokenizer(@NotNull Map<String, ? extends Function<?>> functions) {
         this();
-        nameableMap.putAll(functions);
+        names.putAll(functions);
     }
 
     private static Map<String, Nameable> toMap(@NotNull Collection<? extends Nameable> collection) {
         return collection.stream().collect(Collectors.toMap(Nameable::getName, n -> n));
     }
 
-    public MathTokenizer withFunctions(@NotNull Collection<? extends Function> functions) {
-        nameableMap.putAll(toMap(functions));
+    public MathTokenizer withFunctions(@NotNull Collection<? extends Function<?>> functions) {
+        names.putAll(toMap(functions));
         return this;
     }
 
-    public MathTokenizer withConstants(@NotNull Collection<? extends ImmutableSymbol> constants) {
-        nameableMap.putAll(toMap(constants));
+    public MathTokenizer withConstants(@NotNull Collection<? extends ImmutableSymbol<?>> constants) {
+        names.putAll(toMap(constants));
         return this;
     }
 
-    public MathTokenizer withOperators(@NotNull Collection<? extends Operator> operators) {
-        nameableMap.putAll(toMap(operators));
+    public MathTokenizer withOperators(@NotNull Collection<? extends Operator<?>> operators) {
+        names.putAll(toMap(operators));
         return this;
     }
 
@@ -142,11 +146,11 @@ public class MathTokenizer implements Tokenizer, Serializable {
                                    int requiredArguments,
                                    boolean variadic,
                                    @NotNull java.util.function.Function<List<Double>, Double> replace) {
-        if (!nameableMap.containsKey(name)) {
-            throw new NoSuchNameException(name, nameableMap.keySet());
+        if (!names.containsKey(name)) {
+            throw new NoSuchNameException(name, names.keySet());
         }
 
-        Function newFunction = new AbstractFunction(name, requiredArguments) {
+        Function<Double> newFunction = new DoubleFunction(name, requiredArguments) {
             @Override
             public Double apply(List<Double> arguments) {
                 return replace.apply(arguments);
@@ -158,49 +162,49 @@ public class MathTokenizer implements Tokenizer, Serializable {
             }
         };
 
-        nameableMap.replace(name, newFunction);
+        names.replace(name, newFunction);
         return this;
     }
 
     public
     MathTokenizer overrideOperator(@NotNull String name,
-                                   Operator operator) {
-        if (!nameableMap.containsKey(name)) {
-            throw new NoSuchNameException(name, nameableMap.keySet());
+                                   Operator<?> operator) {
+        if (!names.containsKey(name)) {
+            throw new NoSuchNameException(name, names.keySet());
         }
 
-        nameableMap.replace(name, operator);
+        names.replace(name, operator);
         return this;
     }
 
     public MathTokenizer overrideConstant(@NotNull String name, double value) {
-        nameableMap.remove(name);
-        nameableMap.put(name, new Constant(name, value) {});
+        names.remove(name);
+        names.put(name, new DoubleConstant(name, value) {});
         return this;
     }
 
-    public MathTokenizer addFunction(@NotNull Function function) {
+    public MathTokenizer addFunction(@NotNull Function<?> function) {
         addName(function);
         return this;
     }
 
-    public MathTokenizer addConstant(@NotNull Constant constant) {
+    public MathTokenizer addConstant(@NotNull DoubleConstant constant) {
         addName(constant);
         return this;
     }
 
     public MathTokenizer addName(@NotNull Nameable nameable) {
-        nameableMap.put(nameable.getName(), nameable);
+        names.put(nameable.getName(), nameable);
         return this;
     }
 
-    public MathTokenizer addOperator(@NotNull Operator operator) {
+    public MathTokenizer addOperator(@NotNull Operator<?> operator) {
         addName(operator);
         return this;
     }
 
     private <N extends Nameable> MathTokenizer clearNameables(Class<N> cls) {
-        nameableMap.entrySet()
+        names.entrySet()
                 .removeIf(cls::isInstance);
         return this;
     }
@@ -210,7 +214,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
     }
 
     public MathTokenizer clearConstants() {
-        return clearNameables(Constant.class);
+        return clearNameables(DoubleConstant.class);
     }
 
     public MathTokenizer clearOperators() {
@@ -220,8 +224,13 @@ public class MathTokenizer implements Tokenizer, Serializable {
     @Override
     public synchronized
     @NotNull Group tokenize(@NotNull Expression expression,
-                            @NotNull Context context) throws TokenizeException {
+                            @NotNull Context<?> context) throws TokenizeException {
         return new TokenGroup(start(new Buffer(expression.iterator(), expression, context)));
+    }
+
+    @Override
+    public @NotNull Map<String, Nameable> getNames() {
+        return names;
     }
 
     protected @NotNull Tokens start(@NotNull Buffer buffer) throws TokenizeException {
@@ -303,26 +312,49 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return tokens;
     }
 
-    private <X extends Nameable> List<X> getFromNameables(Class<X> cls) {
-        return nameableMap.values()
-                .stream()
-                .filter(cls::isInstance)
-                .map(cls::cast)
-                .collect(Collectors.toList());
+    @Override
+    public @NotNull Map<String, Operator<?>> getOperators() {
+        if (!operators.isEmpty()) {
+            return operators;
+        }
+
+        names.forEach((k, v) -> {
+            if (v instanceof Operator<?>) {
+                operators.put(k, (Operator<?>) v);
+            }
+        });
+
+        return operators;
     }
 
     @Override
-    public @NotNull List<ImmutableSymbol> getConstants() {
-        return getFromNameables(ImmutableSymbol.class);
+    public @NotNull Map<String, Function<?>> getFunctions() {
+        if (!functions.isEmpty()) {
+            return functions;
+        }
+
+        names.forEach((k, v) -> {
+            if (v instanceof Function<?>) {
+                functions.put(k, (Function<?>) v);
+            }
+        });
+
+        return functions;
     }
 
     @Override
-    public @NotNull List<Function> getFunctions() {
-        return getFromNameables(Function.class);
-    }
+    public @NotNull Map<String, ImmutableSymbol<?>> getConstants() {
+        if (!constants.isEmpty()) {
+            return constants;
+        }
 
-    public @NotNull List<Operator> getOperators() {
-        return getFromNameables(Operator.class);
+        names.forEach((k, v) -> {
+            if (v instanceof ImmutableSymbol<?>) {
+                constants.put(k, (ImmutableSymbol<?>) v);
+            }
+        });
+
+        return constants;
     }
 
     protected Token handleNumber(Buffer buffer) throws InvalidNumberFormatException {
@@ -420,7 +452,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
     protected Result find(CharSequence symbols, int start) {
         Result result = new Result();
 
-        nameableMap.values().stream()
+        names.values().stream()
                 .filter(Nameable.match(symbols))
                 .findFirst()
                 .ifPresent(s -> {
@@ -431,7 +463,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return result;
     }
 
-    protected Result findFromContext(Context context, CharSequence symbols, int start) {
+    protected Result findFromContext(Context<?> context, CharSequence symbols, int start) {
         Result result = new Result();
 
         context.getSymbol(symbols.toString())

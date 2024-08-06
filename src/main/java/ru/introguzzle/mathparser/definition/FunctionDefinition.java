@@ -6,9 +6,9 @@ import ru.introguzzle.mathparser.symbol.Variable;
 
 public class FunctionDefinition extends MathExpression {
 
-    private final Variable variable;
+    private final Variable<Double> variable;
 
-    public FunctionDefinition(@NotNull String string, Variable variable) {
+    public FunctionDefinition(@NotNull String string, Variable<Double> variable) {
         super(string);
         this.variable = variable;
     }
@@ -21,7 +21,7 @@ public class FunctionDefinition extends MathExpression {
                 : index;
     }
 
-    public Variable getVariable() {
+    public Variable<Double> getVariable() {
         return variable;
     }
 }

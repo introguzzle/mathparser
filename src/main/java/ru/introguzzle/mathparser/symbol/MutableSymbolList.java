@@ -6,7 +6,7 @@ import ru.introguzzle.mathparser.common.NotUniqueNamingException;
 
 import java.util.*;
 
-public abstract class MutableSymbolList<T extends MutableSymbol> {
+public abstract class MutableSymbolList<T extends MutableSymbol<N>, N extends Number> {
 
     private final Map<String, T> values = new HashMap<>();
 
@@ -36,7 +36,7 @@ public abstract class MutableSymbolList<T extends MutableSymbol> {
         return Optional.ofNullable(values.getOrDefault(name, null));
     }
 
-    public void setValue(@NotNull String name, double value) {
+    public void setValue(@NotNull String name, N value) {
         find(name)
                 .orElseThrow(() -> new NoSuchNameException(name, values.keySet()))
                 .setValue(value);
@@ -47,7 +47,11 @@ public abstract class MutableSymbolList<T extends MutableSymbol> {
         values.put(item.getName(), item);
     }
 
-    public void addAll(MutableSymbolList<? extends T> items) {
+    public void add(String name, MutableSymbol<? extends Number> item) {
+        values.put(name, (T) item);
+    }
+
+    public void addAll(MutableSymbolList<? extends T, N> items) {
         values.putAll(items.values);
     }
 
@@ -75,8 +79,8 @@ public abstract class MutableSymbolList<T extends MutableSymbol> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MutableSymbolList<?> that = (MutableSymbolList<?>) o;
-        return size() == that.size() && Objects.equals(values, that.values);
+        MutableSymbolList<?, ?> that = (MutableSymbolList<?, ?>) o;
+        return Objects.equals(values, that.values);
     }
 
     @Override

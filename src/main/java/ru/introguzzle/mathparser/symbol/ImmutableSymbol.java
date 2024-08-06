@@ -6,15 +6,17 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
-public abstract class ImmutableSymbol implements Symbol<Double>, Serializable {
+public abstract class ImmutableSymbol<T extends Number> implements
+        Symbol<T>,
+        Serializable {
 
     @Serial
     private static final long serialVersionUID = 282184201759219L;
 
     private final String name;
-    private final transient double value;
+    private final T value;
 
-    public ImmutableSymbol(String name, double value) {
+    public ImmutableSymbol(String name, T value) {
         this.name = name;
         this.value = value;
     }
@@ -24,7 +26,7 @@ public abstract class ImmutableSymbol implements Symbol<Double>, Serializable {
     }
 
     @Override
-    public Double getValue() {
+    public T getValue() {
         return value;
     }
 
@@ -37,17 +39,11 @@ public abstract class ImmutableSymbol implements Symbol<Double>, Serializable {
     }
 
     @Override
-    public ImmutableSymbol clone() throws CloneNotSupportedException {
-        return (ImmutableSymbol) super.clone();
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ImmutableSymbol immutableSymbol = (ImmutableSymbol) o;
-        return Double.compare(value, immutableSymbol.value) == 0
-                && Objects.equals(name, immutableSymbol.name);
+        ImmutableSymbol<?> immutableSymbol = (ImmutableSymbol<?>) o;
+        return Objects.equals(name, immutableSymbol.name);
     }
 
     @Override

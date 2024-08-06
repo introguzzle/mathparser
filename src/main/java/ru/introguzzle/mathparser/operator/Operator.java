@@ -8,10 +8,10 @@ import ru.introguzzle.mathparser.tokenize.token.type.Type;
 import java.util.List;
 import java.util.function.Function;
 
-public interface Operator extends Nameable,
+public interface Operator<T extends Number> extends Nameable,
         Associative,
         Priorable,
-        Function<List<Double>, Double> {
+        Function<List<T>, T> {
     int VARIADIC = -1;
     int UNARY = 1;
     int BINARY = 2;

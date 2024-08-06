@@ -4,9 +4,8 @@ import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.tokenize.token.type.SymbolType;
 import ru.introguzzle.mathparser.tokenize.token.type.Type;
 
-public class Variable extends MutableSymbol {
-
-    public Variable(String name, double value) {
+public class Variable<N extends Number> extends MutableSymbol<N> {
+    public Variable(String name, N value) {
         super(name, value);
     }
 

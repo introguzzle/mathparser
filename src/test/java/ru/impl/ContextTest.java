@@ -13,9 +13,9 @@ public class ContextTest {
 
     @Test
     public void test_delete() {
-        Context context = new NamingContext();
+        Context<Double> context = new NamingContext<>();
 
-        context.addSymbol(new Variable("x", 3));
+        context.addSymbol(new Variable<>("x", 3.0));
         assertTrue(context.removeSymbol("x"));
 
         assertEquals(context.getSymbols().size(), 0);
@@ -24,17 +24,17 @@ public class ContextTest {
 
     @Test(expected = NotUniqueNamingException.class)
     public void test_adding_not_unique_fails() {
-        Context context = new NamingContext();
+        Context<Double> context = new NamingContext<>();
 
-        context.addSymbol(new Variable("x", 3));
-        context.addSymbol(new Variable("x", 3));
+        context.addSymbol(new Variable<>("x", 3.0));
+        context.addSymbol(new Variable<>("x", 3.0));
     }
 
     @Test(expected = NotUniqueNamingException.class)
     public void test_adding_variable_and_coefficient_with_same_name() {
-        Context context = new NamingContext();
+        Context<Double> context = new NamingContext<>();
 
-        context.addSymbol(new Variable("x", 3));
-        context.addSymbol(new Coefficient("x", 3));
+        context.addSymbol(new Variable<>("x", 3.0));
+        context.addSymbol(new Coefficient<>("x", 3.0));
     }
 }

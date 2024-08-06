@@ -52,10 +52,10 @@ public class PrefixNotationParserTest {
     public void test_illegal_variables() throws Exception {
         Expression expression = new MathExpression("max(a, b, c)");
 
-        Variables variables = new Variables();
-        variables.add(new Variable("a", 2));
+        Variables<Double> variables = new Variables<>();
+        variables.add(new Variable<>("a", 2.0));
 
-        parser.parse(expression, new NamingContext(variables));
+        parser.parse(expression, new NamingContext<>(variables));
     }
 
     @Test
@@ -131,13 +131,13 @@ public class PrefixNotationParserTest {
     @Test
     @SuppressWarnings("unused")
     public void test_unique_variables() {
-        Variables variables = new Variables();
+        Variables<Double> variables = new Variables<>();
         variables.add("a", 1.43);
-        variables.add("b", 21221);
+        variables.add("b", 21221.0);
 
-        variables = new Variables(
-                new Variable("a", 9),
-                new Variable("b", 4)
+        variables = new Variables<>(
+                new Variable<>("a", 9.0),
+                new Variable<>("b", 4.0)
         );
 
         variables.size();
@@ -145,9 +145,9 @@ public class PrefixNotationParserTest {
 
     @Test(expected = NotUniqueNamingException.class)
     public void test_not_unique_variables_throws1() {
-        Variables variables = new Variables(
-                new Variable("a", 3),
-                new Variable("a", 3)
+        Variables<Double> variables = new Variables<>(
+                new Variable<>("a", 3.0),
+                new Variable<>("a", 3.0)
         );
 
         variables.size();
@@ -155,9 +155,9 @@ public class PrefixNotationParserTest {
 
     @Test(expected = NotUniqueNamingException.class)
     public void test_not_unique_variables_throws2() {
-        Variables variables = new Variables();
+        Variables<Double> variables = new Variables<>();
 
-        variables.add(new Variable("a", 3));
-        variables.add(new Variable("a", 4));
+        variables.add(new Variable<>("a", 3.0));
+        variables.add(new Variable<>("a", 4.0));
     }
 }

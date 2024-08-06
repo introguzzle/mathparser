@@ -11,8 +11,8 @@ import java.util.Optional;
 
 public interface Parser<T extends Number> {
     T parse(@NotNull Expression expression) throws SyntaxException;
-    T parse(@NotNull Expression expression, @NotNull Context context) throws SyntaxException;
-    T parse(@NotNull Tokens tokens, Context context) throws SyntaxException;
+    T parse(@NotNull Expression expression, @NotNull Context<T> context) throws SyntaxException;
+    T parse(@NotNull Tokens tokens, Context<T> context) throws SyntaxException;
 
     default Optional<T> tryParse(@Nullable Expression expression) {
         if (expression == null) return Optional.empty();
@@ -24,7 +24,7 @@ public interface Parser<T extends Number> {
         }
     }
 
-    default Optional<T> tryParse(@Nullable Expression expression, @Nullable Context context) {
+    default Optional<T> tryParse(@Nullable Expression expression, @Nullable Context<T> context) {
         if (expression == null || context == null) return Optional.empty();
 
         try {

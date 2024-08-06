@@ -3,11 +3,13 @@ package ru.introguzzle.mathparser.parse;
 import org.jetbrains.annotations.NotNull;
 
 import ru.introguzzle.mathparser.common.Context;
-import ru.introguzzle.mathparser.common.Nameable;
 import ru.introguzzle.mathparser.common.NamingContext;
 import ru.introguzzle.mathparser.common.SyntaxException;
+import ru.introguzzle.mathparser.constant.real.DoubleConstant;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.function.Function;
+import ru.introguzzle.mathparser.function.real.DoubleFunction;
+import ru.introguzzle.mathparser.operator.DoubleOperator;
 import ru.introguzzle.mathparser.operator.Operator;
 import ru.introguzzle.mathparser.symbol.ImmutableSymbol;
 import ru.introguzzle.mathparser.symbol.MutableSymbol;
@@ -17,16 +19,13 @@ import ru.introguzzle.mathparser.tokenize.token.Tokens;
 import ru.introguzzle.mathparser.tokenize.token.type.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class PrefixNotationParser implements Parser<Double> {
     private final Tokenizer tokenizer;
     private final TokenProcessor processor;
 
     public PrefixNotationParser(@NotNull Tokenizer tokenizer) {
-        this(tokenizer, new PrefixTokenProcessor(tokenizer.getOperators().stream()
-                .collect(Collectors.toMap(Nameable::getName, o -> o))
-        ));
+        this(tokenizer, new PrefixTokenProcessor(tokenizer.getOperators()));
     }
 
     public PrefixNotationParser(@NotNull Tokenizer tokenizer, @NotNull TokenProcessor processor) {
@@ -36,11 +35,11 @@ public class PrefixNotationParser implements Parser<Double> {
 
     @Override
     public Double parse(@NotNull Expression expression) throws SyntaxException {
-        return parse(expression, new NamingContext());
+        return parse(expression, new NamingContext<>());
     }
 
     @Override
-    public Double parse(@NotNull Expression expression, @NotNull Context context) throws SyntaxException {
+    public Double parse(@NotNull Expression expression, @NotNull Context<Double> context) throws SyntaxException {
         Tokens tokens = tokenizer.tokenize(expression, context).getTokens();
         if (tokens.get(0).getType().isTerminal()) {
             return Double.NaN;
@@ -50,7 +49,7 @@ public class PrefixNotationParser implements Parser<Double> {
     }
 
     @Override
-    public Double parse(@NotNull Tokens tokens, Context context) throws SyntaxException {
+    public Double parse(@NotNull Tokens tokens, Context<Double> context) throws SyntaxException {
         Tokens infix = processor.process(tokens);
         Stack<Double> stack = new Stack<>();
         infix.skipDeclaration();
@@ -61,7 +60,11 @@ public class PrefixNotationParser implements Parser<Double> {
             Type type = token.getType();
 
             if (type instanceof OperatorType) {
-                Operator operator = tokenizer.findOperator(token.getData()).orElseThrow();
+                Optional<Operator<?>> optional = tokenizer.findOperator(token.getData());
+                if (optional.isEmpty() || !(optional.get() instanceof DoubleOperator operator)) {
+                    throw new UnexpectedTokenException(tokens, token);
+                }
+
                 processOperator(stack, operator, tokens, position);
                 position++;
                 continue;
@@ -74,7 +77,14 @@ public class PrefixNotationParser implements Parser<Double> {
             }
 
             if (type instanceof FunctionType) {
-                Function function = tokenizer.findFunction(token).orElseThrow();
+                Optional<Function<?>> optional = tokenizer.findFunction(token.getData());
+                if (optional.isEmpty() || !(optional.get() instanceof DoubleFunction function)) {
+                    if (optional.isEmpty()) {
+                        throw new UnexpectedTokenException(tokens, token);
+                    }
+
+                    throw new UnsupportedOperationException("Can't cast function to DoubleFunction instance");
+                }
 
                 if (function.isVariadic()) {
                     throw new RuntimeException("Variadic functions are not supported in this parser. Try MathParser instead.");
@@ -88,12 +98,18 @@ public class PrefixNotationParser implements Parser<Double> {
             if (type instanceof SymbolType) {
                 switch (type) {
                     case SymbolType.CONSTANT -> {
-                        Optional<ImmutableSymbol> symbol = tokenizer.findConstant(token);
-                        stack.push(symbol.orElseThrow().getValue());
+                        Optional<ImmutableSymbol<?>> symbol = tokenizer.findConstant(token);
+                        if (symbol.isPresent() && symbol.get() instanceof DoubleConstant constant) {
+                            stack.push(constant.getValue());
+                        } else {
+                            if (symbol.isEmpty()) throw new UnexpectedTokenException(tokens, position);
+                            throw new UnsupportedOperationException("Can't cast constant to DoubleConstant");
+                        }
                     }
 
                     case SymbolType.VARIABLE, SymbolType.COEFFICIENT -> {
-                        MutableSymbol mutableSymbol = context.getSymbol(token.getData()).orElseThrow();
+                        Optional<MutableSymbol<Double>> symbol = context.getSymbol(token.getData());
+                        MutableSymbol<Double> mutableSymbol = symbol.orElseThrow();
                         stack.push(mutableSymbol.getValue());
                     }
 
@@ -115,7 +131,7 @@ public class PrefixNotationParser implements Parser<Double> {
     }
 
     private void processOperator(Stack<Double> stack,
-                                 Operator operator,
+                                 DoubleOperator operator,
                                  Tokens tokens,
                                  int position) throws SyntaxException {
         int operandCount = operator.getRequiredOperands();
