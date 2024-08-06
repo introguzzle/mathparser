@@ -56,8 +56,8 @@ public class Example {
         });
 
         Context<Double> context = new NamingContext<>();
-        context.addSymbol(new Variable<>("x", 3));
-        context.addSymbol(new Variable<>("y", 9));
+        context.addSymbol(new Variable<>("x", 3.0));
+        context.addSymbol(new Variable<>("y", 9.0));
 
         Expression expression = new MathExpression("1 &&&& 4 + example(1, 3) >>> x << y");
         System.out.println(parser.parse(expression, context));
