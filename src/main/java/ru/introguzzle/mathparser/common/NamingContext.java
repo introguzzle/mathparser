@@ -47,14 +47,14 @@ public class NamingContext<N extends Number> implements Context<N> {
     }
 
     @Override
-    public void addSymbol(MutableSymbol<? extends Number> symbol) {
+    public void addSymbol(MutableSymbol<N> symbol) {
         String name;
         boolean added = names.add(name = symbol.getName());
         if (!added) {
             throw new NotUniqueNamingException(name, names);
         }
 
-        symbols.add(symbol.getName(), symbol);
+        symbols.add(symbol);
     }
 
     @Override

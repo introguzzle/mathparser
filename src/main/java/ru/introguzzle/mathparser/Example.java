@@ -21,7 +21,7 @@ public class Example {
         MathTokenizer tokenizer = new MathTokenizer();
         Parser<Double> parser = new MathParser(tokenizer);
 
-        tokenizer.addOperator(new DoubleBinaryOperator() {
+        tokenizer.getOptions().addOperator(new DoubleBinaryOperator() {
             @Override
             public Double apply(List<Double> doubles) {
                 return 999.0;
@@ -43,14 +43,14 @@ public class Example {
             }
         });
 
-        tokenizer.addFunction(new DoubleFunction("example", 2) {
+        tokenizer.getOptions().addFunction(new DoubleFunction("example", 2) {
             @Override
             public boolean isVariadic() {
                 return false;
             }
 
             @Override
-            public Double apply(List<Double> doubles) {
+            public @NotNull Double apply(List<Double> doubles) {
                 return 999.0;
             }
         });

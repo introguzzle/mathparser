@@ -107,7 +107,7 @@ public class ExpressionGenerator implements Generator<Expression> {
         }
 
         ExpressionBuilder appendFunction(Depth depth) {
-            Function<?> function = Random.pickFromMap(tokenizer.getFunctions());
+            Function<?> function = Random.pickFromMap(tokenizer.getOptions().getFunctions());
 
             if (function == null) {
                 throw new EmptyFunctionListException("No registered functions");
@@ -176,7 +176,7 @@ public class ExpressionGenerator implements Generator<Expression> {
         int i = Random.randomInteger(97, 122);
         String s = Character.toString((char) i);
 
-        for (var symbol: tokenizer.getConstants().values()) {
+        for (var symbol: tokenizer.getOptions().getConstants().values()) {
             if (symbol.getName().contentEquals(s)) {
                 return createVariable();
             }
@@ -186,7 +186,7 @@ public class ExpressionGenerator implements Generator<Expression> {
     }
 
     private String createConstant() {
-        DoubleConstant constant = (DoubleConstant) Random.pickFromMap(tokenizer.getConstants());
+        DoubleConstant constant = (DoubleConstant) Random.pickFromMap(tokenizer.getOptions().getConstants());
         if (constant == null) {
             throw new EmptyConstantListException("No constant present in tokenizer");
         }

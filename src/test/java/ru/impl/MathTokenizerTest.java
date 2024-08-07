@@ -1,5 +1,6 @@
 package ru.impl;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import ru.introguzzle.mathparser.common.Context;
@@ -241,10 +242,10 @@ public class MathTokenizerTest {
         Expression expression = new MathExpression("pi + 3 + e + a + b / c ** d");
         Context<Double> context = new NamingContext<>();
 
-        context.addSymbol(new Variable<>("a", 0));
-        context.addSymbol(new Variable<>("b", 0));
-        context.addSymbol(new Variable<>("c", 0));
-        context.addSymbol(new Variable<>("d", 0));
+        context.addSymbol(new Variable<>("a", 0.0));
+        context.addSymbol(new Variable<>("b", 0.0));
+        context.addSymbol(new Variable<>("c", 0.0));
+        context.addSymbol(new Variable<>("d", 0.0));
 
         Tokens tokens = tokenizer.tokenize(expression, context).getTokens();
 
@@ -254,9 +255,9 @@ public class MathTokenizerTest {
 
     @Test
     public void test_custom_function() throws Exception {
-        tokenizer.addFunction(new DoubleFunction("test_function", 1) {
+        tokenizer.getOptions().addFunction(new DoubleFunction("test_function", 1) {
             @Override
-            public Double apply(List<Double> arguments) {
+            public @NotNull Double apply(List<Double> arguments) {
                 return 0.0;
             }
 
@@ -266,7 +267,7 @@ public class MathTokenizerTest {
             }
         }).addFunction(new DoubleFunction("clown", 0) {
             @Override
-            public Double apply(List<Double> arguments) {
+            public @NotNull Double apply(List<Double> arguments) {
                 return ThreadLocalRandom.current().nextDouble();
             }
 
@@ -289,7 +290,7 @@ public class MathTokenizerTest {
         MathTokenizer tokenizer = new MathTokenizer(
                 Map.of("zzzz", new DoubleFunction("zzzz", 1) {
                     @Override
-                    public Double apply(List<Double> arguments) {
+                    public @NotNull Double apply(List<Double> arguments) {
                         return null;
                     }
 
@@ -305,16 +306,16 @@ public class MathTokenizerTest {
 
     @Test
     public void test_custom_constants() throws Exception {
-        tokenizer.addConstant(new DoubleConstant("A", 1) {})
+        tokenizer.getOptions().addConstant(new DoubleConstant("A", 1) {})
                 .addConstant(new DoubleConstant("B", 3) {});
 
         tokenizer.tokenize(new MathExpression("A + B"), new NamingContext<>());
-        tokenizer.clearConstants()
+        tokenizer.getOptions().clearConstants()
                 .clearFunctions()
                 .withConstants(DoubleConstantReflector.get().values())
                 .withFunctions(DoubleFunctionReflector.get().values());
 
-        tokenizer.overrideConstant("PI", 3)
+        tokenizer.getOptions().overrideConstant("PI", 3)
                 .overrideConstant("PI", 4)
                 .overrideFunction("sin", 2, false, args -> 0.0)
                 .overrideConstant("PI", 5);
@@ -362,7 +363,7 @@ public class MathTokenizerTest {
     @Test
     public void supress() {
         MathTokenizer t = new MathTokenizer();
-        t.setDigitPredicate(null)
+        t.getOptions().setDigitPredicate(null)
                 .setAllowedOperatorSymbols(null)
                 .setLetterPredicate(null)
                 .setDigitPredicate(null)
@@ -372,8 +373,7 @@ public class MathTokenizerTest {
                 .addName(new Variable<>("x", 3.0))
                 .addOperator(new AdditionOperator())
                 .clearConstants()
-                .clearOperators()
-                .setOptions(null);
+                .clearOperators();
     }
 
     @Test
@@ -417,7 +417,7 @@ public class MathTokenizerTest {
     @Test
     public void test_long_symbols() throws Exception {
         Expression expression = new MathExpression("sin(theta)");
-        tokenizer.addConstant(new DoubleConstant("theta", 3) {});
+        tokenizer.getOptions().addConstant(new DoubleConstant("theta", 3) {});
 
         Context<Double> parent = new NamingContext<>();
 
@@ -428,7 +428,7 @@ public class MathTokenizerTest {
     @Test(expected = NamingException.class)
     public void test_long_symbols_with_strict_mode() throws Exception {
         Expression expression = new MathExpression("sin(theta)");
-        tokenizer.addConstant(new DoubleConstant("theta", 3) {});
+        tokenizer.getOptions().addConstant(new DoubleConstant("theta", 3) {});
         tokenizer.getOptions().strictMode = true;
 
         Context<Double> parent = new NamingContext<>();

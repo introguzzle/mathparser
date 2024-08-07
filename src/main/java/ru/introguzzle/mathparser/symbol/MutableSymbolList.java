@@ -47,10 +47,6 @@ public abstract class MutableSymbolList<T extends MutableSymbol<N>, N extends Nu
         values.put(item.getName(), item);
     }
 
-    public void add(String name, MutableSymbol<? extends Number> item) {
-        values.put(name, (T) item);
-    }
-
     public void addAll(MutableSymbolList<? extends T, N> items) {
         values.putAll(items.values);
     }

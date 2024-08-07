@@ -25,7 +25,7 @@ public class PrefixNotationParser implements Parser<Double> {
     private final TokenProcessor processor;
 
     public PrefixNotationParser(@NotNull Tokenizer tokenizer) {
-        this(tokenizer, new PrefixTokenProcessor(tokenizer.getOperators()));
+        this(tokenizer, new PrefixTokenProcessor(tokenizer.getOptions().getOperators()));
     }
 
     public PrefixNotationParser(@NotNull Tokenizer tokenizer, @NotNull TokenProcessor processor) {
@@ -60,7 +60,7 @@ public class PrefixNotationParser implements Parser<Double> {
             Type type = token.getType();
 
             if (type instanceof OperatorType) {
-                Optional<Operator<?>> optional = tokenizer.findOperator(token.getData());
+                Optional<Operator<?>> optional = tokenizer.getOptions().findOperator(token.getData());
                 if (optional.isEmpty() || !(optional.get() instanceof DoubleOperator operator)) {
                     throw new UnexpectedTokenException(tokens, token);
                 }
@@ -77,7 +77,7 @@ public class PrefixNotationParser implements Parser<Double> {
             }
 
             if (type instanceof FunctionType) {
-                Optional<Function<?>> optional = tokenizer.findFunction(token.getData());
+                Optional<Function<?>> optional = tokenizer.getOptions().findFunction(token.getData());
                 if (optional.isEmpty() || !(optional.get() instanceof DoubleFunction function)) {
                     if (optional.isEmpty()) {
                         throw new UnexpectedTokenException(tokens, token);
@@ -98,7 +98,7 @@ public class PrefixNotationParser implements Parser<Double> {
             if (type instanceof SymbolType) {
                 switch (type) {
                     case SymbolType.CONSTANT -> {
-                        Optional<ImmutableSymbol<?>> symbol = tokenizer.findConstant(token);
+                        Optional<ImmutableSymbol<?>> symbol = tokenizer.getOptions().findConstant(token);
                         if (symbol.isPresent() && symbol.get() instanceof DoubleConstant constant) {
                             stack.push(constant.getValue());
                         } else {

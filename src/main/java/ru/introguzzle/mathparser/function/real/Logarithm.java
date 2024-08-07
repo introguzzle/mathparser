@@ -1,5 +1,7 @@
 package ru.introguzzle.mathparser.function.real;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public class Logarithm extends DoubleFunction {
@@ -9,7 +11,7 @@ public class Logarithm extends DoubleFunction {
     }
 
     @Override
-    public Double apply(List<Double> arguments) {
+    public @NotNull Double apply(List<Double> arguments) {
         return Math.log(arguments.get(1)) / Math.log(arguments.get(0));
     }
 

@@ -67,7 +67,7 @@ public class MathParser implements Parser<Double>, Serializable {
 
         while (true) {
             Token token = tokens.getNextToken();
-            Optional<Operator<?>> optional = tokenizer.findOperator(token.getData());
+            Optional<Operator<?>> optional = tokenizer.getOptions().findOperator(token.getData());
 
             if (optional.isEmpty() || !(optional.get() instanceof DoubleOperator operator) || optional.get().getPriority() >= priority) {
                 tokens.returnBack();
@@ -107,7 +107,7 @@ public class MathParser implements Parser<Double>, Serializable {
                 return Double.parseDouble(token.getData());
 
             case SymbolType.CONSTANT:
-                Optional<ImmutableSymbol<?>> symbol = tokenizer.findConstant(token);
+                Optional<ImmutableSymbol<?>> symbol = tokenizer.getOptions().findConstant(token);
                 if (symbol.isPresent() && symbol.get() instanceof DoubleConstant constant) {
                     return constant.getValue();
                 }
@@ -129,7 +129,7 @@ public class MathParser implements Parser<Double>, Serializable {
 
             default:
                 if (token.getType() instanceof OperatorType) {
-                    Operator<?> operator = tokenizer.findOperator(token.getData()).orElseThrow();
+                    Operator<?> operator = tokenizer.getOptions().findOperator(token.getData()).orElseThrow();
                     if (operator instanceof DoubleUnaryOperator o) {
                         return o.apply(List.of(parseFactor(tokens, context)));
                     }
@@ -158,7 +158,7 @@ public class MathParser implements Parser<Double>, Serializable {
             } while (token.getType() == SpecialType.COMMA);
         }
 
-        Optional<Function<?>> optional = tokenizer.findFunction(name);
+        Optional<Function<?>> optional = tokenizer.getOptions().findFunction(name);
         int given = arguments.size();
 
         if (optional.isEmpty() || !(optional.get() instanceof DoubleFunction function)) {

@@ -11,7 +11,7 @@ public interface Context<N extends Number> {
 
     MutableSymbolList<MutableSymbol<N>, N> getSymbols();
     Optional<MutableSymbol<N>> getSymbol(String name);
-    void addSymbol(MutableSymbol<? extends Number> symbol);
+    void addSymbol(MutableSymbol<N> symbol);
     boolean removeSymbol(String name);
     boolean removeSymbol(MutableSymbol<N> symbol);
     void setSymbols(MutableSymbolList<? extends MutableSymbol<N>, N> symbols);

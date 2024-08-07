@@ -16,20 +16,20 @@ import java.util.function.Supplier;
 
 public class FunctionDefinitionParser implements Parser<Double> {
 
-    private final FunctionDefinitionTokenizer tokenizer;
+    private final FunctionDefinitionTokenizer<Double> tokenizer;
     private final Parser<Double> parser;
 
     public FunctionDefinitionParser() {
-        this.tokenizer = new FunctionDefinitionTokenizer() {
+        this.tokenizer = new FunctionDefinitionTokenizer<>() {
+
             @Override
-            public Supplier<MutableSymbol<?>> getDefaultFactory(CharSequence name,
-                                                                Number value) {
+            public Supplier<MutableSymbol<Double>> getDefaultFactory(CharSequence name, Double value) {
                 return () -> new Coefficient<>(name.toString(), value);
             }
 
             @Override
-            public Number getDefaultValue() {
-                return 0;
+            public Double getDefaultValue() {
+                return 0.0;
             }
         };
 
@@ -55,7 +55,7 @@ public class FunctionDefinitionParser implements Parser<Double> {
                                FunctionDefinitionType type) {}
 
     public
-    ParserResult parseDefinition(FunctionDefinition definition,
+    ParserResult parseDefinition(FunctionDefinition<Double> definition,
                                  Context<Double> context)
             throws SyntaxException {
 

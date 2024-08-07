@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Locale;
 import java.util.Objects;
 
-public final class Complex extends Number {
+public class Complex extends Number {
     public static final Complex ZERO = new Complex(0, 0);
     public static final Complex ONE = new Complex(1, 0);
     public static final Complex NAN = new Complex(Double.NaN, 0);
@@ -15,6 +15,14 @@ public final class Complex extends Number {
 
     private final double a;
     private final double b;
+
+    public static Complex of(double a) {
+        return new Complex(a);
+    }
+
+    public static Complex of(double a, double b) {
+        return new Complex(a, b);
+    }
 
     public Complex(double real) {
         a = real;
@@ -63,14 +71,18 @@ public final class Complex extends Number {
         return Math.atan2(b, a);
     }
 
-    public Complex log() {
+    public Complex log(Complex base) {
+        return ln().divide(base.ln());
+    }
+
+    public Complex ln() {
         return new Complex(Math.log(magnitude()), phase());
     }
 
     public Complex pow(Complex power) {
-        Complex l = log();
-        double real = l.a * power.a - l.b * power.b;
-        double imaginary = l.a * power.b + l.b * power.a;
+        Complex ln = ln();
+        double real = ln.a * power.a - ln.b * power.b;
+        double imaginary = ln.a * power.b + ln.b * power.a;
         return new Complex(Math.exp(real) * Math.cos(imaginary), Math.exp(real) * Math.sin(imaginary));
     }
 
@@ -119,13 +131,13 @@ public final class Complex extends Number {
         return new Complex(a / scale, b / scale);
     }
 
-    private static String format(double value) {
+    public static String format(double value) {
         return BigDecimal.valueOf(value).toPlainString();
     }
 
     @Override
     public String toString() {
-        return b > 0
+        return b >= 0
                 ? format(a) + " + " + format(b) + "i"
                 : format(a) + " - " + format(Math.abs(b)) + "i";
     }

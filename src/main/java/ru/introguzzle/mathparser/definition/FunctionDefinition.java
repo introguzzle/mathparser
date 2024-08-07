@@ -4,11 +4,11 @@ import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.expression.MathExpression;
 import ru.introguzzle.mathparser.symbol.Variable;
 
-public class FunctionDefinition extends MathExpression {
+public class FunctionDefinition<T extends Number> extends MathExpression {
 
-    private final Variable<Double> variable;
+    private final Variable<T> variable;
 
-    public FunctionDefinition(@NotNull String string, Variable<Double> variable) {
+    public FunctionDefinition(@NotNull String string, Variable<T> variable) {
         super(string);
         this.variable = variable;
     }
@@ -21,7 +21,7 @@ public class FunctionDefinition extends MathExpression {
                 : index;
     }
 
-    public Variable<Double> getVariable() {
+    public Variable<T> getVariable() {
         return variable;
     }
 }

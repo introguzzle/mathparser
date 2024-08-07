@@ -22,13 +22,13 @@ public class Reflector<N extends Nameable> {
         Reflections reflections = new Reflections(packageName);
         Set<Class<? extends N>> classes = reflections.getSubTypesOf(cls);
 
-        for (Class<? extends N> clazz : classes) {
+        for (Class<? extends N> _class : classes) {
             try {
-                if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
+                if (!isInstantiable(_class)) {
                     continue;
                 }
 
-                N instance = clazz.getDeclaredConstructor().newInstance();
+                N instance = _class.getDeclaredConstructor().newInstance();
                 instances.put(instance.getName(), instance);
             } catch (Exception e) {
                 System.err.println("An error occurred while scanning classes: " + e.getMessage());
@@ -37,5 +37,9 @@ public class Reflector<N extends Nameable> {
         }
 
         return instances;
+    }
+
+    private boolean isInstantiable(@NotNull Class<?> cls) {
+        return !cls.isInterface() && !cls.isEnum() && !cls.isAnnotation() && !Modifier.isAbstract(cls.getModifiers());
     }
 }

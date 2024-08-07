@@ -1,5 +1,7 @@
 package ru.introguzzle.mathparser.function.real;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -11,7 +13,7 @@ public class Factorial extends DoubleFunction {
     }
 
     @Override
-    public Double apply(List<Double> arguments) {
+    public @NotNull Double apply(List<Double> arguments) {
         double d = arguments.getFirst();
         int n = (int) d;
 

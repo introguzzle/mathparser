@@ -1,5 +1,7 @@
 package ru.introguzzle.mathparser.function.real;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public class Sine extends DoubleFunction {
@@ -9,7 +11,7 @@ public class Sine extends DoubleFunction {
     }
 
     @Override
-    public Double apply(List<Double> arguments) {
+    public @NotNull Double apply(List<Double> arguments) {
         return Math.sin(arguments.getFirst());
     }
 

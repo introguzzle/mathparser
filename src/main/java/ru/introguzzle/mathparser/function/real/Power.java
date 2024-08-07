@@ -1,5 +1,7 @@
 package ru.introguzzle.mathparser.function.real;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public class Power extends DoubleFunction {
@@ -8,7 +10,7 @@ public class Power extends DoubleFunction {
     }
 
     @Override
-    public Double apply(List<Double> arguments) {
+    public @NotNull Double apply(List<Double> arguments) {
         return Math.pow(arguments.getFirst(), arguments.getLast());
     }
 

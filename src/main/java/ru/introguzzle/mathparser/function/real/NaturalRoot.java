@@ -1,5 +1,7 @@
 package ru.introguzzle.mathparser.function.real;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public class NaturalRoot extends DoubleFunction {
@@ -9,7 +11,7 @@ public class NaturalRoot extends DoubleFunction {
     }
 
     @Override
-    public Double apply(List<Double> arguments) {
+    public @NotNull Double apply(List<Double> arguments) {
         double n = arguments.getFirst();
         double x = arguments.getLast();
 
