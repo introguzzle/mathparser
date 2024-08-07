@@ -2,7 +2,10 @@ package ru.introguzzle.mathparser.tokenize;
 
 import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.common.*;
+import ru.introguzzle.mathparser.common.math.Number;
+import ru.introguzzle.mathparser.common.math.Radix;
 import ru.introguzzle.mathparser.expression.ExpressionIterator;
+import ru.introguzzle.mathparser.expression.MathExpression;
 import ru.introguzzle.mathparser.function.Function;
 import ru.introguzzle.mathparser.function.real.DoubleFunctionReflector;
 import ru.introguzzle.mathparser.group.Group;
@@ -10,11 +13,14 @@ import ru.introguzzle.mathparser.group.TokenGroup;
 import ru.introguzzle.mathparser.operator.DoubleOperatorReflector;
 import ru.introguzzle.mathparser.constant.real.DoubleConstantReflector;
 import ru.introguzzle.mathparser.expression.Expression;
+import ru.introguzzle.mathparser.operator.Operator;
+import ru.introguzzle.mathparser.symbol.ImmutableSymbol;
 import ru.introguzzle.mathparser.tokenize.token.*;
 import ru.introguzzle.mathparser.tokenize.token.type.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.sql.SQLOutput;
 import java.util.*;
 
 public class MathTokenizer implements Tokenizer, Serializable {
@@ -39,14 +45,20 @@ public class MathTokenizer implements Tokenizer, Serializable {
     private static final long serialVersionUID = -54943912839L;
 
     public MathTokenizer() {
-        options.getNames().putAll(DoubleFunctionReflector.get());
-        options.getNames().putAll(DoubleConstantReflector.get());
-        options.getNames().putAll(DoubleOperatorReflector.get());
+        this(DoubleFunctionReflector.get(), DoubleConstantReflector.get(), DoubleOperatorReflector.get());
     }
 
     public MathTokenizer(@NotNull Map<String, ? extends Function<?>> functions) {
         this();
         options.getNames().putAll(functions);
+    }
+
+    public MathTokenizer(Map<String, ? extends Function<?>> functions,
+                         Map<String, ? extends ImmutableSymbol<?>> constants,
+                         Map<String, ? extends Operator<?>> operators) {
+        options.getNames().putAll(functions);
+        options.getNames().putAll(constants);
+        options.getNames().putAll(operators);
     }
 
     @Override
@@ -136,7 +148,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
     }
 
     protected Token handleNumber(Buffer buffer) throws InvalidNumberFormatException {
-        StringBuilder number = new StringBuilder();
+        StringBuilder acc = new StringBuilder();
 
         ExpressionIterator iterator = buffer.iterator;
         char current = iterator.current();
@@ -144,21 +156,20 @@ public class MathTokenizer implements Tokenizer, Serializable {
 
         int imaginaryUnitCount = 0;
         int decimalPointCount = 0;
+        int underscoreCount = 0;
 
         while (iterator.hasNext() && options.getDigitPredicate().test(current)) {
             if (current == TokenizerOptions.IMAGINARY_UNIT) {
                 imaginaryUnitCount++;
-            }
 
-            if (current == TokenizerOptions.DECIMAL) {
+            } else if (current == TokenizerOptions.UNDERSCORE) {
+                underscoreCount++;
+
+            } else if (current == TokenizerOptions.DECIMAL) {
                 decimalPointCount++;
             }
 
-            if (imaginaryUnitCount > 1 || decimalPointCount > 1) {
-                throw new InvalidNumberFormatException(number, buffer.expression, iterator.getCursor());
-            }
-
-            number.append(current);
+            acc.append(current);
             iterator.next();
             if (!iterator.hasNext()) {
                 break;
@@ -167,11 +178,23 @@ public class MathTokenizer implements Tokenizer, Serializable {
             current = iterator.current();
         }
 
-        if (imaginaryUnitCount > 0) {
-            return new SimpleToken(NumberType.COMPLEX_NUMBER, number, start);
+        if (imaginaryUnitCount > 1 || decimalPointCount > 1 || underscoreCount > 1) {
+            throw new InvalidNumberFormatException(acc, buffer.expression, iterator.getCursor() - 1);
         }
 
-        return new SimpleToken(NumberType.NUMBER, number, start);
+        String[] splitted = acc.toString().split("_");
+
+        Radix radix = Radix.DECIMAL;
+        if (splitted.length == 2) {
+            radix = new Radix(Double.parseDouble(splitted[1]));
+        }
+
+        Number number = new Number(splitted[0], radix);
+        if (imaginaryUnitCount > 0) {
+            return new NumberToken(NumberType.COMPLEX_NUMBER, number, start);
+        }
+
+        return new NumberToken(NumberType.NUMBER, number, start);
     }
 
     protected Token handleOperator(Buffer buffer)

@@ -71,7 +71,7 @@ public class SimpleToken implements
 
     @Override
     public String toString() {
-        return "SimpleToken{" +
+        return getClass().getSimpleName() + "{" +
                 "type=" + type +
                 ", data='" + data + '\'' +
                 ", offset=" + offset +

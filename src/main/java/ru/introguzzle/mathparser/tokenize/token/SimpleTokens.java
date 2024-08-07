@@ -176,6 +176,18 @@ public class SimpleTokens implements Tokens, Serializable {
 
             builder.append(token.getData());
             currentOffset += token.getData().length();
+
+            if (token instanceof NumberToken numberToken) {
+                double radix = numberToken.getNumber().getRadix().getRadix();
+                if (radix == 10.0) {
+                    continue;
+                }
+
+                builder.append("_")
+                        .append((int) radix)
+                        .append(" ");
+                currentOffset += 3 + String.valueOf(radix).length();
+            }
         }
 
         return builder.toString();

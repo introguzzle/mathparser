@@ -18,11 +18,16 @@ import ru.introguzzle.mathparser.tokenize.token.Token;
 import ru.introguzzle.mathparser.tokenize.token.Tokens;
 import ru.introguzzle.mathparser.tokenize.token.type.*;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.*;
 
-public class PrefixNotationParser implements Parser<Double> {
+public class PrefixNotationParser implements Parser<Double>, Serializable {
     private final Tokenizer tokenizer;
     private final TokenProcessor processor;
+
+    @Serial
+    private static final long serialVersionUID = -1939810056047253420L;
 
     public PrefixNotationParser(@NotNull Tokenizer tokenizer) {
         this(tokenizer, new PrefixTokenProcessor(tokenizer.getOptions().getOperators()));
@@ -128,6 +133,11 @@ public class PrefixNotationParser implements Parser<Double> {
         }
 
         return stack.pop();
+    }
+
+    @Override
+    public Tokenizer getTokenizer() {
+        return tokenizer;
     }
 
     private void processOperator(Stack<Double> stack,

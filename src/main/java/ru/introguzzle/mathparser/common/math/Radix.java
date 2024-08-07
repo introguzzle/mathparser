@@ -1,25 +1,22 @@
 package ru.introguzzle.mathparser.common.math;
 
-import java.util.Locale;
-import java.util.Map;
-
 public class Radix {
-    private static final Map<Integer, Character> ADDITIONAL = Map.of(
-        10, 'A',
-        11, 'B',
-        12, 'C',
-        13, 'D',
-        14, 'E',
-        15, 'F'
-    );
+    public static final Radix DECIMAL = new Radix(10);
 
-    private static final double EPSILON = 1E-6;
+    public static final Radix BINARY = new Radix(2);
+    public static final Radix QUATERNARY = new Radix(4);
+    public static final Radix OCTAL = new Radix(8);
+    public static final Radix HEXADECIMAL = new Radix(16);
+
+    public static final Radix TERNARY = new Radix(3);
+    public static final Radix PENTAL = new Radix(5);
+
     private final double radix;
     private final int maxDigit;
 
     public Radix(double radix) {
-        if (radix <= 0) {
-            throw new IllegalArgumentException("Radix must be greater than 0");
+        if (radix < 2) {
+            throw new IllegalArgumentException("Radix must be at least 2");
         }
 
         this.radix = radix;
@@ -34,104 +31,24 @@ public class Radix {
         return maxDigit;
     }
 
-    public String convert(double number) {
-        if (getRadix() == 10.0) {
-            return Double.toString(number);
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        StringBuilder result = new StringBuilder();
-
-        long integerPart = (long) number;
-        double actualFractionalPart = number - integerPart;
-        long converted = Long.parseLong(String.valueOf(number - integerPart).substring(2));
-
-        result.append(convertIntegerPartToRadix(integerPart));
-
-        if (actualFractionalPart > 0) {
-            result.append(".");
-            result.append(convertFractionalPartToRadix(converted));
-        }
-
-        while (result.length() > 1 && result.charAt(0) == '0' && result.charAt(1) != '.') {
-            result.deleteCharAt(0);
-        }
-
-        return result.toString();
+        Radix r = (Radix) o;
+        return Double.compare(radix, r.radix) == 0 && maxDigit == r.maxDigit;
     }
 
-    private double convertToTen(String number) {
-        if (getRadix() == 10.0) {
-            return Double.parseDouble(number);
-        }
-
-        int decimalPoint = number.indexOf(".");
-        double value = 0;
-
-        if (decimalPoint == -1) {
-            int length = number.length();
-            for (int i = 0; i < length; i++) {
-                int base = length - i - 1;
-                int digit = number.charAt(i) - '0';
-                if (digit > maxDigit) {
-                    throw newException(digit);
-                }
-
-                value += digit * Math.pow(getRadix(), base);
-            }
-
-        } else {
-            int length = number.substring(0, decimalPoint).length();
-
-            for (int i = 0; i < decimalPoint; i++) {
-                int base = length - i - 1;
-                int digit = number.charAt(i) - '0';
-                if (digit > maxDigit) {
-                    throw newException(digit);
-                }
-
-                value += digit * Math.pow(getRadix(), base);
-            }
-
-            int n = 0;
-            for (int i = decimalPoint + 1; i < number.length(); i++) {
-                n++;
-                int base = -n;
-                int digit = number.charAt(i) - '0';
-                if (digit > maxDigit) {
-                    throw newException(digit);
-                }
-
-                value += digit * Math.pow(getRadix(), base);
-            }
-        }
-
-        return value;
+    @Override
+    public int hashCode() {
+        int result = Double.hashCode(radix);
+        result = 31 * result + maxDigit;
+        return result;
     }
 
-    private String convertIntegerPartToRadix(long integerPart) {
-        StringBuilder result = new StringBuilder();
-        double n = (double) integerPart;
-
-        while (n > EPSILON) {
-            int digit = (int) (n % radix);
-            result.insert(0, Character.toTitleCase(Character.forDigit(digit, (int) radix)));
-            n /= radix;
-        }
-
-        return result.toString();
-    }
-
-    private String convertFractionalPartToRadix(long fractionalPart) {
-        return "";
-    }
-
-    private NumberFormatException newException(int digit) {
-        String format = "Digit: %d is not allowed in radix %f";
-        return new NumberFormatException(String.format(Locale.US, format, digit, getRadix()));
-    }
-
-    public static void main(String[] args) {
-        Radix r = new Radix(2);
-        r.convert(120210);
+    @Override
+    public String toString() {
+        return "Radix" + radix;
     }
 }

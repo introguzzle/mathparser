@@ -10,6 +10,7 @@ import ru.introguzzle.mathparser.group.FunctionGroup;
 import ru.introguzzle.mathparser.symbol.Coefficient;
 import ru.introguzzle.mathparser.symbol.MutableSymbol;
 import ru.introguzzle.mathparser.tokenize.FunctionDefinitionTokenizer;
+import ru.introguzzle.mathparser.tokenize.Tokenizer;
 import ru.introguzzle.mathparser.tokenize.token.Tokens;
 
 import java.util.function.Supplier;
@@ -49,6 +50,11 @@ public class FunctionDefinitionParser implements Parser<Double> {
     @Override
     public Double parse(@NotNull Tokens tokens, Context<Double> context) throws SyntaxException {
         return parser.parse(tokens, context);
+    }
+
+    @Override
+    public Tokenizer getTokenizer() {
+        return parser.getTokenizer();
     }
 
     public record ParserResult(double value,

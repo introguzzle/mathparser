@@ -44,7 +44,7 @@ public class TokenizerOptions implements Options {
             c != null && allowedOperatorSymbols.indexOf(c) != -1;
 
     private Predicate<Character> digitPredicate = c ->
-            c != null && (c == DECIMAL || c == IMAGINARY_UNIT || Character.isDigit(c));
+            c != null && (c == DECIMAL || c == IMAGINARY_UNIT || c == UNDERSCORE || Character.isDigit(c));
 
     private Predicate<Character> letterPredicate = c ->
             c != null && (c == UNDERSCORE || Character.isLetter(c));

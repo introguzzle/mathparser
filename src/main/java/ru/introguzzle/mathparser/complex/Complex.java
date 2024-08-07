@@ -34,6 +34,12 @@ public class Complex extends Number {
         b = imaginary;
     }
 
+    public static Complex parseComplex(String string) {
+        return !string.contains("i")
+                ? Complex.of(Double.parseDouble(string))
+                : Complex.of(0, Double.parseDouble(string.substring(0, string.length() - 1)));
+    }
+
     public double getReal() {
         return a;
     }
@@ -188,5 +194,9 @@ public class Complex extends Number {
     @Override
     public double doubleValue() {
         return a;
+    }
+
+    public Complex negate() {
+        return new Complex(-a, -b);
     }
 }
