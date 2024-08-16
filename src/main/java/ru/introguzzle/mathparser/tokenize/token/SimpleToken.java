@@ -16,7 +16,7 @@ public class SimpleToken implements
     private static final long serialVersionUID = -54892981192L;
     private final Type type;
     private final String data;
-    private final int offset;
+    private int offset;
     private final int length;
 
     public static Token of(Type type, CharSequence data, int offset) {
@@ -98,7 +98,16 @@ public class SimpleToken implements
     }
 
     @Override
-    protected SimpleToken clone() throws CloneNotSupportedException {
-        return (SimpleToken) super.clone();
+    public SimpleToken clone() {
+        try {
+            return (SimpleToken) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return new SimpleToken(type, data, offset, length);
+        }
+    }
+
+    @Override
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 }

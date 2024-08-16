@@ -1,7 +1,8 @@
 package ru.introguzzle.mathparser.tokenize.token.type;
 
 public enum OperatorType implements Type {
-    OPERATOR;
+    OPERATOR,
+    CONVERTER;
 
     @Override
     public Category getCategory() {

@@ -1,0 +1,22 @@
+package ru.introguzzle.mathparser.function.complex;
+
+import org.jetbrains.annotations.NotNull;
+import ru.introguzzle.mathparser.complex.Complex;
+
+import java.util.List;
+
+public class ComplexRoot extends ComplexFunction {
+    public ComplexRoot() {
+        super("sqrt", 1);
+    }
+
+    @Override
+    public boolean isVariadic() {
+        return false;
+    }
+
+    @Override
+    public @NotNull Complex evaluate(List<Complex> arguments) {
+        return arguments.getFirst().pow(new Complex(0.5, 0));
+    }
+}

@@ -1,8 +1,9 @@
 package ru.introguzzle.mathparser.constant.real;
 
-import ru.introguzzle.mathparser.common.Reflector;
+import ru.introguzzle.mathparser.common.reflect.Reflector;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DoubleConstantReflector {
     private static final Map<String, DoubleConstant> CONSTANTS = new HashMap<>();

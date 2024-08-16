@@ -8,7 +8,7 @@ public class EquationTokenizer extends MathTokenizer {
 
         @Override
         public Category getCategory() {
-            return Category.SPECIAL;
+            return Category.LAMBDA;
         }
     }
 }

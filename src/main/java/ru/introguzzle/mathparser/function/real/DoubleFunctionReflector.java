@@ -1,9 +1,9 @@
 package ru.introguzzle.mathparser.function.real;
 
+import ru.introguzzle.mathparser.common.reflect.Reflector;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import ru.introguzzle.mathparser.common.Reflector;
 
 public final class DoubleFunctionReflector {
 

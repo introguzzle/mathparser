@@ -11,7 +11,7 @@ public class ComplexNaturalLogarithm extends ComplexFunction {
     }
 
     @Override
-    public @NotNull Complex apply(List<Complex> arguments) {
+    public @NotNull Complex evaluate(List<Complex> arguments) {
         return arguments.getFirst().ln();
     }
 

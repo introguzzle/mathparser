@@ -1,8 +1,8 @@
 package ru.introguzzle.mathparser.symbol;
 
 import org.jetbrains.annotations.NotNull;
-import ru.introguzzle.mathparser.common.NoSuchNameException;
-import ru.introguzzle.mathparser.common.NotUniqueNamingException;
+import ru.introguzzle.mathparser.common.naming.NoSuchNameException;
+import ru.introguzzle.mathparser.common.naming.NotUniqueNamingException;
 
 import java.util.*;
 

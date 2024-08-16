@@ -1,9 +1,9 @@
 package ru.impl;
 
 import org.junit.Test;
-import ru.introguzzle.mathparser.common.Context;
-import ru.introguzzle.mathparser.common.NamingContext;
-import ru.introguzzle.mathparser.common.NotUniqueNamingException;
+import ru.introguzzle.mathparser.common.naming.Context;
+import ru.introguzzle.mathparser.common.naming.NamingContext;
+import ru.introguzzle.mathparser.common.naming.NotUniqueNamingException;
 import ru.introguzzle.mathparser.symbol.Coefficient;
 import ru.introguzzle.mathparser.symbol.Variable;
 

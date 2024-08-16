@@ -40,6 +40,10 @@ public class ExpressionIterator implements Iterator<Character> {
         return null;
     }
 
+    public Expression getExpression() {
+        return expression;
+    }
+
     @Override
     public void remove() {
         throw new UnsupportedOperationException("Remove not supported");

@@ -2,34 +2,42 @@ package ru.introguzzle.mathparser.tokenize;
 
 import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.common.Nameable;
-import ru.introguzzle.mathparser.common.NoSuchNameException;
-import ru.introguzzle.mathparser.common.Options;
 import ru.introguzzle.mathparser.common.math.Radix;
+import ru.introguzzle.mathparser.common.naming.NoSuchNameException;
+import ru.introguzzle.mathparser.common.options.Options;
 import ru.introguzzle.mathparser.constant.real.DoubleConstant;
 import ru.introguzzle.mathparser.function.Function;
 import ru.introguzzle.mathparser.function.real.DoubleFunction;
+import ru.introguzzle.mathparser.lambda.LambdaEvaluator;
 import ru.introguzzle.mathparser.operator.Operator;
 import ru.introguzzle.mathparser.symbol.ImmutableSymbol;
-import ru.introguzzle.mathparser.tokenize.token.Token;
+import ru.introguzzle.mathparser.tokenize.predicates.DigitPredicate;
+import ru.introguzzle.mathparser.tokenize.predicates.LetterPredicate;
+import ru.introguzzle.mathparser.tokenize.predicates.OperatorPredicate;
+import ru.introguzzle.mathparser.tokenize.validation.CommaValidator;
+import ru.introguzzle.mathparser.tokenize.validation.NumberValidator;
+import ru.introguzzle.mathparser.tokenize.validation.UnitValidator;
+import ru.introguzzle.mathparser.tokenize.validation.Validator;
+import ru.introguzzle.mathparser.unit.Unit;
+import ru.introguzzle.mathparser.unit.UnitConverter;
 
 import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class TokenizerOptions implements Options {
-    public static final char DECIMAL = '.';
-    public static final char IMAGINARY_UNIT = 'i';
-    public static final char UNDERSCORE = '_';
-
     private int flags;
 
     /**
      * If false, tokenizer will not check strict match of mutable symbols used in context
      * and actual mutable symbols in expression
      */
-    public boolean strictMode = false;
-    public Radix radix = new Radix(10);
+    private boolean strictMode = true;
 
+    /**
+     * TODO
+     */
+    private Radix radix = new Radix(10);
+    private List<Validator> validators = new ArrayList<>();
+    private UnitConverter unitConverter = new UnitConverter();
 
     @NotNull
     private final transient Map<String, Nameable> names = new HashMap<>();
@@ -37,24 +45,22 @@ public class TokenizerOptions implements Options {
     private final transient Map<String, Operator<?>> operators = new HashMap<>();
     private final transient Map<String, Function<?>> functions = new HashMap<>();
     private final transient Map<String, ImmutableSymbol<?>> constants = new HashMap<>();
+    private final transient Map<String, LambdaEvaluator<?>> lambdaEvaluators = new HashMap<>();
+    private final transient Map<String, Unit<?, ?>> units = new HashMap<>();
 
-    private String allowedOperatorSymbols = "+-/*~!@#$%^&*()\"{}_[]|\\?/<>,.=";
-
-    private final Predicate<Character> allowedOperatorSymbolsPredicate = c ->
-            c != null && allowedOperatorSymbols.indexOf(c) != -1;
-
-    private Predicate<Character> digitPredicate = c ->
-            c != null && (c == DECIMAL || c == IMAGINARY_UNIT || c == UNDERSCORE || Character.isDigit(c));
-
-    private Predicate<Character> letterPredicate = c ->
-            c != null && (c == UNDERSCORE || Character.isLetter(c));
+    private final OperatorPredicate allowedOperatorSymbolsPredicate = new OperatorPredicate();
+    private final DigitPredicate digitPredicate = new DigitPredicate();
+    private final LetterPredicate letterPredicate = new LetterPredicate();
 
     public TokenizerOptions() {
-
+        this(0);
     }
 
     public TokenizerOptions(int flags) {
         this.flags = flags;
+        this.validators.add(new NumberValidator());
+        this.validators.add(new CommaValidator());
+        this.validators.add(new UnitValidator());
     }
 
     public void setFlags(int flags) {
@@ -65,26 +71,11 @@ public class TokenizerOptions implements Options {
         this.strictMode = strictMode;
     }
 
-    public TokenizerOptions setAllowedOperatorSymbols(String allowedOperatorSymbols) {
-        this.allowedOperatorSymbols = allowedOperatorSymbols;
-        return this;
-    }
-
-    public TokenizerOptions setLetterPredicate(Predicate<Character> letterPredicate) {
-        this.letterPredicate = letterPredicate;
-        return this;
-    }
-
-    public TokenizerOptions setDigitPredicate(Predicate<Character> digitPredicate) {
-        this.digitPredicate = digitPredicate;
-        return this;
-    }
-
     public boolean isStrictMode() {
         return strictMode;
     }
 
-    public Map<String, Nameable> getNames() {
+    public @NotNull Map<String, Nameable> getNames() {
         return names;
     }
 
@@ -130,22 +121,46 @@ public class TokenizerOptions implements Options {
         return constants;
     }
 
-    public String getAllowedOperatorSymbols() {
-        return allowedOperatorSymbols;
+
+    public Map<String, LambdaEvaluator<?>> getLambdaEvaluators() {
+        if (!lambdaEvaluators.isEmpty()) {
+            return lambdaEvaluators;
+        }
+
+        names.forEach((k, v) -> {
+            if (v instanceof LambdaEvaluator<?>) {
+                lambdaEvaluators.put(k, (LambdaEvaluator<?>) v);
+            }
+        });
+
+        return lambdaEvaluators;
     }
 
-    public Predicate<Character> getDigitPredicate() {
+    public Map<String, Unit<?, ?>> getUnits() {
+        if (!units.isEmpty()) {
+            return units;
+        }
+
+        names.forEach((k, v) -> {
+            if (v instanceof Unit<?, ?>) {
+                units.put(k, (Unit<?, ?>) v);
+            }
+        });
+
+        return units;
+    }
+
+    public DigitPredicate getDigitPredicate() {
         return digitPredicate;
     }
 
-    public Predicate<Character> getLetterPredicate() {
+    public LetterPredicate getLetterPredicate() {
         return letterPredicate;
     }
 
-    public Predicate<Character> getAllowedOperatorSymbolsPredicate() {
+    public OperatorPredicate getAllowedOperatorSymbolsPredicate() {
         return allowedOperatorSymbolsPredicate;
     }
-
 
     public TokenizerOptions addFunction(@NotNull Function<?> function) {
         addName(function);
@@ -167,6 +182,16 @@ public class TokenizerOptions implements Options {
         return this;
     }
 
+    public TokenizerOptions addLambdaEvaluator(@NotNull LambdaEvaluator<?> lambdaEvaluator) {
+        addName(lambdaEvaluator);
+        return this;
+    }
+
+    public TokenizerOptions addUnit(Unit<?, ?> unit) {
+        addName(unit);
+        return this;
+    }
+
     private <N extends Nameable> TokenizerOptions clearNameables(Class<N> cls) {
         names.entrySet()
                 .removeIf(cls::isInstance);
@@ -185,16 +210,12 @@ public class TokenizerOptions implements Options {
         return clearNameables(Operator.class);
     }
 
-    public @NotNull Optional<ImmutableSymbol<?>> findConstant(Token token) {
-        return findConstant(token.getData());
+    public TokenizerOptions clearLambdaEvaluators() {
+        return clearNameables(LambdaEvaluator.class);
     }
 
-    public @NotNull Optional<Function<?>> findFunction(Token token) {
-        return findFunction(token.getData());
-    }
-
-    public @NotNull Optional<Operator<?>> findOperator(Token token) {
-        return findOperator(token.getData());
+    public TokenizerOptions clearUnits() {
+        return clearNameables(Unit.class);
     }
 
     public @NotNull Optional<ImmutableSymbol<?>> findConstant(String name) {
@@ -209,22 +230,26 @@ public class TokenizerOptions implements Options {
         return Optional.ofNullable(getOperators().get(name));
     }
 
-    private static Map<String, Nameable> toMap(@NotNull Collection<? extends Nameable> collection) {
-        return collection.stream().collect(Collectors.toMap(Nameable::getName, n -> n));
+    public @NotNull Optional<LambdaEvaluator<?>> findLambdaEvaluator(String name) {
+        return Optional.ofNullable(getLambdaEvaluators().get(name));
+    }
+
+    public @NotNull Optional<Unit<?, ?>> findUnit(String name) {
+        return Optional.ofNullable(getUnits().get(name));
     }
 
     public TokenizerOptions withFunctions(@NotNull Collection<? extends Function<?>> functions) {
-        names.putAll(toMap(functions));
+        names.putAll(Nameable.toMap(functions));
         return this;
     }
 
     public TokenizerOptions withConstants(@NotNull Collection<? extends ImmutableSymbol<?>> constants) {
-        names.putAll(toMap(constants));
+        names.putAll(Nameable.toMap(constants));
         return this;
     }
 
     public TokenizerOptions withOperators(@NotNull Collection<? extends Operator<?>> operators) {
-        names.putAll(toMap(operators));
+        names.putAll(Nameable.toMap(operators));
         return this;
     }
 
@@ -254,7 +279,7 @@ public class TokenizerOptions implements Options {
 
         Function<Double> newFunction = new DoubleFunction(name, requiredArguments) {
             @Override
-            public @NotNull Double apply(List<Double> arguments) {
+            public @NotNull Double evaluate(List<Double> arguments) {
                 return replace.apply(arguments);
             }
 
@@ -277,7 +302,33 @@ public class TokenizerOptions implements Options {
     }
 
     @Override
-    public int getFlags() {
+    public final int getFlags() {
         return flags;
+    }
+
+    public final List<Validator> getValidators() {
+        return validators;
+    }
+
+    public final void setValidators(Validator... validators) {
+        this.validators = new ArrayList<>(Arrays.asList(validators));
+    }
+
+    public final TokenizerOptions addValidator(Validator validator) {
+        validators.add(validator);
+        return this;
+    }
+
+    public final TokenizerOptions removeValidators() {
+        validators.clear();
+        return this;
+    }
+
+    public UnitConverter getUnitConverter() {
+        return unitConverter;
+    }
+
+    public void setUnitConverter(UnitConverter unitConverter) {
+        this.unitConverter = unitConverter;
     }
 }

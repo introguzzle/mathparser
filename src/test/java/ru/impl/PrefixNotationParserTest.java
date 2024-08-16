@@ -3,13 +3,13 @@ package ru.impl;
 import org.junit.Before;
 import org.junit.Test;
 
-import ru.introguzzle.mathparser.common.NotUniqueNamingException;
+import ru.introguzzle.mathparser.common.naming.NotUniqueNamingException;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.parse.Parser;
 import ru.introguzzle.mathparser.parse.PrefixNotationParser;
 import ru.introguzzle.mathparser.tokenize.Tokenizer;
 import ru.introguzzle.mathparser.expression.MathExpression;
-import ru.introguzzle.mathparser.common.NamingContext;
+import ru.introguzzle.mathparser.common.naming.NamingContext;
 import ru.introguzzle.mathparser.tokenize.MathTokenizer;
 import ru.introguzzle.mathparser.tokenize.UnknownSymbolTokenizeException;
 import ru.introguzzle.mathparser.symbol.Variable;

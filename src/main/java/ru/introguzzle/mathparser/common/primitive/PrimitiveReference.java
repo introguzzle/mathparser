@@ -1,10 +1,6 @@
 package ru.introguzzle.mathparser.common.primitive;
 
-public abstract sealed class PrimitiveReference<T> permits
-        IntegerReference,
-        BooleanReference,
-        DoubleReference,
-        LongReference {
+public class PrimitiveReference<T> {
     private T value;
     public PrimitiveReference(T value) {
         this.value = value;

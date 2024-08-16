@@ -11,7 +11,7 @@ public class Random extends DoubleFunction {
     }
 
     @Override
-    public @NotNull Double apply(List<Double> arguments) {
+    public @NotNull Double evaluate(List<Double> arguments) {
         double v1 = java.util.Random.from(RandomGenerator.getDefault()).nextDouble(-1, 1);
         double v2 = java.util.Random.from(RandomGenerator.getDefault()).nextDouble(-100, 100);
         return v1 * v2;

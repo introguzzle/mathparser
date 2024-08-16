@@ -3,25 +3,26 @@ package ru.impl;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
-import ru.introguzzle.mathparser.common.Context;
-import ru.introguzzle.mathparser.common.NamingException;
+import ru.introguzzle.mathparser.common.naming.Context;
+import ru.introguzzle.mathparser.common.naming.NamingException;
 import ru.introguzzle.mathparser.constant.real.DoubleConstant;
 import ru.introguzzle.mathparser.constant.real.DoubleConstantReflector;
 import ru.introguzzle.mathparser.function.real.DoubleFunction;
 import ru.introguzzle.mathparser.function.real.DoubleFunctionReflector;
 import ru.introguzzle.mathparser.operator.standard.AdditionOperator;
+import ru.introguzzle.mathparser.tokenize.token.SimpleToken;
 import ru.introguzzle.mathparser.tokenize.token.type.OperatorType;
 import ru.introguzzle.mathparser.symbol.Coefficient;
 import ru.introguzzle.mathparser.tokenize.*;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.expression.MathExpression;
-import ru.introguzzle.mathparser.common.NamingContext;
+import ru.introguzzle.mathparser.common.naming.NamingContext;
 import ru.introguzzle.mathparser.symbol.Variable;
 import ru.introguzzle.mathparser.tokenize.token.Tokens;
 import ru.introguzzle.mathparser.tokenize.token.type.*;
+import ru.introguzzle.mathparser.tokenize.validation.NumberValidator;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static org.junit.Assert.assertEquals;
@@ -195,13 +196,13 @@ public class MathTokenizerTest {
         assertEquals(NumberType.NUMBER, tokens.get(2).getType());
         assertEquals("1", tokens.get(2).getData());
 
-        assertEquals(SpecialType.COMMA, tokens.get(3).getType());
+        assertEquals(DelimiterType.COMMA, tokens.get(3).getType());
         assertEquals(",", tokens.get(3).getData());
 
         assertEquals(NumberType.NUMBER, tokens.get(4).getType());
         assertEquals("3", tokens.get(4).getData());
 
-        assertEquals(SpecialType.COMMA, tokens.get(5).getType());
+        assertEquals(DelimiterType.COMMA, tokens.get(5).getType());
         assertEquals(",", tokens.get(5).getData());
 
         assertEquals(NumberType.NUMBER, tokens.get(6).getType());
@@ -257,7 +258,7 @@ public class MathTokenizerTest {
     public void test_custom_function() throws Exception {
         tokenizer.getOptions().addFunction(new DoubleFunction("test_function", 1) {
             @Override
-            public @NotNull Double apply(List<Double> arguments) {
+            public @NotNull Double evaluate(List<Double> arguments) {
                 return 0.0;
             }
 
@@ -267,7 +268,7 @@ public class MathTokenizerTest {
             }
         }).addFunction(new DoubleFunction("clown", 0) {
             @Override
-            public @NotNull Double apply(List<Double> arguments) {
+            public @NotNull Double evaluate(List<Double> arguments) {
                 return ThreadLocalRandom.current().nextDouble();
             }
 
@@ -287,19 +288,18 @@ public class MathTokenizerTest {
 
     @Test
     public void test_custom_constants_and_functions() throws Exception {
-        MathTokenizer tokenizer = new MathTokenizer(
-                Map.of("zzzz", new DoubleFunction("zzzz", 1) {
-                    @Override
-                    public @NotNull Double apply(List<Double> arguments) {
-                        return null;
-                    }
+        MathTokenizer tokenizer = new MathTokenizer();
+        tokenizer.getOptions().addName(new DoubleFunction("zzzz", 1) {
+            @Override
+            public @NotNull Double evaluate(List<Double> arguments) {
+                return 999.0;
+            }
 
-                    @Override
-                    public boolean isVariadic() {
-                        return false;
-                    }
-                })
-        );
+            @Override
+            public boolean isVariadic() {
+                return false;
+            }
+        });
 
         tokenizer.tokenize(new MathExpression("zzzz(1)"), new NamingContext<>());
     }
@@ -363,17 +363,27 @@ public class MathTokenizerTest {
     @Test
     public void supress() {
         MathTokenizer t = new MathTokenizer();
-        t.getOptions().setDigitPredicate(null)
-                .setAllowedOperatorSymbols(null)
-                .setLetterPredicate(null)
-                .setDigitPredicate(null)
+        t.getOptions()
                 .withFunctions(List.of())
                 .withOperators(List.of())
                 .overrideOperator("+", new AdditionOperator())
                 .addName(new Variable<>("x", 3.0))
                 .addOperator(new AdditionOperator())
                 .clearConstants()
-                .clearOperators();
+                .clearOperators()
+                .setRadix(null);
+
+        t.getOptions().setValidators(new NumberValidator());
+        t.getOptions().setFlags(0);
+        t.getOptions().setRadix(null);
+        var r = t.getOptions().getRadix();
+        System.out.println(r);
+        t.getOptions().setStrictMode(false);
+        var f1 = t.getOptions().findFunction("1");
+        var o1 = t.getOptions().findOperator("1");
+        var o2 = t.getOptions().findOperator(new SimpleToken(OperatorType.OPERATOR, "", 1).getData());
+        var f2 = t.getOptions().findFunction(new SimpleToken(OperatorType.OPERATOR, "", 1).getData());
+        System.out.println(f1.toString() + f2 + o1 + o2);
     }
 
     @Test
@@ -429,7 +439,7 @@ public class MathTokenizerTest {
     public void test_long_symbols_with_strict_mode() throws Exception {
         Expression expression = new MathExpression("sin(theta)");
         tokenizer.getOptions().addConstant(new DoubleConstant("theta", 3) {});
-        tokenizer.getOptions().strictMode = true;
+        tokenizer.getOptions().setStrictMode(true);
 
         Context<Double> parent = new NamingContext<>();
         parent.getSymbols().add(new Variable<>("theta", 3.0));

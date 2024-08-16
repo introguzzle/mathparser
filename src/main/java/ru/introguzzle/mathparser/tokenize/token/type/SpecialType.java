@@ -4,16 +4,16 @@ import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.common.Nameable;
 
 public enum SpecialType implements Type, Nameable {
-    COMMA;
+    ASSIGNMENT;
 
     @Override
     public Category getCategory() {
-        return Category.COMMA;
+        return Category.SPECIAL;
     }
 
     @Override
     public @NotNull String getName() {
-        return ",";
+        return "=";
     }
 
     @Override

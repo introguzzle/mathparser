@@ -1,77 +1,95 @@
 package ru.introguzzle.mathparser.generate;
 
-import ru.introguzzle.mathparser.common.Context;
+import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.common.SyntaxException;
+import ru.introguzzle.mathparser.common.naming.Context;
+import ru.introguzzle.mathparser.common.naming.NamingContext;
 import ru.introguzzle.mathparser.expression.Expression;
-import ru.introguzzle.mathparser.expression.MathExpression;
-import ru.introguzzle.mathparser.tokenize.*;
-import ru.introguzzle.mathparser.tokenize.token.*;
-import ru.introguzzle.mathparser.tokenize.token.type.NumberType;
+import ru.introguzzle.mathparser.symbol.MutableSymbol;
+import ru.introguzzle.mathparser.symbol.Variable;
+import ru.introguzzle.mathparser.tokenize.FunctionDefinitionTokenizer;
+import ru.introguzzle.mathparser.tokenize.TokenProcessor;
+import ru.introguzzle.mathparser.tokenize.Tokenizer;
+import ru.introguzzle.mathparser.tokenize.token.Tokens;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.function.Supplier;
 
 public class CachedExpressionGenerator implements Generator<Expression> {
-    private final Tokenizer tokenizer;
-    private GeneratorOptions options = new GeneratorOptions(GeneratorOptions.INCLUDE_FLOATS) {};
+    private GeneratorOptions options;
 
-    {
-        options.maxFloating = 1;
+    private final Tokenizer tokenizer;
+    private final TokenProcessor[] tokenProcessors;
+
+    public CachedExpressionGenerator() {
+        this(new FunctionDefinitionTokenizer<>() {
+            @Override
+            public Supplier<MutableSymbol<Number>> getDefaultFactory(CharSequence name, Number value) {
+                return () -> new Variable<>(name.toString(), value);
+            }
+
+            @Override
+            public Number getDefaultValue() {
+                return 0.0;
+            }
+        }, new CachedGeneratorOptions());
     }
 
     public CachedExpressionGenerator(Tokenizer tokenizer) {
-        this.tokenizer = tokenizer;
+        this(tokenizer, new CachedGeneratorOptions());
     }
 
     public CachedExpressionGenerator(Tokenizer tokenizer, GeneratorOptions options) {
+        this(tokenizer, options,
+                new NumberSwapper(options),
+                new FunctionSwapper(options, tokenizer)
+        );
+    }
+
+    public CachedExpressionGenerator(@NotNull Tokenizer tokenizer,
+                                     @NotNull GeneratorOptions options,
+                                     @NotNull TokenProcessor... tokenProcessors) {
         this.tokenizer = tokenizer;
         this.options = options;
+        this.tokenProcessors = tokenProcessors;
     }
 
     @Override
     public Expression generate() {
-        var pair = Random.pickFromCollection(ExpressionStorage.EXPRESSIONS);
+        ExpressionStorage.Pair pair = Random.fromCollection(ExpressionStorage.EXPRESSIONS);
+        if (pair == null) {
+            throw new GeneratorException("No expressions found");
+        }
+
         Expression expression = pair.getKey();
-        Context<Double> context = pair.getValue();
+        Context<Double> context;
+
+        if (tokenizer instanceof FunctionDefinitionTokenizer<?>) {
+            context = new NamingContext<>();
+        } else {
+            context = pair.getValue();
+        }
 
         try {
-            Tokens tokens = this.tokenizer.tokenize(expression, context).getTokens();
-            Tokens changed = swapNumbers(tokens);
+            Tokens tokens = tokenizer.tokenize(expression, context).getTokens();
 
-            return new MathExpression(
-                    changed.getTokenList()
-                    .stream()
-                    .map(t -> t.getData() + " ")
-                    .collect(Collectors.joining())
-            );
-
-
-        } catch (SyntaxException e) {
-            // e.g. failed to swap numbers
-            return expression;
-        }
-    }
-
-    private Tokens swapNumbers(Tokens tokens) {
-        List<Token> result = new ArrayList<>();
-
-        for (Token token: tokens) {
-            if (token.getType() == NumberType.NUMBER) {
-                float f = Random.randomFloat(options.min, options.max);
-                result.add(new SimpleToken(NumberType.NUMBER, Float.toString(f), token.getOffset()));
-                continue;
+            for (TokenProcessor tokenProcessor : tokenProcessors) {
+                tokens = tokenProcessor.process(tokens);
             }
 
-            result.add(token);
-        }
+            return tokens.toExpression();
+        } catch (SyntaxException e) {
+            return expression;
+        }    }
 
-        return new SimpleTokens(result);
+    public static void main(String[] args) {
+        CachedExpressionGenerator g = new CachedExpressionGenerator();
+
+        System.out.println(g.generate());
     }
 
     @Override
     public GeneratorOptions getOptions() {
-        return this.options;
+        return options;
     }
 
     @Override

@@ -10,6 +10,10 @@ public class MathExpression implements Expression, Serializable {
 
     private final String string;
 
+    public static MathExpression of(String string) {
+        return new MathExpression(string);
+    }
+
     public MathExpression(@NotNull String string) {
         this.string = string;
     }
@@ -35,7 +39,7 @@ public class MathExpression implements Expression, Serializable {
     }
 
     @Serial
-    private static final long serialVersionUID = 555455926606431241L;
+    private static final long serialVersionUID = 6472600532564318283L;
 
     @Override
     public int compareTo(@NotNull Expression o) {

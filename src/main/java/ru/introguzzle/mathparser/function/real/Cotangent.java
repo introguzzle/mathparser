@@ -11,7 +11,7 @@ public class Cotangent extends DoubleFunction {
     }
 
     @Override
-    public @NotNull Double apply(List<Double> arguments) {
+    public @NotNull Double evaluate(List<Double> arguments) {
         return 1.0 / Math.tan(arguments.getFirst());
     }
 

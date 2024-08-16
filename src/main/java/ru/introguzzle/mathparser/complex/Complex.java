@@ -5,6 +5,8 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class Complex extends Number {
+    public static final Character I = 'i';
+
     public static final Complex ZERO = new Complex(0, 0);
     public static final Complex ONE = new Complex(1, 0);
     public static final Complex NAN = new Complex(Double.NaN, 0);
@@ -24,6 +26,12 @@ public class Complex extends Number {
         return new Complex(a, b);
     }
 
+    public static Complex parseComplex(String string) {
+        return !string.contains(I.toString())
+                ? Complex.of(Double.parseDouble(string))
+                : Complex.of(0, Double.parseDouble(string.substring(0, string.length() - 1)));
+    }
+
     public Complex(double real) {
         a = real;
         b = 0.0;
@@ -32,12 +40,6 @@ public class Complex extends Number {
     public Complex(double real, double imaginary) {
         a = real;
         b = imaginary;
-    }
-
-    public static Complex parseComplex(String string) {
-        return !string.contains("i")
-                ? Complex.of(Double.parseDouble(string))
-                : Complex.of(0, Double.parseDouble(string.substring(0, string.length() - 1)));
     }
 
     public double getReal() {
@@ -144,8 +146,8 @@ public class Complex extends Number {
     @Override
     public String toString() {
         return b >= 0
-                ? format(a) + " + " + format(b) + "i"
-                : format(a) + " - " + format(Math.abs(b)) + "i";
+                ? format(a) + " + " + format(b) + I
+                : format(a) + " - " + format(Math.abs(b)) + I;
     }
 
     public String toExponential() {

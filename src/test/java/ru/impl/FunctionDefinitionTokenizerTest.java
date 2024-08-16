@@ -2,8 +2,8 @@ package ru.impl;
 
 import org.junit.Before;
 import org.junit.Test;
-import ru.introguzzle.mathparser.common.Context;
-import ru.introguzzle.mathparser.common.NamingContext;
+import ru.introguzzle.mathparser.common.naming.Context;
+import ru.introguzzle.mathparser.common.naming.NamingContext;
 import ru.introguzzle.mathparser.definition.FunctionDefinition;
 import ru.introguzzle.mathparser.definition.FunctionDefinitionType;
 import ru.introguzzle.mathparser.group.FunctionGroup;
@@ -16,7 +16,6 @@ import ru.introguzzle.mathparser.tokenize.TokenizeException;
 import java.util.function.Supplier;
 
 import static org.junit.Assert.assertEquals;
-
 
 public class FunctionDefinitionTokenizerTest {
 

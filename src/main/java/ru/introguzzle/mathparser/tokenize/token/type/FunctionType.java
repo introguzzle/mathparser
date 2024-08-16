@@ -1,7 +1,7 @@
 package ru.introguzzle.mathparser.tokenize.token.type;
 
 public enum FunctionType implements Type {
-    FUNCTION;
+    FUNCTION, LAMBDA_FUNCTION;
 
     @Override
     public Category getCategory() {

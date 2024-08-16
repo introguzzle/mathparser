@@ -11,20 +11,20 @@ public class Radix {
     public static final Radix TERNARY = new Radix(3);
     public static final Radix PENTAL = new Radix(5);
 
-    private final double radix;
+    private final double base;
     private final int maxDigit;
 
-    public Radix(double radix) {
-        if (radix < 2) {
+    public Radix(double base) {
+        if (base < 2) {
             throw new IllegalArgumentException("Radix must be at least 2");
         }
 
-        this.radix = radix;
-        this.maxDigit = ((int) radix) - 1;
+        this.base = base;
+        this.maxDigit = ((int) base) - 1;
     }
 
-    public double getRadix() {
-        return radix;
+    public double getBase() {
+        return base;
     }
 
     public double getMaxDigit() {
@@ -37,18 +37,18 @@ public class Radix {
         if (o == null || getClass() != o.getClass()) return false;
 
         Radix r = (Radix) o;
-        return Double.compare(radix, r.radix) == 0 && maxDigit == r.maxDigit;
+        return Double.compare(base, r.base) == 0 && maxDigit == r.maxDigit;
     }
 
     @Override
     public int hashCode() {
-        int result = Double.hashCode(radix);
+        int result = Double.hashCode(base);
         result = 31 * result + maxDigit;
         return result;
     }
 
     @Override
     public String toString() {
-        return "Radix" + radix;
+        return "Radix" + base;
     }
 }

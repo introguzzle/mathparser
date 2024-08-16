@@ -13,7 +13,7 @@ public class Factorial extends DoubleFunction {
     }
 
     @Override
-    public @NotNull Double apply(List<Double> arguments) {
+    public @NotNull Double evaluate(List<Double> arguments) {
         double d = arguments.getFirst();
         int n = (int) d;
 

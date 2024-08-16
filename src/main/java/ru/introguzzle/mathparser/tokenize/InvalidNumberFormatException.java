@@ -1,6 +1,7 @@
 package ru.introguzzle.mathparser.tokenize;
 
 import ru.introguzzle.mathparser.expression.Expression;
+import ru.introguzzle.mathparser.tokenize.token.Tokens;
 
 public class InvalidNumberFormatException extends TokenizeException {
     private final CharSequence number;
@@ -10,7 +11,12 @@ public class InvalidNumberFormatException extends TokenizeException {
         this.number = number;
     }
 
-    public CharSequence getNumber() {
+    public InvalidNumberFormatException(CharSequence number, Tokens tokens, int offset) {
+        super("Invalid number format: " + number, tokens.toExpression(), offset);
+        this.number = number;
+    }
+
+    public final CharSequence getNumber() {
         return number;
     }
 }

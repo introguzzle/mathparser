@@ -5,8 +5,8 @@ import ru.introguzzle.mathparser.common.Nameable;
 import ru.introguzzle.mathparser.function.real.FunctionUtilities;
 import ru.introguzzle.mathparser.function.real.IllegalFunctionInvocationException;
 import ru.introguzzle.mathparser.operator.Operator;
-import ru.introguzzle.mathparser.tokenize.token.type.FunctionType;
 import ru.introguzzle.mathparser.operator.Priorities;
+import ru.introguzzle.mathparser.tokenize.token.type.FunctionType;
 import ru.introguzzle.mathparser.tokenize.token.type.Type;
 
 import java.util.List;
@@ -18,8 +18,28 @@ public interface Function<T extends Number> extends
 
     boolean isVariadic();
 
-    @NotNull default IllegalFunctionInvocationException createException(int given) {
+    @NotNull private IllegalFunctionInvocationException getInvocationException(int given) {
         return new IllegalFunctionInvocationException(FunctionUtilities.createExceptionMessage(given, this));
+    }
+
+    @NotNull T evaluate(List<T> arguments);
+
+    default @NotNull T apply(List<T> arguments) {
+        int given = arguments.size();
+
+        if (isVariadic()) {
+            if (getRequiredArguments() > given) {
+                throw getInvocationException(given);
+            } else {
+                return evaluate(arguments);
+            }
+        }
+
+        if (getRequiredArguments() != given) {
+            throw getInvocationException(given);
+        }
+
+        return evaluate(arguments);
     }
 
     @Override
@@ -27,7 +47,7 @@ public interface Function<T extends Number> extends
         return FunctionType.FUNCTION;
     }
 
-    default Operator<T> toOperator() {
+    default @NotNull Operator<T> toOperator() {
         return new Operator<>() {
             @Override
             public int getRequiredOperands() {

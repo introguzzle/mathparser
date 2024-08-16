@@ -1,10 +1,16 @@
 package ru.introguzzle.mathparser.generate;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import ru.introguzzle.mathparser.common.math.Radix;
+
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Predicate;
 
-class Random {
+public final class Random {
 
     /**
      *
@@ -12,22 +18,43 @@ class Random {
      * @param max Maximal (included)
      * @return Random integer
      */
-    static int randomInteger(int min, int max) {
+    public static int getRandomInteger(int min, int max) {
         return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
 
-    static float randomFloat(float min, float max) {
+    public static float getRandomFloat(float min, float max) {
         return ThreadLocalRandom.current().nextFloat(min, max + 1.0f);
     }
 
-    static <T> T pickFromMap(Map<?, ? extends T> map) {
-        Object key = pickFromCollection(map.keySet());
+    @NotNull public static String getRandomInteger(int min, int max, @NotNull Radix radix) {
+        int number = getRandomInteger(min, max);
+        return Integer.toString(number, (int) radix.getBase());
+    }
+
+    @NotNull public static String getRandomFloat(float min, float max, @NotNull Radix radix) {
+        float number = getRandomFloat(min, max);
+        String integer = Integer.toString((int) number, (int) radix.getBase());
+
+        String decimal1 = Integer.toString((int) getRandomFloat(min, max), (int) radix.getBase());
+        String decimal2 = Integer.toString((int) getRandomFloat(min, max), (int) radix.getBase());
+
+        return integer + "." + decimal1 + decimal2;
+    }
+
+    @Nullable public static <T> T fromMap(@NotNull Map<?, ? extends T> map) {
+        Object key = fromCollection(map.keySet());
         return map.get(key);
     }
 
-    static <T> T pickFromCollection(Collection<? extends T> collection) {
+    @Nullable public static <T> T fromMap(@NotNull Map<?, ? extends T> map,
+                                          @NotNull Predicate<? super T> predicate) {
+        List<? extends T> list = map.values().stream().filter(predicate).toList();
+        return fromCollection(list);
+    }
+
+    @Nullable public static <T> T fromCollection(@NotNull Collection<? extends T> collection) {
         return collection.stream()
-                .skip(Random.randomInteger(0, collection.size() - 1))
+                .skip(Random.getRandomInteger(0, collection.size() - 1))
                 .findFirst()
                 .orElse(null);
     }

@@ -1,8 +1,8 @@
 package ru.introguzzle.mathparser.operator.logical;
 
 import org.jetbrains.annotations.NotNull;
-import ru.introguzzle.mathparser.operator.Priorities;
 import ru.introguzzle.mathparser.operator.DoubleUnaryOperator;
+import ru.introguzzle.mathparser.operator.Priorities;
 
 import java.util.List;
 

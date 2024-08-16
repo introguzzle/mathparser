@@ -1,5 +1,6 @@
 package ru.introguzzle.mathparser.group;
 
+import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.tokenize.token.Tokens;
 
 public class TokenGroup implements Group {
@@ -10,7 +11,7 @@ public class TokenGroup implements Group {
     }
 
     @Override
-    public Tokens getTokens() {
+    public @NotNull Tokens getTokens() {
         return tokens;
     }
 }

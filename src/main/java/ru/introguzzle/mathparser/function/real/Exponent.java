@@ -10,7 +10,7 @@ public class Exponent extends DoubleFunction {
     }
 
     @Override
-    public @NotNull Double apply(List<Double> arguments) {
+    public @NotNull Double evaluate(List<Double> arguments) {
         return Math.exp(arguments.getFirst());
     }
 

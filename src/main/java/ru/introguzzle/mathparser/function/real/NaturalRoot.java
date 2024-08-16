@@ -11,7 +11,7 @@ public class NaturalRoot extends DoubleFunction {
     }
 
     @Override
-    public @NotNull Double apply(List<Double> arguments) {
+    public @NotNull Double evaluate(List<Double> arguments) {
         double n = arguments.getFirst();
         double x = arguments.getLast();
 

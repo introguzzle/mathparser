@@ -1,8 +1,9 @@
 package ru.introguzzle.mathparser.tokenize;
 
+import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.tokenize.token.Tokens;
 
 @FunctionalInterface
 public interface TokenProcessor {
-    Tokens process(Tokens tokens) throws UnknownOperatorException;
+    @NotNull Tokens process(@NotNull Tokens tokens);
 }

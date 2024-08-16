@@ -9,22 +9,22 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class SearchResult {
-    public boolean match = false;
-    public Token token;
+    private boolean match = false;
+    private Token token;
 
     public SearchResult() {
 
     }
 
     public SearchResult(boolean match, @Nullable Token token) {
-        this.match = match;
-        this.token = token;
+        this.setMatch(match);
+        this.setToken(token);
     }
 
     @Contract("_ -> new")
     public static @NotNull SearchResult reduce(SearchResult... results) {
         boolean match = Arrays.stream(results)
-                .anyMatch(r -> r.match);
+                .anyMatch(SearchResult::isMatch);
 
         if (!match) {
             return new SearchResult(false, null);
@@ -32,11 +32,27 @@ public class SearchResult {
 
         Token nonNullToken = Arrays.stream(results)
                 .sequential()
-                .map(result -> result.token)
+                .map(SearchResult::getToken)
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
 
         return new SearchResult(true, nonNullToken);
+    }
+
+    public boolean isMatch() {
+        return match;
+    }
+
+    public void setMatch(boolean match) {
+        this.match = match;
+    }
+
+    public Token getToken() {
+        return token;
+    }
+
+    public void setToken(Token token) {
+        this.token = token;
     }
 }

@@ -1,6 +1,5 @@
 package ru.introguzzle.mathparser.tokenize.token;
 
-import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.common.primitive.IntegerReference;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.expression.MathExpression;
@@ -12,40 +11,30 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.IntStream;
 
 public class SimpleTokens implements Tokens, Serializable {
 
     @Serial
-    private static final long serialVersionUID = 48984394839L;
-    private int position;
+    private static final long serialVersionUID = -2446858740059770855L;
+    private int position = 0;
+
     private final List<Token> tokens;
     private transient Integer constantCount;
     private transient Integer variableCount;
     private transient Integer coefficientCount;
 
     public SimpleTokens() {
-        tokens = new ArrayList<>();
-    }
-
-    public SimpleTokens(Token token) {
-        tokens = new ArrayList<>();
-        tokens.add(token);
+        this(new ArrayList<>());
     }
 
     public SimpleTokens(Token... tokens) {
-        this.tokens = Arrays.asList(tokens);
+        this(Arrays.asList(tokens));
     }
 
     public SimpleTokens(List<Token> tokens) {
         this.tokens = tokens;
-    }
-
-    @Override
-    public void add(Token token) {
-        tokens.add(token);
     }
 
     @Override
@@ -65,7 +54,7 @@ public class SimpleTokens implements Tokens, Serializable {
 
     @Override
     public Token getNextToken() {
-        return tokens.get(this.position++);
+        return get(position++);
     }
 
     @Override
@@ -76,11 +65,6 @@ public class SimpleTokens implements Tokens, Serializable {
     @Override
     public int getPosition() {
         return position;
-    }
-
-    @Override
-    public void setPosition(int position) {
-        this.position = position;
     }
 
     @Override
@@ -119,8 +103,8 @@ public class SimpleTokens implements Tokens, Serializable {
     private int findType(Type type) {
         IntegerReference ref = new IntegerReference(-1);
 
-        IntStream.range(0, tokens.size())
-                .filter(i -> tokens.get(i).getType() == type)
+        IntStream.range(0, size())
+                .filter(i -> get(i).getType() == type)
                 .findFirst()
                 .ifPresent(i -> ref.setValue(i + 1));
 
@@ -128,7 +112,7 @@ public class SimpleTokens implements Tokens, Serializable {
     }
 
     private int computeVariableCount() {
-        variableCount = (int) tokens.stream()
+        variableCount = (int) stream()
                 .filter(token -> token.getType() == SymbolType.VARIABLE)
                 .count();
 
@@ -136,7 +120,7 @@ public class SimpleTokens implements Tokens, Serializable {
     }
 
     private int computeConstantCount() {
-        constantCount = (int) tokens.stream()
+        constantCount = (int) stream()
                 .filter(token -> token.getType() == SymbolType.CONSTANT)
                 .count();
 
@@ -144,21 +128,11 @@ public class SimpleTokens implements Tokens, Serializable {
     }
 
     private int computeCoefficientCount() {
-        coefficientCount = (int) tokens.stream()
+        coefficientCount = (int) stream()
                 .filter(token -> token.getType() == SymbolType.COEFFICIENT)
                 .count();
 
         return coefficientCount;
-    }
-
-    @Override
-    public int size() {
-        return tokens.size();
-    }
-
-    @Override
-    public Token get(int index) {
-        return tokens.get(index);
     }
 
     @Override
@@ -176,18 +150,6 @@ public class SimpleTokens implements Tokens, Serializable {
 
             builder.append(token.getData());
             currentOffset += token.getData().length();
-
-            if (token instanceof NumberToken numberToken) {
-                double radix = numberToken.getNumber().getRadix().getRadix();
-                if (radix == 10.0) {
-                    continue;
-                }
-
-                builder.append("_")
-                        .append((int) radix)
-                        .append(" ");
-                currentOffset += 3 + String.valueOf(radix).length();
-            }
         }
 
         return builder.toString();
@@ -199,20 +161,23 @@ public class SimpleTokens implements Tokens, Serializable {
     }
 
     @Override
-    public void merge(Tokens other) {
-        for (Token token: other) {
-            this.add(token);
+    public Tokens clone() {
+        Tokens clone = new SimpleTokens();
+
+        for (Token token: tokens) {
+            clone.add(token.clone());
         }
+
+        return clone;
+    }
+
+    @Override
+    public void setPosition(int offset) {
+        position = offset;
     }
 
     @Override
     public String toString() {
         return tokens.toString();
-    }
-
-    @NotNull
-    @Override
-    public Iterator<Token> iterator() {
-        return tokens.iterator();
     }
 }

@@ -13,6 +13,6 @@ public class UnknownSymbolTokenizeException extends TokenizeException {
 
     @NotNull
     private static String createMessage(CharSequence symbols) {
-        return "Unknown variable, coefficient or function: " + symbols + ". Forgot to register in Context?";
+        return "Unknown argument, coefficient or function: " + symbols + ". Forgot to register in Context?";
     }
 }

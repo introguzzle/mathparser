@@ -11,7 +11,7 @@ public class Logarithm extends DoubleFunction {
     }
 
     @Override
-    public @NotNull Double apply(List<Double> arguments) {
+    public @NotNull Double evaluate(List<Double> arguments) {
         return Math.log(arguments.get(1)) / Math.log(arguments.get(0));
     }
 

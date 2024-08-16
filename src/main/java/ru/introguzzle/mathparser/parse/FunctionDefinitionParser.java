@@ -1,8 +1,8 @@
 package ru.introguzzle.mathparser.parse;
 
 import org.jetbrains.annotations.NotNull;
-import ru.introguzzle.mathparser.common.Context;
 import ru.introguzzle.mathparser.common.SyntaxException;
+import ru.introguzzle.mathparser.common.naming.Context;
 import ru.introguzzle.mathparser.definition.FunctionDefinition;
 import ru.introguzzle.mathparser.definition.FunctionDefinitionType;
 import ru.introguzzle.mathparser.expression.Expression;
@@ -55,6 +55,11 @@ public class FunctionDefinitionParser implements Parser<Double> {
     @Override
     public Tokenizer getTokenizer() {
         return parser.getTokenizer();
+    }
+
+    @Override
+    public NumberConverter<Double> getConverter() {
+        return NumberConverter.getDoubleConverter();
     }
 
     public record ParserResult(double value,

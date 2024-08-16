@@ -10,7 +10,7 @@ public class CubicRoot extends DoubleFunction {
     }
 
     @Override
-    public @NotNull Double apply(List<Double> arguments) {
+    public @NotNull Double evaluate(List<Double> arguments) {
         return Math.cbrt(arguments.getFirst());
     }
 

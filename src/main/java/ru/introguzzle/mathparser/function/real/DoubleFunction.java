@@ -60,10 +60,6 @@ public abstract class DoubleFunction implements Function<Double> {
     }
 
     @Override
-    @NotNull
-    public abstract Double apply(List<Double> arguments);
-
-    @Override
     public String toString() {
         return describe() + '{' +
                 "name='" + name + '\'' +

@@ -2,18 +2,23 @@ package ru.introguzzle.mathparser.tokenize;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ru.introguzzle.mathparser.common.*;
+import ru.introguzzle.mathparser.common.Mutates;
+import ru.introguzzle.mathparser.common.NumberTypeException;
+import ru.introguzzle.mathparser.common.naming.Context;
+import ru.introguzzle.mathparser.common.naming.NamingContext;
+import ru.introguzzle.mathparser.common.resolve.Resolver;
 import ru.introguzzle.mathparser.definition.FunctionDefinition;
 import ru.introguzzle.mathparser.definition.FunctionDefinitionType;
 import ru.introguzzle.mathparser.expression.ExpressionIterator;
-import ru.introguzzle.mathparser.function.Function;
 import ru.introguzzle.mathparser.group.FunctionGroup;
 import ru.introguzzle.mathparser.symbol.MutableSymbol;
 import ru.introguzzle.mathparser.symbol.Variable;
-import ru.introguzzle.mathparser.tokenize.token.*;
+import ru.introguzzle.mathparser.tokenize.token.SimpleToken;
+import ru.introguzzle.mathparser.tokenize.token.SimpleTokens;
+import ru.introguzzle.mathparser.tokenize.token.Token;
+import ru.introguzzle.mathparser.tokenize.token.Tokens;
 import ru.introguzzle.mathparser.tokenize.token.type.DeclarationType;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -39,24 +44,15 @@ public abstract class FunctionDefinitionTokenizer<T extends Number>
         this.resolver = resolver;
     }
 
-    public
-    FunctionDefinitionTokenizer(@NotNull Map<String, ? extends Function<?>> functions,
-                                @Nullable Resolver<FunctionDefinition<T>, FunctionDefinitionType> resolver) {
-        super(functions);
-        this.resolver = resolver;
-    }
-
     public synchronized
     @NotNull FunctionGroup tokenizeDefinition(@NotNull FunctionDefinition<T> definition,
                                               @NotNull Context<Double> context)
             throws TokenizeException {
         ExpressionIterator iterator = definition.iterator();
-        Buffer buffer = new Buffer(iterator, definition, context);
-
         Tokens declarationTokens = new SimpleTokens();
-        declarationTokens.add(handleDefinition(buffer, definition));
+        declarationTokens.add(handleDefinition(definition, iterator, context));
 
-        Tokens mainTokens = super.start(buffer);
+        Tokens mainTokens = super.start(iterator, context, false);
 
         if (mainTokens.get(0).getType() == DeclarationType.DECLARATION_TERMINAL) {
             declarationTokens.add(mainTokens.getTokenList().removeFirst());
@@ -65,17 +61,18 @@ public abstract class FunctionDefinitionTokenizer<T extends Number>
         return new FunctionGroup(declarationTokens, mainTokens, resolve(definition, mainTokens));
     }
 
-    protected Token handleDefinition(Buffer buffer,
-                                     FunctionDefinition<T> definition) {
+    protected Token handleDefinition(FunctionDefinition<T> definition,
+                                     ExpressionIterator iterator,
+                                     Context<Double> context) {
         int split = definition.getDefinitionSpliterator();
         Variable<T> variable = definition.getVariable();
 
-        if (!buffer.context().contains(variable.getName())) {
-            Context<T> parent = setContextParent(buffer.context());
+        if (!context.contains(variable.getName())) {
+            Context<T> parent = setContextParent(context);
             parent.addSymbol(variable);
         }
 
-        buffer.iterator().setCursor(split);
+        iterator.setCursor(split);
 
         return new SimpleToken(
                 DeclarationType.DECLARATION,
@@ -105,9 +102,9 @@ public abstract class FunctionDefinitionTokenizer<T extends Number>
     }
 
     @Override
-    protected SearchResult findFromContext(@Mutates Context<?> context,
-                                           CharSequence symbols,
-                                           int start) {
+    protected @NotNull SearchResult findFromContext(@Mutates Context<?> context,
+                                                    CharSequence symbols,
+                                                    int start) {
         Context<T> parent = setContextParent(context);
         Optional<? extends MutableSymbol<?>> optional = context.getSymbol(symbols.toString());
         MutableSymbol<T> symbol;
@@ -125,8 +122,13 @@ public abstract class FunctionDefinitionTokenizer<T extends Number>
         return new SearchResult(true, token);
     }
 
+    public static class AutoContext<T extends Number> extends NamingContext<T> {
+
+    }
+
+    // Unsafe casts
     private <U extends Number> Context<T> setContextParent(Context<U> context) {
-        Context<T> parent = new NamingContext<>();
+        Context<T> parent = new AutoContext<>();
 
         if (context.getParent() == null) {
             try {
@@ -148,7 +150,7 @@ public abstract class FunctionDefinitionTokenizer<T extends Number>
     }
 
     @Override
-    protected SearchResult find(CharSequence symbols, int start) {
+    protected @NotNull SearchResult find(CharSequence symbols, int start) {
         SearchResult result = super.find(symbols, start);
 
         return "=".contentEquals(symbols)

@@ -1,6 +1,6 @@
 package ru.introguzzle.mathparser.operator.complex;
 
-import ru.introguzzle.mathparser.common.Reflector;
+import ru.introguzzle.mathparser.common.reflect.Reflector;
 
 import java.util.HashMap;
 import java.util.Map;

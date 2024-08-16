@@ -10,7 +10,7 @@ public class Sign extends DoubleFunction {
     }
 
     @Override
-    public @NotNull Double apply(List<Double> arguments) {
+    public @NotNull Double evaluate(List<Double> arguments) {
         return Math.signum(arguments.getFirst());
     }
 

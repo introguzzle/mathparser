@@ -1,10 +1,9 @@
 package ru.introguzzle.mathparser.parse;
 
 import org.jetbrains.annotations.NotNull;
-
-import ru.introguzzle.mathparser.common.Context;
-import ru.introguzzle.mathparser.common.NamingContext;
 import ru.introguzzle.mathparser.common.SyntaxException;
+import ru.introguzzle.mathparser.common.naming.Context;
+import ru.introguzzle.mathparser.common.naming.NamingContext;
 import ru.introguzzle.mathparser.constant.real.DoubleConstant;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.function.Function;
@@ -13,14 +12,18 @@ import ru.introguzzle.mathparser.operator.DoubleOperator;
 import ru.introguzzle.mathparser.operator.Operator;
 import ru.introguzzle.mathparser.symbol.ImmutableSymbol;
 import ru.introguzzle.mathparser.symbol.MutableSymbol;
-import ru.introguzzle.mathparser.tokenize.*;
+import ru.introguzzle.mathparser.tokenize.PrefixTokenProcessor;
+import ru.introguzzle.mathparser.tokenize.TokenProcessor;
+import ru.introguzzle.mathparser.tokenize.Tokenizer;
 import ru.introguzzle.mathparser.tokenize.token.Token;
 import ru.introguzzle.mathparser.tokenize.token.Tokens;
 import ru.introguzzle.mathparser.tokenize.token.type.*;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Stack;
 
 public class PrefixNotationParser implements Parser<Double>, Serializable {
     private final Tokenizer tokenizer;
@@ -103,7 +106,7 @@ public class PrefixNotationParser implements Parser<Double>, Serializable {
             if (type instanceof SymbolType) {
                 switch (type) {
                     case SymbolType.CONSTANT -> {
-                        Optional<ImmutableSymbol<?>> symbol = tokenizer.getOptions().findConstant(token);
+                        Optional<ImmutableSymbol<?>> symbol = tokenizer.getOptions().findConstant(token.getData());
                         if (symbol.isPresent() && symbol.get() instanceof DoubleConstant constant) {
                             stack.push(constant.getValue());
                         } else {
@@ -138,6 +141,11 @@ public class PrefixNotationParser implements Parser<Double>, Serializable {
     @Override
     public Tokenizer getTokenizer() {
         return tokenizer;
+    }
+
+    @Override
+    public NumberConverter<Double> getConverter() {
+        return NumberConverter.getDoubleConverter();
     }
 
     private void processOperator(Stack<Double> stack,

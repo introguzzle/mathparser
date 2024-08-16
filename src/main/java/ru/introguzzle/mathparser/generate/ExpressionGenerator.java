@@ -3,14 +3,14 @@ package ru.introguzzle.mathparser.generate;
 import org.jetbrains.annotations.Nullable;
 import ru.introguzzle.mathparser.constant.real.DoubleConstant;
 import ru.introguzzle.mathparser.expression.Expression;
-import ru.introguzzle.mathparser.function.Function;
 import ru.introguzzle.mathparser.expression.MathExpression;
+import ru.introguzzle.mathparser.function.Function;
 import ru.introguzzle.mathparser.tokenize.Tokenizer;
 
 public class ExpressionGenerator implements Generator<Expression> {
     private GeneratorOptions options = new GeneratorOptions(GeneratorOptions.INCLUDE_FLOATS) {};
 
-    private static class Depth {
+    private static final class Depth {
         Integer current;
         Integer chance = 50;
 
@@ -40,7 +40,7 @@ public class ExpressionGenerator implements Generator<Expression> {
         }
 
         ExpressionBuilder appendOperator() {
-            if (count < options.maxLength) {
+            if (count < options.getMaxLength()) {
                 String operator = createOperator();
                 appendSpace().append(operator).appendSpace();
                 count++;
@@ -50,7 +50,7 @@ public class ExpressionGenerator implements Generator<Expression> {
         }
 
         ExpressionBuilder appendNumber() {
-            if (count < options.maxLength) {
+            if (count < options.getMaxLength()) {
                 String number = createNumber();
                 append(number);
                 count++;
@@ -60,9 +60,9 @@ public class ExpressionGenerator implements Generator<Expression> {
         }
 
         ExpressionBuilder appendSymbol() {
-            if (count < options.maxLength) {
-                int random = Random.randomInteger(0, options.distribution.getTotal() - 1);
-                int[] chances = options.distribution.getAccumulatedChances();
+            if (count < options.getMaxLength()) {
+                int random = Random.getRandomInteger(0, options.getDistribution().getTotal() - 1);
+                int[] chances = options.getDistribution().getAccumulatedChances();
 
                 if (random < chances[0]) {
                     return appendNumber();
@@ -77,9 +77,9 @@ public class ExpressionGenerator implements Generator<Expression> {
         }
 
         ExpressionBuilder appendVariable() {
-            if (count < options.maxLength) {
+            if (count < options.getMaxLength()) {
                 String variable = options.match(GeneratorOptions.ONLY_DEFAULT_VARIABLE)
-                        ? options.defaultVariable
+                        ? options.getDefaultVariable()
                         : createVariable();
                 append(variable);
                 count++;
@@ -89,7 +89,7 @@ public class ExpressionGenerator implements Generator<Expression> {
         }
 
         ExpressionBuilder appendConstant() {
-            if (count < options.maxLength) {
+            if (count < options.getMaxLength()) {
                 String constant = createConstant();
                 append(constant);
                 count++;
@@ -99,7 +99,7 @@ public class ExpressionGenerator implements Generator<Expression> {
         }
 
         ExpressionBuilder appendFunction() {
-            if (count < options.maxLength) {
+            if (count < options.getMaxLength()) {
                 return appendFunction(new Depth(0));
             }
 
@@ -107,7 +107,7 @@ public class ExpressionGenerator implements Generator<Expression> {
         }
 
         ExpressionBuilder appendFunction(Depth depth) {
-            Function<?> function = Random.pickFromMap(tokenizer.getOptions().getFunctions());
+            Function<?> function = Random.fromMap(tokenizer.getOptions().getFunctions());
 
             if (function == null) {
                 throw new EmptyFunctionListException("No registered functions");
@@ -116,11 +116,11 @@ public class ExpressionGenerator implements Generator<Expression> {
             append(function.getName());
             append("(");
             int args = function.isVariadic()
-                    ? function.getRequiredArguments() + Random.randomInteger(0, options.maxAdditionalVariadicArgs)
+                    ? function.getRequiredArguments() + Random.getRandomInteger(0, options.getMaxAdditionalVariadicArgs())
                     : function.getRequiredArguments();
 
             for (int i = 0; i < args; i++) {
-                if (depth.current < options.maxDepth && Random.randomInteger(0, 100) < depth.chance) {
+                if (depth.current < options.getMaxDepth() && Random.getRandomInteger(0, 100) < depth.chance) {
                     appendFunction(depth);
                     depth.next();
                 } else {
@@ -139,7 +139,7 @@ public class ExpressionGenerator implements Generator<Expression> {
         }
 
         ExpressionBuilder appendExpression() {
-            if (count < options.maxLength) {
+            if (count < options.getMaxLength()) {
                 append("(")
                         .appendNumber()
                         .appendOperator()
@@ -157,8 +157,8 @@ public class ExpressionGenerator implements Generator<Expression> {
 
             String last = s.substring(s.length() - 1);
 
-            for (int i = 0; i < options.operators.length; i++) {
-                if (last.equals(options.operators[i])) {
+            for (int i = 0; i < options.getOperatorsSymbols().length; i++) {
+                if (last.equals(options.getOperatorsSymbols()[i])) {
                     lastOperator = true;
                     break;
                 }
@@ -173,7 +173,7 @@ public class ExpressionGenerator implements Generator<Expression> {
     }
 
     private String createVariable() {
-        int i = Random.randomInteger(97, 122);
+        int i = Random.getRandomInteger(97, 122);
         String s = Character.toString((char) i);
 
         for (var symbol: tokenizer.getOptions().getConstants().values()) {
@@ -186,7 +186,7 @@ public class ExpressionGenerator implements Generator<Expression> {
     }
 
     private String createConstant() {
-        DoubleConstant constant = (DoubleConstant) Random.pickFromMap(tokenizer.getOptions().getConstants());
+        DoubleConstant constant = (DoubleConstant) Random.fromMap(tokenizer.getOptions().getConstants());
         if (constant == null) {
             throw new EmptyConstantListException("No constant present in tokenizer");
         }
@@ -227,30 +227,30 @@ public class ExpressionGenerator implements Generator<Expression> {
     }
 
     private String createOperator() {
-        int number = Random.randomInteger(0, options.operators.length - 1);
-        return options.operators[number];
+        int number = Random.getRandomInteger(0, options.getOperatorsSymbols().length - 1);
+        return options.getOperatorsSymbols()[number];
     }
 
     private String createInteger() {
-        int number = Random.randomInteger(options.min, options.max);
+        int number = Random.getRandomInteger(options.getMin(), options.getMax());
         return Integer.toString(number);
     }
 
     private String createFloat() {
-        float number = Random.randomFloat(options.min, options.max);
+        float number = Random.getRandomFloat(options.getMin(), options.getMax());
         String string = Float.toString(number);
 
         int decimalIndex = string.indexOf(".");
         int floatingLength = string.length() - decimalIndex - 1;
 
-        return floatingLength > options.maxFloating
-                ? string.substring(0, decimalIndex + options.maxFloating + 1)
+        return floatingLength > options.getMaxFloating()
+                ? string.substring(0, decimalIndex + options.getMaxFloating() + 1)
                 : string;
     }
 
     private @Nullable String createNumber() {
         if (options.matchAll(GeneratorOptions.INCLUDE_FLOATS, GeneratorOptions.INCLUDE_INTEGERS)) {
-            if (Random.randomInteger(0, 100) < 50) {
+            if (Random.getRandomInteger(0, 100) < 50) {
                 return createInteger();
             }
 

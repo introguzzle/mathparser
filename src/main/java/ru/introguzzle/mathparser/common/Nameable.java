@@ -68,10 +68,12 @@ public interface Nameable extends Cloneable {
     /**
      * Converts a collection of Nameable objects into a map with names as keys.
      *
+     * @param <T> subclass of Nameable or Nameable itself
      * @param nameables the collection of Nameable objects.
      * @return a map with names as keys and Nameable objects as values.
      */
-    static Map<String, Nameable> toMap(Collection<? extends Nameable> nameables) {
+    static <T extends Nameable>
+    Map<String, ? extends T> toMap(Collection<? extends T> nameables) {
         return nameables.stream().collect(Collectors.toMap(Nameable::getName, n -> n));
     }
 
@@ -81,7 +83,7 @@ public interface Nameable extends Cloneable {
      * @param offset the offset of the token.
      * @return a token representing this Nameable object.
      */
-    default Token getToken(int offset) {
+    default Token toToken(int offset) {
         return SimpleToken.of(type(), getName(), offset);
     }
 

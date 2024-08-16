@@ -61,10 +61,6 @@ public abstract class ComplexFunction implements Function<Complex> {
     }
 
     @Override
-    @NotNull
-    public abstract Complex apply(List<Complex> arguments);
-
-    @Override
     public String toString() {
         return describe() + '{' +
                 "name='" + name + '\'' +

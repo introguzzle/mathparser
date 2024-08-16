@@ -3,10 +3,15 @@ package ru.introguzzle.mathparser.tokenize;
 import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.operator.DoubleOperator;
 import ru.introguzzle.mathparser.operator.Operator;
-import ru.introguzzle.mathparser.tokenize.token.*;
+import ru.introguzzle.mathparser.tokenize.token.SimpleTokens;
+import ru.introguzzle.mathparser.tokenize.token.Token;
+import ru.introguzzle.mathparser.tokenize.token.Tokens;
 import ru.introguzzle.mathparser.tokenize.token.type.*;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 
 public class PrefixTokenProcessor implements TokenProcessor {
 
@@ -17,7 +22,7 @@ public class PrefixTokenProcessor implements TokenProcessor {
     }
 
     @Override
-    public Tokens process(Tokens tokens) throws UnknownOperatorException {
+    public @NotNull Tokens process(@NotNull Tokens tokens) {
         Tokens output = new SimpleTokens();
         Stack<Token> operatorTokens = new Stack<>();
 
@@ -39,13 +44,9 @@ public class PrefixTokenProcessor implements TokenProcessor {
             } else if (type instanceof FunctionType || operators.containsKey(string)) {
                 Operator<?> op = operators.get(string);
 
-                if (op == null && type instanceof FunctionType) {
-                    op = createDummy();
+                if (type instanceof FunctionType) {
+                    op = toOperator();
                     operators.put(string, op);
-                }
-
-                if (op == null) {
-                    throw new UnknownOperatorException(string, tokens.toExpression(), tokens.getPosition());
                 }
 
                 while (!operatorTokens.isEmpty()
@@ -68,7 +69,7 @@ public class PrefixTokenProcessor implements TokenProcessor {
         return output;
     }
 
-    private static @NotNull DoubleOperator createDummy() {
+    private static @NotNull DoubleOperator toOperator() {
         return new DoubleOperator() {
             @Override
             public int getRequiredOperands() {
