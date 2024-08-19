@@ -4,12 +4,11 @@ import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.common.SyntaxException;
 import ru.introguzzle.mathparser.common.naming.Context;
 import ru.introguzzle.mathparser.constant.real.DoubleConstant;
+import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.function.Function;
 import ru.introguzzle.mathparser.function.real.DoubleFunction;
 import ru.introguzzle.mathparser.lambda.LambdaEvaluator;
-import ru.introguzzle.mathparser.lambda.real.DoubleLambdaEvaluator;
-import ru.introguzzle.mathparser.lambda.real.SumDeltaDoubleLambdaEvaluator;
-import ru.introguzzle.mathparser.lambda.real.SumDoubleLambdaEvaluator;
+import ru.introguzzle.mathparser.lambda.real.*;
 import ru.introguzzle.mathparser.operator.DoubleOperator;
 import ru.introguzzle.mathparser.operator.Operator;
 import ru.introguzzle.mathparser.symbol.ImmutableSymbol;
@@ -21,14 +20,37 @@ import ru.introguzzle.mathparser.tokenize.token.type.OperatorType;
 import ru.introguzzle.mathparser.unit.Unit;
 import ru.introguzzle.mathparser.unit.measure.MeasureException;
 
+/**
+ * A parser class for mathematical expressions involving only real values.
+ * This class extends AbstractParser and implements specific parsing operations
+ * for Double values, including support for units and custom operators, functions,
+ * constants, and lambda evaluators.
+ *
+ * @see AbstractParser
+ * @see ComplexParser
+ */
 public class MathParser extends AbstractParser<Double> {
 
+    /**
+     * Default constructor that initializes the parser with default tokenizer and adds
+     * built-in lambda evaluators.
+     *
+     * @see LambdaEvaluator
+     * @see Tokenizer
+     */
     public MathParser() {
         super(new MathTokenizer());
-        tokenizer.getOptions().addLambdaEvaluator(new SumDoubleLambdaEvaluator(this))
-                .addLambdaEvaluator(new SumDeltaDoubleLambdaEvaluator(this));
+        getTokenizer().getOptions().addLambdaEvaluator(new SumEvaluator(this))
+                .addLambdaEvaluator(new SumDeltaEvaluator(this))
+                .addLambdaEvaluator(new FunctionAdapterEvaluator(this))
+                .addLambdaEvaluator(new NewtonEvaluator(this));
     }
 
+    /**
+     * Constructor that allows providing a tokenizer.
+     *
+     * @param tokenizer {@link Tokenizer} for obtaining {@link Tokens} from {@link Expression}
+     */
     public MathParser(Tokenizer tokenizer) {
         super(tokenizer);
     }
@@ -70,30 +92,30 @@ public class MathParser extends AbstractParser<Double> {
 
     @Override
     public Double parseUnit(Double value, Tokens tokens, Context<Double> context) throws SyntaxException {
-        tokens.returnBack();
-        Token token = tokens.getNextToken();
+        tokens.back();
+        Token token = tokens.next();
 
         Unit<?, ?> from = getTokenizer().getOptions()
                 .findUnit(token.getData())
                 .orElseThrow();
 
-        Token nextToken = tokens.getNextToken();
+        Token nextToken = tokens.next();
         if (nextToken.getType() != OperatorType.CONVERTER) {
             throw new UnexpectedTokenException(tokens, nextToken);
         }
 
         Unit<?, ?> to = getTokenizer().getOptions()
-                .findUnit(tokens.getNextToken().getData())
+                .findUnit(tokens.next().getData())
                 .orElseThrow();
 
-        if (from.getMeasure() != to.getMeasure()) {
+        if (!from.getMeasure().equals(to.getMeasure())) {
             throw new MeasureException(from.getMeasure(), to.getMeasure());
         }
 
         try {
-            // Measures should be same type, but actual runtime classes are totally unsafe
+            // Measures should be same type, but actual runtime classes are still unsafe
             @SuppressWarnings("unchecked")
-            double convertedValue = ((Unit) from).transform(value, to);
+            double convertedValue = ((Unit) from).apply(value, to);
             return convertedValue;
         } catch (ClassCastException e) {
             String format = """
@@ -124,5 +146,32 @@ public class MathParser extends AbstractParser<Double> {
     @Override
     public boolean compare(Double left, Double right) {
         return left > right;
+    }
+
+    // Customizing methods
+
+    public MathParser addOperator(DoubleOperator operator) {
+        getTokenizer().getOptions().addOperator(operator);
+        return this;
+    }
+
+    public MathParser addFunction(DoubleFunction function) {
+        getTokenizer().getOptions().addFunction(function);
+        return this;
+    }
+
+    public MathParser addConstant(DoubleConstant constant) {
+        getTokenizer().getOptions().addConstant(constant);
+        return this;
+    }
+
+    public MathParser addLambdaEvaluator(DoubleLambdaEvaluator evaluator) {
+        getTokenizer().getOptions().addLambdaEvaluator(evaluator);
+        return this;
+    }
+
+    @Override
+    public MathParser addUnit(Unit<?, ?> unit) {
+        return (MathParser) super.addUnit(unit);
     }
 }

@@ -5,8 +5,8 @@ import ru.introguzzle.mathparser.parse.AbstractParser;
 
 import java.util.List;
 
-public class SumDeltaDoubleLambdaEvaluator extends AbstractSumDoubleLambdaEvaluator {
-    public SumDeltaDoubleLambdaEvaluator(AbstractParser<Double> parser) {
+public class SumDeltaEvaluator extends AbstractSumEvaluator {
+    public SumDeltaEvaluator(AbstractParser<Double> parser) {
         super(parser, 3);
     }
 
@@ -18,15 +18,5 @@ public class SumDeltaDoubleLambdaEvaluator extends AbstractSumDoubleLambdaEvalua
     @Override
     public @NotNull String getName() {
         return "sum_delta";
-    }
-
-    @Override
-    public int getRequiredCommas() {
-        return 3;
-    }
-
-    @Override
-    public int getLambdaGroupIndex() {
-        return 3;
     }
 }

@@ -18,6 +18,6 @@ public class Variables<N extends Number> extends MutableSymbolList<Variable<N>, 
     }
 
     public void add(String name, N value) {
-        this.add(new Variable<>(name, value));
+        add(new Variable<>(name, value));
     }
 }

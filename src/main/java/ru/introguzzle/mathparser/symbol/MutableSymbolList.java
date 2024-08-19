@@ -16,13 +16,13 @@ public abstract class MutableSymbolList<T extends MutableSymbol<N>, N extends Nu
     @SafeVarargs
     public MutableSymbolList(@NotNull T... items) {
         for (T item : items) {
-            this.add(item);
+            add(item);
         }
     }
 
     public MutableSymbolList(@NotNull List<? extends T> items) {
         for (T item : items) {
-            this.add(item);
+            add(item);
         }
     }
 

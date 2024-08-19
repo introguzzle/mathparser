@@ -1,6 +1,7 @@
 package ru.introguzzle.mathparser.tokenize;
 
 import org.jetbrains.annotations.NotNull;
+import ru.introguzzle.mathparser.common.MultiNameable;
 import ru.introguzzle.mathparser.common.Nameable;
 import ru.introguzzle.mathparser.common.math.Number;
 import ru.introguzzle.mathparser.common.math.Radix;
@@ -100,6 +101,7 @@ public class MathTokenizer implements Tokenizer, Serializable {
         while (iterator.hasNext()) {
             char current = iterator.current();
             switch (current) {
+                case '\n':
                 case ' ':
                     iterator.next();
                     continue;
@@ -175,7 +177,9 @@ public class MathTokenizer implements Tokenizer, Serializable {
             try {
                 validate(tokens);
             } catch (ValidationException e) {
-                throw new TokenizeException(e.getMessage(), expression, e.getOffset()) {};
+                TokenizeException te = new TokenizeException(e.getMessage(), expression, e.getOffset()) {};
+                te.initCause(e.getCause());
+                throw te;
             }
         }
 
@@ -339,14 +343,25 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return operatorResult.getToken();
     }
 
+    /**
+     * Processes a sequence of symbols, recognizing it as a known object (e.g., function, constant, operator, etc.)
+     * or a variable in the context.
+     *
+     * @param iterator              The expression iterator that points to the current position in the string.
+     * @param context               The context containing known symbols (e.g., variables).
+     * @param suppressUnknownSymbols If true, unknown symbols will not raise an exception;
+     *                               if false, an exception will be thrown.
+     * @return A token representing the recognized symbol.
+     * @throws TokenizeException If an error occurs during tokenization (e.g., an unknown symbol is encountered).
+     */
     protected @NotNull Token handleSymbols(ExpressionIterator iterator,
                                            Context<?> context,
                                            boolean suppressUnknownSymbols)
             throws TokenizeException {
-
         StringBuilder symbols = new StringBuilder();
         final int start = iterator.getCursor();
 
+        // Reads a sequence of letter characters (the symbol could be, for example, a function or variable name).
         while (iterator.hasNext() && options.getLetterPredicate().test(iterator.current())) {
             symbols.append(iterator.next());
             if (!iterator.hasNext()) {
@@ -354,29 +369,34 @@ public class MathTokenizer implements Tokenizer, Serializable {
             }
         }
 
+        // Checks if the found symbol is the name of a unit converter.
         if (getOptions().getUnitConverter().nameEquals(symbols)) {
             return getOptions().getUnitConverter().toToken(start);
         }
 
+        // Checks if the found symbol is the name of a lambda expression.
         if (getOptions().getLambdaEvaluators().containsKey(symbols.toString())) {
             LambdaEvaluator<?> lambdaEvaluator = getOptions().getLambdaEvaluators().get(symbols.toString());
             return handleCompositeNameable(iterator, lambdaEvaluator, context);
         }
 
+        // Search among registered objects (functions, operators, constants, etc.) and in the context.
         SearchResult result = SearchResult.reduce(
-                find(symbols, start),
-                findFromContext(context, symbols, start)
+                find(symbols, start),                    // Search among known symbols.
+                findFromContext(context, symbols, start) // Search among variables in the context.
         );
 
+        // If the symbol was not found and suppressing unknown symbols is not allowed, an exception is thrown.
         if (!result.isMatch() && !suppressUnknownSymbols) {
             throw new UnknownSymbolTokenizeException(symbols, iterator.getExpression(), start);
         }
 
+        // If nothing is found, return a token interpreted as a lambda expression argument.
         if (result.getToken() == null) {
             return new SimpleToken(SymbolType.LAMBDA_ARGUMENT, symbols, start);
         }
 
-        return result.getToken();
+        return result.getToken();  // Return the found token.
     }
 
     /**
@@ -386,16 +406,19 @@ public class MathTokenizer implements Tokenizer, Serializable {
      */
 
     protected @NotNull SearchResult find(CharSequence symbols, int start) {
+        // We try to find by main name first
+        // If failed, try to check alternative names
+        // If previous step failed, certainly nothing was found
+
         Nameable nameable = getOptions().getNames().get(symbols.toString());
         if (nameable != null) {
             return new SearchResult(true, nameable.toToken(start));
         }
 
+        // Slow O(n) lookup if nameable has multiple names
         for (Nameable n : getOptions().getNames().values()) {
-            if (n instanceof Unit<?, ?> unit) {
-                if (unit.nameEquals(symbols)) {
-                    return new SearchResult(true, n.toToken(start));
-                }
+            if (n instanceof MultiNameable multiNameable && multiNameable.nameEquals(symbols)) {
+                return new SearchResult(true, n.toToken(start));
             }
         }
 

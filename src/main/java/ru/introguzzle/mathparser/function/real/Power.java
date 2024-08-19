@@ -1,10 +1,12 @@
 package ru.introguzzle.mathparser.function.real;
 
 import org.jetbrains.annotations.NotNull;
+import ru.introguzzle.mathparser.common.MultiNameable;
 
 import java.util.List;
+import java.util.Set;
 
-public class Power extends DoubleFunction {
+public class Power extends DoubleFunction implements MultiNameable {
     public Power() {
         super("pow", 2);
     }
@@ -17,5 +19,10 @@ public class Power extends DoubleFunction {
     @Override
     public boolean isVariadic() {
         return false;
+    }
+
+    @Override
+    public @NotNull Set<String> getAlternativeNames() {
+        return Set.of("power");
     }
 }

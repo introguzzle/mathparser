@@ -1,10 +1,13 @@
 package ru.introguzzle.mathparser.function.real;
 
 import org.jetbrains.annotations.NotNull;
+import ru.introguzzle.mathparser.common.MultiNameable;
 
 import java.util.List;
+import java.util.Set;
 
-public class Gamma extends DoubleFunction {
+public class Gamma extends DoubleFunction implements MultiNameable {
+    private static final Factorial F = new Factorial();
     private static final double[] COEFFICIENTS = {
             1.000000000190015,
             76.18009172947146,
@@ -24,7 +27,11 @@ public class Gamma extends DoubleFunction {
         return gamma(arguments.getFirst());
     }
 
-    private double gamma(double x) {
+    private static double gamma(double x) {
+        if (x - (int) x == 0.0) {
+            return F.evaluate(List.of(x - 1));
+        }
+
         double tmp = x + 5.5;
         tmp -= (x + 0.5) * Math.log(tmp);
         double sum = COEFFICIENTS[0];
@@ -38,5 +45,10 @@ public class Gamma extends DoubleFunction {
     @Override
     public boolean isVariadic() {
         return false;
+    }
+
+    @Override
+    public @NotNull Set<String> getAlternativeNames() {
+        return Set.of("GAMMA", "gamma");
     }
 }

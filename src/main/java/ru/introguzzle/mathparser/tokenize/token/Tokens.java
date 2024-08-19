@@ -26,8 +26,8 @@ public interface Tokens extends Iterable<Token> {
         return getTokenList().remove(index);
     }
 
-    Token getNextToken();
-    void returnBack();
+    Token next();
+    void back();
 
     default List<Tokens> split(Type type) {
         List<Tokens> splitTokensList = new ArrayList<>();

@@ -10,6 +10,11 @@ public class Variable<N extends Number> extends MutableSymbol<N> {
     }
 
     @Override
+    public Variable<N> setValue(N value) {
+        return (Variable<N>) super.setValue(value);
+    }
+
+    @Override
     public @NotNull Type type() {
         return SymbolType.VARIABLE;
     }

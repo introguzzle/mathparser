@@ -1,21 +1,21 @@
 package ru.introguzzle.mathparser.lambda.real;
 
+import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.lambda.LambdaEvaluator;
+import ru.introguzzle.mathparser.parse.AbstractParser;
 
 public abstract class DoubleLambdaEvaluator implements LambdaEvaluator<Double> {
+    private final AbstractParser<Double> parser;
+
     private final int requiredArguments;
     private final int requiredLambdaArguments;
-    private final boolean lambdaVariadic;
-    private final boolean variadic;
 
-    public DoubleLambdaEvaluator(int requiredArguments,
-                                 int requiredLambdaArguments,
-                                 boolean variadic,
-                                 boolean lambdaVariadic) {
+    public DoubleLambdaEvaluator(AbstractParser<Double> parser,
+                                 int requiredArguments,
+                                 int requiredLambdaArguments) {
+        this.parser = parser;
         this.requiredArguments = requiredArguments;
         this.requiredLambdaArguments = requiredLambdaArguments;
-        this.variadic = variadic;
-        this.lambdaVariadic = lambdaVariadic;
     }
 
     @Override
@@ -29,12 +29,7 @@ public abstract class DoubleLambdaEvaluator implements LambdaEvaluator<Double> {
     }
 
     @Override
-    public boolean isVariadic() {
-        return variadic;
-    }
-
-    @Override
-    public boolean isLambdaVariadic() {
-        return lambdaVariadic;
+    public @NotNull AbstractParser<Double> getParser() {
+        return parser;
     }
 }

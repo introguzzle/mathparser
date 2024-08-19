@@ -10,6 +10,11 @@ public class LambdaArgument<T extends Number> extends MutableSymbol<T> {
     }
 
     @Override
+    public LambdaArgument<T> setValue(T value) {
+        return (LambdaArgument<T>) super.setValue(value);
+    }
+
+    @Override
     public @NotNull Type type() {
         return SymbolType.LAMBDA_ARGUMENT;
     }

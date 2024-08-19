@@ -1,11 +1,13 @@
 package ru.introguzzle.mathparser.function.real;
 
 import org.jetbrains.annotations.NotNull;
+import ru.introguzzle.mathparser.common.MultiNameable;
 
 import java.util.List;
+import java.util.Set;
 import java.util.random.RandomGenerator;
 
-public class Random extends DoubleFunction {
+public class Random extends DoubleFunction implements MultiNameable {
     public Random() {
         super("random", 0);
     }
@@ -20,5 +22,10 @@ public class Random extends DoubleFunction {
     @Override
     public boolean isVariadic() {
         return false;
+    }
+
+    @Override
+    public @NotNull Set<String> getAlternativeNames() {
+        return Set.of("rand");
     }
 }

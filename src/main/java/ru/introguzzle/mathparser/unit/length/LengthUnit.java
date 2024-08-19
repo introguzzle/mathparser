@@ -1,13 +1,12 @@
 package ru.introguzzle.mathparser.unit.length;
 
 import org.jetbrains.annotations.NotNull;
-import ru.introguzzle.mathparser.common.math.Number;
 import ru.introguzzle.mathparser.unit.AbstractUnit;
-import ru.introguzzle.mathparser.unit.measure.LengthMeasure;
+import ru.introguzzle.mathparser.unit.measure.Measure;
 
 import java.util.Set;
 
-public abstract class LengthUnit extends AbstractUnit<LengthMeasure, LengthUnit> {
+public abstract class LengthUnit extends AbstractUnit<Measure.LengthMeasure, LengthUnit> {
     public LengthUnit(Set<String> names, String main) {
         super(names, main);
     }
@@ -22,11 +21,6 @@ public abstract class LengthUnit extends AbstractUnit<LengthMeasure, LengthUnit>
     public double transform(double value, LengthUnit unit) {
         double valueInMeters = toMeters(value);
         return unit.fromMeters(valueInMeters);
-    }
-
-    public static void main(String[] args) {
-        Number number = new Number(1);
-        System.out.println(number.transform(KilometerUnit.get(), MeterUnit.get()));
     }
 
     /**
@@ -46,7 +40,7 @@ public abstract class LengthUnit extends AbstractUnit<LengthMeasure, LengthUnit>
     protected abstract double fromMeters(double value);
 
     @Override
-    public @NotNull LengthMeasure getMeasure() {
-        return LengthMeasure.LENGTH;
+    public @NotNull Measure.LengthMeasure getMeasure() {
+        return Measure.LengthMeasure.LENGTH;
     }
 }

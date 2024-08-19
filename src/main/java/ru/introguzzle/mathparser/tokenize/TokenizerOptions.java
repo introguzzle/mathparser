@@ -23,31 +23,49 @@ import ru.introguzzle.mathparser.unit.UnitConverter;
 
 import java.util.*;
 
+/**
+ * The TokenizerOptions class encapsulates the configuration options for the tokenizer.
+ * This class holds various settings, predicates, and collections of functions, operators,
+ * constants, and other Nameable entities used during tokenization.
+ */
 public class TokenizerOptions implements Options {
+
+    // Bit flags representing specific options or modes enabled in the tokenizer
     private int flags;
 
     /**
-     * If false, tokenizer will not check strict match of mutable symbols used in context
-     * and actual mutable symbols in expression
+     * If true, the tokenizer will perform validation checks on the generated tokens.
+     * This ensures that the token sequence adheres to expected syntactical rules.
      */
     private boolean strictMode = true;
 
     /**
-     * TODO
+     * The default radix (number base) used for number parsing within the tokenizer.
+     * For example, a radix of 10 means numbers are parsed in decimal format.
      */
     private Radix radix = new Radix(10);
+
+    // List of validators to apply to the tokens during tokenization
     private List<Validator> validators = new ArrayList<>();
+
+    // The UnitConverter handles the conversion of units within expressions
     private UnitConverter unitConverter = new UnitConverter();
 
+    /**
+     * A map that stores all registered Nameable entities (e.g., functions, operators, constants, etc.)
+     * by their names for quick lookup during tokenization.
+     */
     @NotNull
     private final transient Map<String, Nameable> names = new HashMap<>();
 
+    // Specific maps for different types of Nameable entities for easier access
     private final transient Map<String, Operator<?>> operators = new HashMap<>();
     private final transient Map<String, Function<?>> functions = new HashMap<>();
     private final transient Map<String, ImmutableSymbol<?>> constants = new HashMap<>();
     private final transient Map<String, LambdaEvaluator<?>> lambdaEvaluators = new HashMap<>();
     private final transient Map<String, Unit<?, ?>> units = new HashMap<>();
 
+    // Predicates for determining valid symbols for operators, digits, and letters
     private final OperatorPredicate allowedOperatorSymbolsPredicate = new OperatorPredicate();
     private final DigitPredicate digitPredicate = new DigitPredicate();
     private final LetterPredicate letterPredicate = new LetterPredicate();
@@ -58,9 +76,10 @@ public class TokenizerOptions implements Options {
 
     public TokenizerOptions(int flags) {
         this.flags = flags;
-        this.validators.add(new NumberValidator());
-        this.validators.add(new CommaValidator());
-        this.validators.add(new UnitValidator());
+
+        validators.add(new NumberValidator());
+        validators.add(new CommaValidator());
+        validators.add(new UnitValidator());
     }
 
     public void setFlags(int flags) {
@@ -163,13 +182,11 @@ public class TokenizerOptions implements Options {
     }
 
     public TokenizerOptions addFunction(@NotNull Function<?> function) {
-        addName(function);
-        return this;
+        return addName(function);
     }
 
     public TokenizerOptions addConstant(@NotNull ImmutableSymbol<?> constant) {
-        addName(constant);
-        return this;
+        return addName(constant);
     }
 
     public TokenizerOptions addName(@NotNull Nameable nameable) {
@@ -178,23 +195,19 @@ public class TokenizerOptions implements Options {
     }
 
     public TokenizerOptions addOperator(@NotNull Operator<?> operator) {
-        addName(operator);
-        return this;
+        return addName(operator);
     }
 
     public TokenizerOptions addLambdaEvaluator(@NotNull LambdaEvaluator<?> lambdaEvaluator) {
-        addName(lambdaEvaluator);
-        return this;
+        return addName(lambdaEvaluator);
     }
 
     public TokenizerOptions addUnit(Unit<?, ?> unit) {
-        addName(unit);
-        return this;
+        return addName(unit);
     }
 
     private <N extends Nameable> TokenizerOptions clearNameables(Class<N> cls) {
-        names.entrySet()
-                .removeIf(cls::isInstance);
+        names.entrySet().removeIf(cls::isInstance);
         return this;
     }
 

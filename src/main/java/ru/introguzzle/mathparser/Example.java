@@ -1,7 +1,6 @@
 package ru.introguzzle.mathparser;
 
 import org.jetbrains.annotations.NotNull;
-import ru.introguzzle.mathparser.common.SyntaxException;
 import ru.introguzzle.mathparser.common.naming.Context;
 import ru.introguzzle.mathparser.common.naming.NamingContext;
 import ru.introguzzle.mathparser.complex.Complex;
@@ -22,11 +21,21 @@ import java.util.List;
 import java.util.Set;
 
 public class Example {
-    public static void main(String[] args) throws SyntaxException {
+
+    public static void main(String[] args) {
+        basicMathOperationsExample();
+        binaryShiftOperationsExample();
+        unitConversionsExample();
+        lambdaFunctionalityExample();
+        complexNumberParsingExample();
+    }
+
+    private static void basicMathOperationsExample() {
+        System.out.println("\n=== Basic Math Operations ===");
         Parser<Double> parser = new MathParser();
 
+        // Adding constants and custom operators
         parser.getTokenizer().getOptions().addConstant(new DoubleConstant("z", 3) {});
-
         parser.getTokenizer().getOptions().addOperator(new DoubleBinaryOperator() {
             @Override
             public Double apply(List<Double> doubles) {
@@ -49,6 +58,7 @@ public class Example {
             }
         });
 
+        // Adding a custom function
         parser.getTokenizer().getOptions().addFunction(new DoubleFunction("example", 2) {
             @Override
             public boolean isVariadic() {
@@ -61,16 +71,32 @@ public class Example {
             }
         });
 
+        // Setting up context with variables
         Context<Double> context = new NamingContext<>();
         context.addSymbol(new Variable<>("x", 3.0));
         context.addSymbol(new Variable<>("y", 9.0));
 
+        // Parse and evaluate expressions
         Expression expression = new MathExpression("1 &&&& z + example(1, 3) >>> x << y");
-        System.out.println(parser.parse(expression, context));
+        System.out.println("Expression result: " + parser.tryParse(expression, context));
+    }
 
-        expression = new MathExpression("1111_2 << 1_2");
-        System.out.println(parser.parse(expression, context));
+    private static void binaryShiftOperationsExample() {
+        System.out.println("\n=== Binary Shift Operations ===");
+        Parser<Double> parser = new MathParser();
 
+        Context<Double> context = new NamingContext<>();
+        Expression expression = new MathExpression("1111_2 << 1_2");
+        double result = parser.tryParse(expression, context).orElseThrow();
+        System.out.println("1111 in binary shifted 1 bit to left = " + result);
+        assert result == 30.0 : "Expected 30";
+    }
+
+    private static void unitConversionsExample() {
+        System.out.println("\n=== Unit Conversions ===");
+        Parser<Double> parser = new MathParser();
+
+        // Define custom units with the same measure
         enum M implements Measure {
             MEASURE
         }
@@ -104,7 +130,7 @@ public class Example {
             }
 
             @Override
-            public @NotNull Set<String> getNames() {
+            public @NotNull Set<String> getAlternativeNames() {
                 return Set.of();
             }
         }
@@ -120,29 +146,43 @@ public class Example {
             }
 
             @Override
-            public @NotNull Set<String> getNames() {
+            public @NotNull Set<String> getAlternativeNames() {
                 return Set.of();
             }
         }
 
         parser.getTokenizer().getOptions().addUnit(new U1());
         parser.getTokenizer().getOptions().addUnit(new U2());
-        // These units should have the same Measure and the same parent class.
-        // This is because the Unit<M, U> interface is parameterized with a generic U,
-        // which enforces that the unit being transformed (U) must be of the same type or a subtype of the current unit's type.
 
-        // This decision was made so Number class can be safely transformed from one
-        // measure to same measure, but in context of tokenizing and parsing it's apparently downside
+        Context<Double> context = new NamingContext<>();
+        Expression expression = new MathExpression("(1 FIRST to SECOND) FIRST to SECOND");
+        double result = parser.tryParse(expression, context).orElseThrow();
+        System.out.println("Unit conversion result: " + result);
+        assert result == 4.0 : "Expected 8";
+    }
 
-        expression = new MathExpression("(1 FIRST to SECOND) FIRST to SECOND");
-        System.out.println(parser.parse(expression, context));
+    private static void lambdaFunctionalityExample() {
+        System.out.println("\n=== Lambda Functionality ===");
+        Parser<Double> parser = new MathParser();
 
-        expression = new MathExpression("x m to km");
-        System.out.println(parser.parse(expression, context));
+        Context<Double> context = new NamingContext<>();
+        context.addSymbol(new Variable<>("x", 3.0));
+        context.addSymbol(new Variable<>("y", 9.0));
 
-        expression = new MathExpression("ln(e)");
+        Expression expression = new MathExpression("sum(x, y, n -> n)");
+        double result = parser.tryParse(expression, context).orElseThrow();
+        System.out.println("Sum lambda result: " + result);
+        assert result == (double) (3 + 4 + 5 + 6 + 7 + 8 + 9) : "Expected 42";
+    }
+
+    private static void complexNumberParsingExample() {
+        System.out.println("\n=== Complex Number Parsing ===");
         ComplexParser complexParser = new ComplexParser();
+
         Context<Complex> complexContext = new NamingContext<>();
-        System.out.println(complexParser.parse(expression, complexContext));
+        Expression expression = new MathExpression("ln(e)");
+        Complex result = complexParser.tryParse(expression, complexContext).orElseThrow();
+        System.out.println("ln(e) = " + result);
+        assert result.equals(new Complex(1, 0)) : "Expected 1.0 + 0.0i";
     }
 }

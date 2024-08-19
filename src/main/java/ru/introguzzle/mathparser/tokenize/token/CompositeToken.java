@@ -4,13 +4,13 @@ import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.group.Group;
 import ru.introguzzle.mathparser.tokenize.token.type.Type;
 
-public class CompositeToken extends SimpleToken implements Group {
+public abstract class CompositeToken extends SimpleToken implements Group {
     private final Tokens tokens;
 
-    public CompositeToken(Type specialType,
+    public CompositeToken(Type parentType,
                           Tokens tokens,
                           int offset) {
-        super(specialType, tokens.toExpression().getString(), offset);
+        super(parentType, tokens.toExpression().getString(), offset);
         this.tokens = tokens;
     }
 

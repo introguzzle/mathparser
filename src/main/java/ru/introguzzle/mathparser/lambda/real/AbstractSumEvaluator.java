@@ -10,22 +10,11 @@ import ru.introguzzle.mathparser.tokenize.token.Tokens;
 
 import java.util.List;
 
-public abstract class AbstractSumDoubleLambdaEvaluator extends DoubleLambdaEvaluator {
-    private final AbstractParser<Double> parser;
+public abstract class AbstractSumEvaluator extends DoubleLambdaEvaluator {
     public static final long MAX_ITERATIONS = Integer.MAX_VALUE;
 
-    public AbstractSumDoubleLambdaEvaluator(AbstractParser<Double> parser, int requiredArguments) {
-        super(requiredArguments, 1, false, false);
-        this.parser = parser;
-    }
-
-    public @NotNull Double reduce(Double left, Double right) {
-        return left + right;
-    }
-
-    @Override
-    public AbstractParser<Double> getParser() {
-        return parser;
+    public AbstractSumEvaluator(AbstractParser<Double> parser, int requiredArguments) {
+        super(parser, requiredArguments, 1);
     }
 
     public abstract Double getDelta(List<Double> arguments);
@@ -46,23 +35,32 @@ public abstract class AbstractSumDoubleLambdaEvaluator extends DoubleLambdaEvalu
             throw new InfiniteLoopException("Delta cannot be 0");
         }
 
-        Double result = currentValue;
+        Double result = 0.0;
 
         int count = 0;
         while (!getParser().compare(currentValue, to)) {
             argument.setValue(currentValue);
             Double evaluatedValue = getParser().parse(lambda, context);
-            result = reduce(result, evaluatedValue);
+            result += evaluatedValue;
             lambda.reset();
             count++;
             if (count >= MAX_ITERATIONS) {
                 throw new InfiniteLoopException("Too many iterations");
             }
 
-            currentValue = reduce(currentValue, delta);
+            currentValue += delta;
         }
 
-        context.removeSymbol(argument);
         return result;
+    }
+
+    @Override
+    public boolean isVariadic() {
+        return false;
+    }
+
+    @Override
+    public boolean isLambdaVariadic() {
+        return false;
     }
 }

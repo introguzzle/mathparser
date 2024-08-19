@@ -38,7 +38,7 @@ public abstract class AbstractUnit<M extends Measure, U extends AbstractUnit<M, 
     }
 
     @Override
-    public @NotNull Set<String> getNames() {
+    public @NotNull Set<String> getAlternativeNames() {
         return names;
     }
 

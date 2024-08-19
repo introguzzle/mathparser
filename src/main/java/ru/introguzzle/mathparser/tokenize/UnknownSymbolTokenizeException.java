@@ -3,7 +3,11 @@ package ru.introguzzle.mathparser.tokenize;
 import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.expression.Expression;
 
+import java.io.Serial;
+
 public class UnknownSymbolTokenizeException extends TokenizeException {
+    @Serial
+    private static final long serialVersionUID = 9142971083383361303L;
 
     public UnknownSymbolTokenizeException(@NotNull CharSequence symbols,
                                           @NotNull Expression expression,

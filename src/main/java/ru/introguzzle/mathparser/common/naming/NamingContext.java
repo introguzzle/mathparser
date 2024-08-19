@@ -8,9 +8,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-/**
- *
- */
 public class NamingContext<N extends Number> implements Context<N> {
     private final MutableSymbolList<MutableSymbol<N>, N> symbols = new MutableSymbolList<>() {};
     private final Set<String> names = new HashSet<>();
@@ -48,7 +45,7 @@ public class NamingContext<N extends Number> implements Context<N> {
     }
 
     @Override
-    public void addSymbol(MutableSymbol<N> symbol) {
+    public void addSymbol(MutableSymbol<N> symbol) throws NamingException {
         String name;
         boolean added = names.add(name = symbol.getName());
         if (!added) {

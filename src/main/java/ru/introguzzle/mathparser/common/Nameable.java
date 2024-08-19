@@ -51,7 +51,7 @@ public interface Nameable extends Cloneable {
      * @param sequence the character sequence to match.
      * @return a predicate that matches Nameable objects with the specified name.
      */
-    static Predicate<Nameable> match(CharSequence sequence) {
+    static @NotNull Predicate<Nameable> match(CharSequence sequence) {
         return s -> s.getName().contentEquals(sequence);
     }
 
@@ -61,7 +61,7 @@ public interface Nameable extends Cloneable {
      * @param nameable the Nameable object to match.
      * @return a predicate that matches strings with the specified name.
      */
-    static Predicate<String> match(Nameable nameable) {
+    static @NotNull Predicate<String> match(Nameable nameable) {
         return s -> s.contentEquals(nameable.getName());
     }
 
@@ -73,7 +73,7 @@ public interface Nameable extends Cloneable {
      * @return a map with names as keys and Nameable objects as values.
      */
     static <T extends Nameable>
-    Map<String, ? extends T> toMap(Collection<? extends T> nameables) {
+    @NotNull Map<String, T> toMap(Collection<? extends T> nameables) {
         return nameables.stream().collect(Collectors.toMap(Nameable::getName, n -> n));
     }
 
@@ -83,7 +83,7 @@ public interface Nameable extends Cloneable {
      * @param offset the offset of the token.
      * @return a token representing this Nameable object.
      */
-    default Token toToken(int offset) {
+    default @NotNull Token toToken(int offset) {
         return SimpleToken.of(type(), getName(), offset);
     }
 

@@ -26,6 +26,54 @@ import ru.introguzzle.mathparser.tokenize.token.type.SymbolType;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * A parser implementation for mathematical expressions involving complex numbers.
+ * <p>
+ * The {@code ComplexParser} class is designed to parse and evaluate mathematical expressions
+ * where the operands are complex numbers. It extends {@link AbstractParser} and provides specific
+ * behavior tailored to complex arithmetic.
+ * </p>
+ * <h3>Key Characteristics:</h3>
+ * <ul>
+ *   <li><b>No Comparison Support:</b> Complex numbers cannot be compared in terms of greater than,
+ *   less than, or equal to in the usual sense, because they are not ordered. As a result, methods
+ *   related to comparison will either be unsupported or will throw exceptions if used.</li>
+ *   <li><b>No Unit Conversion:</b> Complex numbers do not support conversion from or to physical units
+ *   such as length, mass, or time. Any attempt to parse unit conversions involving complex numbers
+ *   will result in an exception.</li>
+ *   <li><b>Complex Arithmetic:</b> The parser supports complex arithmetic operations such as addition,
+ *   subtraction, multiplication, and division, as well as functions that are well-defined for complex
+ *   numbers (e.g., complex exponentials, logarithms).</li>
+ * </ul>
+ * <h3>Usage:</h3>
+ * <p>
+ * This parser is specifically configured to handle expressions involving complex numbers, using
+ * custom functions, constants, and operators defined in the {@link ComplexFunctionReflector},
+ * {@link ComplexConstantReflector}, and {@link ComplexOperatorReflector} classes, respectively.
+ * </p>
+ * <p>
+ * The parser relies on a {@link MathTokenizer} that is preconfigured with the necessary components
+ * for tokenizing expressions involving complex numbers.
+ * </p>
+ *
+ * <h3>Example:</h3>
+ * <pre>{@code
+ * ComplexParser parser = new ComplexParser();
+ * Complex result = parser.parse(new MathExpression("ln(1 + i)"));
+ * System.out.println(result);  // Outputs the natural logarithm of the complex number 1 + i
+ * }</pre>
+ *
+ * <h3>Limitations:</h3>
+ * <ul>
+ *   <li>Comparison operations are not supported for complex numbers and will throw an exception if invoked.</li>
+ *   <li>Unit conversions are not supported and will throw an exception if attempted with complex numbers.</li>
+ * </ul>
+ *
+ * @see AbstractParser
+ * @see ComplexFunctionReflector
+ * @see ComplexConstantReflector
+ * @see ComplexOperatorReflector
+ */
 public class ComplexParser extends AbstractParser<Complex> {
     public ComplexParser() {
         super(new MathTokenizer(
@@ -93,7 +141,7 @@ public class ComplexParser extends AbstractParser<Complex> {
 
     @Override
     protected Complex parseFactor(Tokens tokens, Context<Complex> context) throws SyntaxException {
-        Token token = tokens.getNextToken();
+        Token token = tokens.next();
 
         switch (token.getType()) {
             case NumberType.NUMBER:
@@ -105,7 +153,7 @@ public class ComplexParser extends AbstractParser<Complex> {
 
             case SymbolType.CONSTANT:
             case SymbolType.COMPLEX_CONSTANT:
-                Optional<ImmutableSymbol<?>> symbol = tokenizer.getOptions().findConstant(token.getData());
+                Optional<ImmutableSymbol<?>> symbol = getTokenizer().getOptions().findConstant(token.getData());
                 if (symbol.isPresent() && getSymbolClass().isInstance(symbol.get())) {
                     return getSymbolClass().cast(symbol.get()).getValue();
                 }
@@ -113,8 +161,30 @@ public class ComplexParser extends AbstractParser<Complex> {
                 throw new UnexpectedTokenException(tokens, token);
 
             default:
-                tokens.returnBack();
+                tokens.back();
                 return super.parseFactor(tokens, context);
         }
+    }
+
+    // Customizing methods
+
+    public ComplexParser addOperator(ComplexOperator operator) {
+        getTokenizer().getOptions().addOperator(operator);
+        return this;
+    }
+
+    public ComplexParser addFunction(ComplexFunction function) {
+        getTokenizer().getOptions().addFunction(function);
+        return this;
+    }
+
+    public ComplexParser addConstant(ComplexConstant constant) {
+        getTokenizer().getOptions().addConstant(constant);
+        return this;
+    }
+
+    public ComplexParser addLambdaEvaluator(ComplexLambdaEvaluator evaluator) {
+        getTokenizer().getOptions().addLambdaEvaluator(evaluator);
+        return this;
     }
 }

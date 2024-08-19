@@ -1,6 +1,7 @@
-package ru.introguzzle.mathparser.function.real;
+package ru.introguzzle.mathparser.function.real.trygonometric;
 
 import org.jetbrains.annotations.NotNull;
+import ru.introguzzle.mathparser.function.real.DoubleFunction;
 
 import java.util.List;
 

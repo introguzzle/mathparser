@@ -11,7 +11,7 @@ public abstract class ImmutableSymbol<T extends Number> implements
         Serializable {
 
     @Serial
-    private static final long serialVersionUID = 282184201759219L;
+    private static final long serialVersionUID = 1678692611467409873L;
 
     private final String name;
     private final T value;
@@ -20,6 +20,7 @@ public abstract class ImmutableSymbol<T extends Number> implements
         this.name = name;
         this.value = value;
     }
+
     @Override
     public @NotNull String getName() {
         return name;

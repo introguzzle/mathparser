@@ -58,13 +58,13 @@ public class PrefixNotationParser implements Parser<Double>, Serializable {
 
     @Override
     public Double parse(@NotNull Tokens tokens, Context<Double> context) throws SyntaxException {
-        Tokens infix = processor.process(tokens);
+        Tokens infix = processor.apply(tokens);
         Stack<Double> stack = new Stack<>();
         infix.skipDeclaration();
 
         int position = 0;
         while (position < infix.size()) {
-            Token token = infix.getNextToken();
+            Token token = infix.next();
             Type type = token.getType();
 
             if (type instanceof OperatorType) {

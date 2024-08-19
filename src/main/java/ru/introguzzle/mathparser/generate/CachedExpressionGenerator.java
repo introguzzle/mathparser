@@ -73,7 +73,7 @@ public class CachedExpressionGenerator implements Generator<Expression> {
             Tokens tokens = tokenizer.tokenize(expression, context).getTokens();
 
             for (TokenProcessor tokenProcessor : tokenProcessors) {
-                tokens = tokenProcessor.process(tokens);
+                tokens = tokenProcessor.apply(tokens);
             }
 
             return tokens.toExpression();

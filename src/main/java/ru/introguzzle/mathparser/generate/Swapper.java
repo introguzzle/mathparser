@@ -1,7 +1,7 @@
 package ru.introguzzle.mathparser.generate;
 
 import org.jetbrains.annotations.NotNull;
-import ru.introguzzle.mathparser.common.options.Optionable;
+import ru.introguzzle.mathparser.common.options.Configurable;
 import ru.introguzzle.mathparser.tokenize.TokenProcessor;
 import ru.introguzzle.mathparser.tokenize.token.SimpleToken;
 import ru.introguzzle.mathparser.tokenize.token.SimpleTokens;
@@ -11,7 +11,7 @@ import ru.introguzzle.mathparser.tokenize.token.type.Type;
 
 public abstract class Swapper implements
         TokenProcessor,
-        Optionable<GeneratorOptions> {
+        Configurable<GeneratorOptions> {
     private GeneratorOptions options;
 
     public Swapper(GeneratorOptions options) {
@@ -32,7 +32,7 @@ public abstract class Swapper implements
     public abstract @NotNull Token apply(Token token, int offset);
 
     @Override
-    public @NotNull Tokens process(@NotNull Tokens tokens) {
+    public @NotNull Tokens apply(@NotNull Tokens tokens) {
         Tokens result = new SimpleTokens();
 
         int totalDifference = 0;

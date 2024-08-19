@@ -22,7 +22,7 @@ public class PrefixTokenProcessor implements TokenProcessor {
     }
 
     @Override
-    public @NotNull Tokens process(@NotNull Tokens tokens) {
+    public @NotNull Tokens apply(@NotNull Tokens tokens) {
         Tokens output = new SimpleTokens();
         Stack<Token> operatorTokens = new Stack<>();
 

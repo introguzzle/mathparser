@@ -53,12 +53,12 @@ public class SimpleTokens implements Tokens, Serializable {
     }
 
     @Override
-    public Token getNextToken() {
+    public Token next() {
         return get(position++);
     }
 
     @Override
-    public void returnBack() {
+    public void back() {
         position--;
     }
 

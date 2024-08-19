@@ -11,6 +11,11 @@ public class Coefficient<T extends Number> extends MutableSymbol<T> {
     }
 
     @Override
+    public Coefficient<T> setValue(T value) {
+        return (Coefficient<T>) super.setValue(value);
+    }
+
+    @Override
     public @NotNull Type type() {
         return SymbolType.COEFFICIENT;
     }

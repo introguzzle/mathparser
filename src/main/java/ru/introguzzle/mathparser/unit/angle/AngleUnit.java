@@ -2,11 +2,11 @@ package ru.introguzzle.mathparser.unit.angle;
 
 import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.unit.AbstractUnit;
-import ru.introguzzle.mathparser.unit.measure.AngleMeasure;
+import ru.introguzzle.mathparser.unit.measure.Measure;
 
 import java.util.Set;
 
-public abstract class AngleUnit extends AbstractUnit<AngleMeasure, AngleUnit> {
+public abstract class AngleUnit extends AbstractUnit<Measure.AngleMeasure, AngleUnit> {
     public AngleUnit(Set<String> names, String main) {
         super(names, main);
     }
@@ -21,7 +21,7 @@ public abstract class AngleUnit extends AbstractUnit<AngleMeasure, AngleUnit> {
     protected abstract double fromRadians(double value);
 
     @Override
-    public @NotNull AngleMeasure getMeasure() {
-        return AngleMeasure.ANGLE;
+    public @NotNull Measure.AngleMeasure getMeasure() {
+        return Measure.AngleMeasure.ANGLE;
     }
 }

@@ -5,184 +5,97 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="79a95465-1031-4eea-b760-ac48f6778d10" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/MultiNameable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/naming/AmbiguousNameException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/reflect/ReflectionUtilities.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/complex/ComplexRoot.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Ceil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Floor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Gamma.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Hypot.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/generate/CachedGeneratorOptions.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/generate/FunctionSwapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/generate/NumberSwapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/generate/Swapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/Delimitable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/InfiniteLoopException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/LambdaEvaluator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/LambdaInvocationException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/complex/ComplexLambdaEvaluator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/real/AbstractSumDoubleLambdaEvaluator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/real/DoubleLambdaEvaluator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/real/SumDeltaDoubleLambdaEvaluator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/real/SumDoubleLambdaEvaluator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/special/Decrement.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/special/Increment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/AbstractParser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/EvaluationContext.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/NumberConverter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/symbol/LambdaArgument.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/InvalidSpecialFunctionException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/MathTokenizerBuilder.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/predicates/CharacterPredicate.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/predicates/DigitPredicate.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/predicates/LetterPredicate.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/predicates/OperatorPredicate.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/CompositeToken.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/SpecialToken.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/DelimiterType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/LambdaType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/UnitType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/validation/CommaValidator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/validation/NumberValidator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/validation/UnitValidator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/validation/ValidationException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/validation/Validator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/AbstractUnit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/Unit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/UnitConverter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/UnitReflector.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/angle/AngleUnit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/angle/DegreeUnit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/angle/RadianUnit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/length/InchUnit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/length/KilometerUnit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/length/LengthUnit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/length/MeterUnit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/mass/GramUnit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/mass/KilogramUnit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/mass/MassUnit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/mass/OunceUnit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/mass/PoundUnit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/measure/AngleMeasure.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/measure/LengthMeasure.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/measure/MassMeasure.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/measure/Measure.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/measure/MeasureException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/measure/TimeMeasure.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/time/HourUnit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/time/MinuteUnit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/time/SecondUnit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/time/TimeUnit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/ru/introguzzle/mathparser/common/math/NumberTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/complex/ComplexArgument.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/complex/ComplexMagnitude.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Beta.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/variadic/GCD.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/variadic/LCM.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/FunctionAdapterEvaluatorException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/real/FunctionAdapterEvaluator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/real/NewtonEvaluator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/temperature/CelsiusUnit.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/temperature/FahrenheitUnit.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/temperature/KelvinUnit.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/temperature/TemperatureUnit.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/Example.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/Example.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/Context.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/naming/Context.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/ContextException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/naming/ContextException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/ExceptionUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/ExceptionUtilities.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/Mutates.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/Mutates.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/MultiNameable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/MultiNameable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/Nameable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/Nameable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/NamingContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/naming/NamingContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/NamingException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/naming/NamingException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/NoSuchNameException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/naming/NoSuchNameException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/NotUniqueNamingException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/naming/NotUniqueNamingException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/Optionable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/options/Optionable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/Options.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/options/Options.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/Reflector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/reflect/Reflector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/Resolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/resolve/Resolver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/SyntaxException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/SyntaxException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/math/Number.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/math/Number.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/math/Radix.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/math/Radix.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/math/RadixNumberFormatException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/math/RadixNumberFormatException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/primitive/BooleanReference.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/primitive/BooleanReference.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/primitive/DoubleReference.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/primitive/DoubleReference.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/primitive/IntegerReference.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/primitive/IntegerReference.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/primitive/LongReference.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/primitive/LongReference.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/primitive/PrimitiveReference.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/primitive/PrimitiveReference.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/naming/AmbiguousNameException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/naming/AmbiguousNameException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/naming/Context.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/naming/Context.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/naming/ContextException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/naming/ContextException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/naming/NamingContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/naming/NamingContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/naming/NamingException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/naming/NamingException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/naming/NoSuchNameException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/naming/NoSuchNameException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/naming/NotUniqueNamingException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/naming/NotUniqueNamingException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/options/Optionable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/options/Configurable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/options/Options.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/common/options/Options.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/complex/Complex.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/complex/Complex.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/constant/complex/ComplexConstantReflector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/constant/complex/ComplexConstantReflector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/constant/complex/PiConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/constant/complex/PiConstant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/constant/real/DoubleConstantReflector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/constant/real/DoubleConstantReflector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/expression/Expression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/expression/Expression.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/expression/ExpressionIterator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/expression/ExpressionIterator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/expression/MathExpression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/expression/MathExpression.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/Function.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/Function.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/complex/ComplexAbsolute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/complex/ComplexAbsolute.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/complex/ComplexCosine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/complex/ComplexCosine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/complex/ComplexFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/complex/ComplexFunction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/complex/ComplexFunctionReflector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/complex/ComplexFunctionReflector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/complex/ComplexLogarithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/complex/ComplexLogarithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/complex/ComplexNaturalLogarithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/complex/ComplexNaturalLogarithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/complex/ComplexPower.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/complex/ComplexPower.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/complex/ComplexSine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/complex/ComplexSine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/complex/ComplexTangent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/complex/ComplexTangent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Absolute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Absolute.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/ArcCosine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/ArcCosine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/ArcSine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/ArcSine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Cosine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Cosine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Cotangent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Cotangent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/CubicRoot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/CubicRoot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/DoubleFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/DoubleFunction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/DoubleFunctionReflector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/DoubleFunctionReflector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Exponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Exponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/ArcCosine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/trygonometric/ArcCosine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/ArcSine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/trygonometric/ArcSine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Cosine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/trygonometric/Cosine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Cotangent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/trygonometric/Cotangent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Factorial.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Factorial.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/FunctionUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/FunctionUtilities.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Logarithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Logarithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/NaturalLogarithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/NaturalLogarithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/NaturalRoot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/NaturalRoot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Gamma.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Gamma.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/IllegalFunctionInvocationException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/IllegalFunctionInvocationException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Power.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Power.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Random.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Random.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Sign.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Sign.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Sine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Sine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/SquareRoot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/SquareRoot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Tangent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Tangent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/variadic/Average.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/variadic/Average.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Sine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/trygonometric/Sine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/Tangent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/trygonometric/Tangent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/variadic/Maximum.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/variadic/Maximum.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/variadic/Minimum.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/variadic/Minimum.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/function/real/variadic/Sum.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/generate/CachedExpressionGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/generate/CachedExpressionGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/generate/ExpressionGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/generate/ExpressionGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/generate/ExpressionStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/generate/ExpressionStorage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/generate/Generator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/generate/Generator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/generate/GeneratorOptions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/generate/GeneratorOptions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/generate/Random.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/generate/Random.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/group/Group.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/group/Group.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/group/TokenGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/group/TokenGroup.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/DoubleOperatorReflector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/DoubleOperatorReflector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/complex/ComplexOperatorReflector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/operator/complex/ComplexOperatorReflector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/generate/GeneratorException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/generate/GeneratorException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/generate/Swapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/generate/Swapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/InfiniteLoopException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/InfiniteLoopException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/LambdaEvaluator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/LambdaEvaluator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/LambdaInvocationException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/LambdaInvocationException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/complex/ComplexLambdaEvaluator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/complex/ComplexLambdaEvaluator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/real/AbstractSumDoubleLambdaEvaluator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/real/AbstractSumEvaluator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/real/DoubleLambdaEvaluator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/real/DoubleLambdaEvaluator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/real/SumDeltaDoubleLambdaEvaluator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/real/SumDeltaEvaluator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/real/SumDoubleLambdaEvaluator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/lambda/real/SumEvaluator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/AbstractParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/AbstractParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/ComplexParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/ComplexParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/FunctionDefinitionParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/FunctionDefinitionParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/MathParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/MathParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/ParseException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/ParseException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/Parser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/PrefixNotationParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/parse/PrefixNotationParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/symbol/Coefficient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/symbol/Coefficient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/symbol/ImmutableSymbol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/symbol/ImmutableSymbol.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/symbol/LambdaArgument.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/symbol/LambdaArgument.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/symbol/MutableSymbolList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/symbol/MutableSymbolList.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/EquationTokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/EquationTokenizer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/FunctionDefinitionTokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/FunctionDefinitionTokenizer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/InvalidNumberFormatException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/InvalidNumberFormatException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/symbol/Variable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/symbol/Variable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/symbol/Variables.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/symbol/Variables.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/MathTokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/MathTokenizer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/PrefixTokenProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/PrefixTokenProcessor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/SearchResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/SearchResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/TokenProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/TokenProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/TokenizeException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/TokenizeException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/Tokenizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/Tokenizer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/TokenizerOptions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/TokenizerOptions.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/UnknownSymbolTokenizeException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/UnknownSymbolTokenizeException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/NumberToken.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/NumberToken.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/SimpleToken.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/SimpleToken.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/VariableMismatchException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/CompositeToken.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/CompositeToken.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/SimpleTokens.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/SimpleTokens.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/Token.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/Tokens.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/Tokens.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/FunctionType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/FunctionType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/OperatorType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/OperatorType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/SpecialType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/SpecialType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/SymbolType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/SymbolType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/TerminalType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/TerminalType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/Type.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/token/type/Type.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/ru/impl/ContextTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ru/impl/ContextTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/ru/impl/FunctionDefinitionTokenizerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ru/impl/FunctionDefinitionTokenizerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/ru/impl/MathParserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ru/impl/MathParserTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/ru/impl/MathTokenizerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ru/impl/MathTokenizerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/ru/impl/PrefixNotationParserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/ru/impl/PrefixNotationParserTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/validation/ValidationException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/tokenize/validation/ValidationException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/AbstractUnit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/AbstractUnit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/Unit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/Unit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/UnitConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/UnitConverter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/angle/AngleUnit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/angle/AngleUnit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/length/LengthUnit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/length/LengthUnit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/mass/MassUnit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/mass/MassUnit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/measure/AngleMeasure.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/measure/LengthMeasure.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/measure/MassMeasure.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/measure/Measure.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/measure/Measure.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/measure/MeasureException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/measure/MeasureException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/measure/TimeMeasure.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/time/TimeUnit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/introguzzle/mathparser/unit/time/TimeUnit.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -227,6 +140,7 @@
   &quot;keyToString&quot;: {
     &quot;Application.AbstractParser.executor&quot;: &quot;Run&quot;,
     &quot;Application.CachedExpressionGenerator.executor&quot;: &quot;Run&quot;,
+    &quot;Application.CelsiusUnit.executor&quot;: &quot;Run&quot;,
     &quot;Application.Complex.executor&quot;: &quot;Run&quot;,
     &quot;Application.ComplexLogarithm.executor&quot;: &quot;Run&quot;,
     &quot;Application.ComplexOperatorReflector.executor&quot;: &quot;Run&quot;,
@@ -248,14 +162,18 @@
     &quot;Application.Generator.executor&quot;: &quot;Run&quot;,
     &quot;Application.InfixTokenProcessor.executor&quot;: &quot;Run&quot;,
     &quot;Application.IntegerReference.executor&quot;: &quot;Run&quot;,
+    &quot;Application.LambdaArgument.executor&quot;: &quot;Run&quot;,
     &quot;Application.LengthUnit.executor&quot;: &quot;Run&quot;,
     &quot;Application.MathParser.executor&quot;: &quot;Run&quot;,
-    &quot;Application.MathTokenizer.executor&quot;: &quot;Debug&quot;,
+    &quot;Application.MathTokenizer.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Measure.executor&quot;: &quot;Run&quot;,
+    &quot;Application.MutableSymbol.executor&quot;: &quot;Run&quot;,
     &quot;Application.Nameable.executor&quot;: &quot;Run&quot;,
     &quot;Application.NamingContext.executor&quot;: &quot;Run&quot;,
     &quot;Application.Normalizer.executor&quot;: &quot;Run&quot;,
     &quot;Application.Number.executor&quot;: &quot;Run&quot;,
     &quot;Application.NumberSwapper.executor&quot;: &quot;Run&quot;,
+    &quot;Application.OperatorNode.executor&quot;: &quot;Run&quot;,
     &quot;Application.OperatorReflector.executor&quot;: &quot;Run&quot;,
     &quot;Application.P.executor&quot;: &quot;Run&quot;,
     &quot;Application.ParenthesisType.executor&quot;: &quot;Run&quot;,
@@ -326,7 +244,7 @@
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.44921467&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.applicationServers&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -360,7 +278,22 @@
       <recent name="ru.implementation" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.java in mathparser">
+  <component name="RunManager" selected="Application.Example">
+    <configuration name="Example" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ru.introguzzle.mathparser.Example" />
+      <module name="mathparser" />
+      <option name="PROGRAM_PARAMETERS" value="-ea" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ru.introguzzle.mathparser.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="FunctionDefinitionTokenizerTest.test_explicit_function" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="mathparser" />
       <extension name="coverage">
@@ -417,13 +350,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.Example" />
+      <item itemvalue="JUnit.FunctionDefinitionTokenizerTest.test_explicit_function" />
+      <item itemvalue="JUnit.FunctionDefinitionTokenizerTest.test_explicit_function_with_parameters" />
+      <item itemvalue="JUnit.impl in mathparser" />
+      <item itemvalue="JUnit.java in mathparser" />
+      <item itemvalue="JUnit.ru in mathparser" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Example" />
         <item itemvalue="JUnit.java in mathparser" />
         <item itemvalue="JUnit.FunctionDefinitionTokenizerTest.test_explicit_function" />
         <item itemvalue="JUnit.impl in mathparser" />
         <item itemvalue="JUnit.ru in mathparser" />
-        <item itemvalue="JUnit.FunctionDefinitionTokenizerTest.test_explicit_function_with_parameters" />
       </list>
     </recent_temporary>
   </component>
@@ -498,6 +439,13 @@
       <workItem from="1723534470501" duration="3980000" />
       <workItem from="1723552562301" duration="6284000" />
       <workItem from="1723578071257" duration="40106000" />
+      <workItem from="1723799629032" duration="6530000" />
+      <workItem from="1723822670750" duration="4392000" />
+      <workItem from="1723872264924" duration="1876000" />
+      <workItem from="1723921532079" duration="6885000" />
+      <workItem from="1723993059760" duration="10198000" />
+      <workItem from="1724059563186" duration="755000" />
+      <workItem from="1724060745571" duration="1578000" />
     </task>
     <servers />
   </component>

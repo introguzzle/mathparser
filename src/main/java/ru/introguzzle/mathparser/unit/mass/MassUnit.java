@@ -2,18 +2,18 @@ package ru.introguzzle.mathparser.unit.mass;
 
 import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.unit.AbstractUnit;
-import ru.introguzzle.mathparser.unit.measure.MassMeasure;
+import ru.introguzzle.mathparser.unit.measure.Measure;
 
 import java.util.Set;
 
-public abstract class MassUnit extends AbstractUnit<MassMeasure, MassUnit> {
+public abstract class MassUnit extends AbstractUnit<Measure.MassMeasure, MassUnit> {
     public MassUnit(Set<String> names, String main) {
         super(names, main);
     }
 
     @Override
-    public @NotNull MassMeasure getMeasure() {
-        return MassMeasure.MASS;
+    public @NotNull Measure.MassMeasure getMeasure() {
+        return Measure.MassMeasure.MASS;
     }
 
     /**
