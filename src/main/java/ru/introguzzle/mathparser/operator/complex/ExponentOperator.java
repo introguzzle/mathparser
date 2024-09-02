@@ -18,7 +18,7 @@ public class ExponentOperator implements ComplexBinaryOperator {
     }
 
     @Override
-    public Association getAssociation() {
+    public @NotNull Association getAssociation() {
         return Association.RIGHT;
     }
 

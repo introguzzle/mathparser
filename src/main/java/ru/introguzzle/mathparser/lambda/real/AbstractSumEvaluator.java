@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.common.SyntaxException;
 import ru.introguzzle.mathparser.common.naming.Context;
 import ru.introguzzle.mathparser.lambda.InfiniteLoopException;
-import ru.introguzzle.mathparser.parse.AbstractParser;
+import ru.introguzzle.mathparser.parse.Parser;
 import ru.introguzzle.mathparser.symbol.LambdaArgument;
 import ru.introguzzle.mathparser.tokenize.token.Tokens;
 
@@ -13,7 +13,7 @@ import java.util.List;
 public abstract class AbstractSumEvaluator extends DoubleLambdaEvaluator {
     public static final long MAX_ITERATIONS = Integer.MAX_VALUE;
 
-    public AbstractSumEvaluator(AbstractParser<Double> parser, int requiredArguments) {
+    public AbstractSumEvaluator(Parser<Double> parser, int requiredArguments) {
         super(parser, requiredArguments, 1);
     }
 
@@ -38,7 +38,7 @@ public abstract class AbstractSumEvaluator extends DoubleLambdaEvaluator {
         Double result = 0.0;
 
         int count = 0;
-        while (!getParser().compare(currentValue, to)) {
+        while (currentValue <= to) {
             argument.setValue(currentValue);
             Double evaluatedValue = getParser().parse(lambda, context);
             result += evaluatedValue;

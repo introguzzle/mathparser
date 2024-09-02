@@ -1,8 +1,8 @@
 package ru.introguzzle.mathparser.parse;
 
 import org.jetbrains.annotations.NotNull;
-import ru.introguzzle.mathparser.common.SyntaxException;
-import ru.introguzzle.mathparser.common.naming.Context;
+import ru.introguzzle.mathparser.common.math.algebra.Algebra;
+import ru.introguzzle.mathparser.common.math.algebra.DoubleAlgebra;
 import ru.introguzzle.mathparser.constant.real.DoubleConstant;
 import ru.introguzzle.mathparser.expression.Expression;
 import ru.introguzzle.mathparser.function.Function;
@@ -14,11 +14,8 @@ import ru.introguzzle.mathparser.operator.Operator;
 import ru.introguzzle.mathparser.symbol.ImmutableSymbol;
 import ru.introguzzle.mathparser.tokenize.MathTokenizer;
 import ru.introguzzle.mathparser.tokenize.Tokenizer;
-import ru.introguzzle.mathparser.tokenize.token.Token;
 import ru.introguzzle.mathparser.tokenize.token.Tokens;
-import ru.introguzzle.mathparser.tokenize.token.type.OperatorType;
 import ru.introguzzle.mathparser.unit.Unit;
-import ru.introguzzle.mathparser.unit.measure.MeasureException;
 
 /**
  * A parser class for mathematical expressions involving only real values.
@@ -30,6 +27,7 @@ import ru.introguzzle.mathparser.unit.measure.MeasureException;
  * @see ComplexParser
  */
 public class MathParser extends AbstractParser<Double> {
+    private final Algebra<Double> algebra = new DoubleAlgebra();
 
     /**
      * Default constructor that initializes the parser with default tokenizer and adds
@@ -76,76 +74,8 @@ public class MathParser extends AbstractParser<Double> {
     }
 
     @Override
-    public Double absentValue() {
-        return 0.0;
-    }
-
-    @Override
-    public Double negateValue(Double value) {
-        return -value;
-    }
-
-    @Override
-    public Double add(Double left, Double right) throws SyntaxException {
-        return left + right;
-    }
-
-    @Override
-    public Double parseUnit(Double value, Tokens tokens, Context<Double> context) throws SyntaxException {
-        tokens.back();
-        Token token = tokens.next();
-
-        Unit<?, ?> from = getTokenizer().getOptions()
-                .findUnit(token.getData())
-                .orElseThrow();
-
-        Token nextToken = tokens.next();
-        if (nextToken.getType() != OperatorType.CONVERTER) {
-            throw new UnexpectedTokenException(tokens, nextToken);
-        }
-
-        Unit<?, ?> to = getTokenizer().getOptions()
-                .findUnit(tokens.next().getData())
-                .orElseThrow();
-
-        if (!from.getMeasure().equals(to.getMeasure())) {
-            throw new MeasureException(from.getMeasure(), to.getMeasure());
-        }
-
-        try {
-            // Measures should be same type, but actual runtime classes are still unsafe
-            @SuppressWarnings("unchecked")
-            double convertedValue = ((Unit) from).apply(value, to);
-            return convertedValue;
-        } catch (ClassCastException e) {
-            String format = """
-                    \s
-                    Failed to convert value %f from unit '%s' to unit '%s'.\s
-                    Incompatible types: cannot cast unit of type '%s' to unit of type '%s'.
-                    %s with name %s must inherit from the same parent with %s.\s""";
-
-
-            String target = to.getClass().isAnonymousClass()
-                    ? "Anonymous class"
-                    : to.describe();
-
-            String message = String.format(format, value, from.getName(), to.getName(),
-                    from.describe(), target,
-                    target, to.getName(), from.describe()
-            );
-
-            throw new UnsupportedOperationException(message, e);
-        }
-    }
-
-    @Override
     public NumberConverter<Double> getConverter() {
         return NumberConverter.getDoubleConverter();
-    }
-
-    @Override
-    public boolean compare(Double left, Double right) {
-        return left > right;
     }
 
     // Customizing methods
@@ -173,5 +103,10 @@ public class MathParser extends AbstractParser<Double> {
     @Override
     public MathParser addUnit(Unit<?, ?> unit) {
         return (MathParser) super.addUnit(unit);
+    }
+
+    @Override
+    public Algebra<Double> getAlgebra() {
+        return algebra;
     }
 }

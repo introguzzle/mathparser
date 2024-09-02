@@ -6,6 +6,7 @@ import ru.introguzzle.mathparser.operator.DoubleOperator;
 import ru.introguzzle.mathparser.operator.Operator;
 
 import java.util.List;
+import java.util.Objects;
 
 public abstract class DoubleFunction implements Function<Double> {
     private final String name;
@@ -18,8 +19,8 @@ public abstract class DoubleFunction implements Function<Double> {
 
     @Override
     @NotNull
-    public DoubleOperator toOperator() {
-        Operator<Double> operator = Function.super.toOperator();
+    public DoubleOperator asOperator() {
+        Operator<Double> operator = Function.super.asOperator();
 
         return new DoubleOperator() {
             @Override
@@ -38,7 +39,7 @@ public abstract class DoubleFunction implements Function<Double> {
             }
 
             @Override
-            public Association getAssociation() {
+            public @NotNull Association getAssociation() {
                 return Association.LEFT;
             }
 
@@ -57,6 +58,19 @@ public abstract class DoubleFunction implements Function<Double> {
     @Override
     public int getRequiredArguments() {
         return requiredArguments;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DoubleFunction that = (DoubleFunction) o;
+        return requiredArguments == that.requiredArguments && Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, requiredArguments);
     }
 
     @Override

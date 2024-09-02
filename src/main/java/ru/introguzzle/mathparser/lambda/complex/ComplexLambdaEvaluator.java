@@ -3,15 +3,15 @@ package ru.introguzzle.mathparser.lambda.complex;
 import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.complex.Complex;
 import ru.introguzzle.mathparser.lambda.LambdaEvaluator;
-import ru.introguzzle.mathparser.parse.AbstractParser;
+import ru.introguzzle.mathparser.parse.Parser;
 
 public abstract class ComplexLambdaEvaluator implements LambdaEvaluator<Complex> {
-    private final AbstractParser<Complex> parser;
+    private final Parser<Complex> parser;
 
     private final int requiredArguments;
     private final int requiredLambdaArguments;
 
-    public ComplexLambdaEvaluator(AbstractParser<Complex> parser,
+    public ComplexLambdaEvaluator(Parser<Complex> parser,
                                   int requiredArguments,
                                   int requiredLambdaArguments) {
         this.parser = parser;
@@ -30,7 +30,7 @@ public abstract class ComplexLambdaEvaluator implements LambdaEvaluator<Complex>
     }
 
     @Override
-    public @NotNull AbstractParser<Complex> getParser() {
+    public @NotNull Parser<Complex> getParser() {
         return parser;
     }
 }

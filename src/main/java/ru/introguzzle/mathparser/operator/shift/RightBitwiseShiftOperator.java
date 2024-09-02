@@ -18,7 +18,7 @@ public class RightBitwiseShiftOperator implements DoubleBinaryOperator {
     }
 
     @Override
-    public Association getAssociation() {
+    public @NotNull Association getAssociation() {
         return Association.LEFT;
     }
 

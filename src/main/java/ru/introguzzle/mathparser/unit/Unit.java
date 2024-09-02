@@ -8,6 +8,7 @@ import ru.introguzzle.mathparser.unit.measure.Measure;
 import ru.introguzzle.mathparser.unit.measure.MeasureException;
 
 import java.util.function.BiFunction;
+import java.util.function.DoubleBinaryOperator;
 import java.util.function.Function;
 
 /**

@@ -7,6 +7,7 @@ import ru.introguzzle.mathparser.operator.Operator;
 import ru.introguzzle.mathparser.operator.complex.ComplexOperator;
 
 import java.util.List;
+import java.util.Objects;
 
 public abstract class ComplexFunction implements Function<Complex> {
     private final String name;
@@ -19,8 +20,8 @@ public abstract class ComplexFunction implements Function<Complex> {
 
     @Override
     @NotNull
-    public ComplexOperator toOperator() {
-        Operator<Complex> operator = Function.super.toOperator();
+    public ComplexOperator asOperator() {
+        Operator<Complex> operator = Function.super.asOperator();
 
         return new ComplexOperator() {
             @Override
@@ -39,7 +40,7 @@ public abstract class ComplexFunction implements Function<Complex> {
             }
 
             @Override
-            public Association getAssociation() {
+            public @NotNull Association getAssociation() {
                 return Association.LEFT;
             }
 
@@ -58,6 +59,19 @@ public abstract class ComplexFunction implements Function<Complex> {
     @Override
     public int getRequiredArguments() {
         return requiredArguments;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ComplexFunction that = (ComplexFunction) o;
+        return requiredArguments == that.requiredArguments && Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, requiredArguments);
     }
 
     @Override

@@ -18,7 +18,7 @@ public class Decrement implements DoubleUnaryOperator {
     }
 
     @Override
-    public Association getAssociation() {
+    public @NotNull Association getAssociation() {
         return Association.LEFT;
     }
 

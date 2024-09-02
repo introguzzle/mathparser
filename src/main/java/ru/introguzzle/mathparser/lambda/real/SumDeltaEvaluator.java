@@ -1,12 +1,12 @@
 package ru.introguzzle.mathparser.lambda.real;
 
 import org.jetbrains.annotations.NotNull;
-import ru.introguzzle.mathparser.parse.AbstractParser;
+import ru.introguzzle.mathparser.parse.Parser;
 
 import java.util.List;
 
 public class SumDeltaEvaluator extends AbstractSumEvaluator {
-    public SumDeltaEvaluator(AbstractParser<Double> parser) {
+    public SumDeltaEvaluator(Parser<Double> parser) {
         super(parser, 3);
     }
 

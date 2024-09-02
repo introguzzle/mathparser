@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Set;
 
 public class Example {
-
     public static void main(String[] args) {
         basicMathOperationsExample();
         binaryShiftOperationsExample();
@@ -30,7 +29,7 @@ public class Example {
         complexNumberParsingExample();
     }
 
-    private static void basicMathOperationsExample() {
+    static void basicMathOperationsExample() {
         System.out.println("\n=== Basic Math Operations ===");
         Parser<Double> parser = new MathParser();
 
@@ -48,7 +47,7 @@ public class Example {
             }
 
             @Override
-            public Association getAssociation() {
+            public @NotNull Association getAssociation() {
                 return Association.LEFT;
             }
 
@@ -81,7 +80,7 @@ public class Example {
         System.out.println("Expression result: " + parser.tryParse(expression, context));
     }
 
-    private static void binaryShiftOperationsExample() {
+    static void binaryShiftOperationsExample() {
         System.out.println("\n=== Binary Shift Operations ===");
         Parser<Double> parser = new MathParser();
 
@@ -92,7 +91,7 @@ public class Example {
         assert result == 30.0 : "Expected 30";
     }
 
-    private static void unitConversionsExample() {
+    static void unitConversionsExample() {
         System.out.println("\n=== Unit Conversions ===");
         Parser<Double> parser = new MathParser();
 
@@ -161,7 +160,7 @@ public class Example {
         assert result == 4.0 : "Expected 8";
     }
 
-    private static void lambdaFunctionalityExample() {
+    static void lambdaFunctionalityExample() {
         System.out.println("\n=== Lambda Functionality ===");
         Parser<Double> parser = new MathParser();
 
@@ -173,9 +172,19 @@ public class Example {
         double result = parser.tryParse(expression, context).orElseThrow();
         System.out.println("Sum lambda result: " + result);
         assert result == (double) (3 + 4 + 5 + 6 + 7 + 8 + 9) : "Expected 42";
+
+        expression = new MathExpression("eval(13, 14, (a b) -> a + b)");
+        result = parser.tryParse(expression, context).orElseThrow();
+        System.out.println("Eval lambda result: " + result);
+        assert result == (double) (13 + 14) : "Expected 27";
+
+        expression = new MathExpression("eval(() -> 33)");
+        result = parser.tryParse(expression, context).orElseThrow();
+        System.out.println("Eval lambda result: " + result);
+        assert result == 33.0 : "Expected 33";
     }
 
-    private static void complexNumberParsingExample() {
+    static void complexNumberParsingExample() {
         System.out.println("\n=== Complex Number Parsing ===");
         ComplexParser complexParser = new ComplexParser();
 

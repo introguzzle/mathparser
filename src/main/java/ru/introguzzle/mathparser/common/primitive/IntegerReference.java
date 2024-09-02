@@ -1,38 +1,56 @@
 package ru.introguzzle.mathparser.common.primitive;
 
-public class IntegerReference extends PrimitiveReference<Integer> {
-    public IntegerReference(Integer value) {
-        super(value);
+import java.util.Objects;
+
+public final class IntegerReference {
+    private int value;
+
+    public IntegerReference(int value) {
+        this.value = value;
     }
 
     public void increment() {
-        setValue(getValue() + 1);
+        value++;
     }
 
     public void decrement() {
-        setValue(getValue() - 1);
+        value--;
     }
 
     public int decrementAndGet() {
-        decrement();
-        return getValue();
+        return --value;
     }
 
     public int getAndDecrement() {
-        int oldValue = getValue();
-        decrement();
-        return oldValue;
+        return value--;
     }
 
     public int incrementAndGet() {
-        increment();
-        return getValue();
+        return ++value;
     }
 
     public int getAndIncrement() {
-        int oldValue = getValue();
-        increment();
-        return oldValue;
+        return value++;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof IntegerReference that)) return false;
+        return value == that.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(value);
     }
 
     @Override

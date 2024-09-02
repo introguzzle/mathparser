@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.introguzzle.mathparser.tokenize.token.Token;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -12,7 +14,10 @@ import java.util.Objects;
  * Represents the result of a search operation, typically used to find a specific token or symbol.
  * A search result can indicate whether a match was found and, if so, can hold a reference to the found token.
  */
-public class SearchResult {
+public final class SearchResult implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -5265607709022002987L;
+
     private boolean match = false; // Indicates whether the search was successful.
     private Token token; // The token found during the search, or null if no match was found.
 
@@ -30,8 +35,8 @@ public class SearchResult {
      * @param token The token found, or null if no match was found.
      */
     public SearchResult(boolean match, @Nullable Token token) {
-        this.setMatch(match);
-        this.setToken(token);
+        setMatch(match);
+        setToken(token);
     }
 
     /**
@@ -98,5 +103,25 @@ public class SearchResult {
      */
     public void setToken(Token token) {
         this.token = token;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SearchResult that)) return false;
+        return match == that.match && Objects.equals(token, that.token);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(match, token);
+    }
+
+    @Override
+    public String toString() {
+        return "SearchResult{" +
+                "match=" + match +
+                ", token=" + token +
+                '}';
     }
 }

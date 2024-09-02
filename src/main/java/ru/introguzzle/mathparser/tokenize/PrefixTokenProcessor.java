@@ -87,7 +87,7 @@ public class PrefixTokenProcessor implements TokenProcessor {
             }
 
             @Override
-            public Association getAssociation() {
+            public @NotNull Association getAssociation() {
                 return null;
             }
 

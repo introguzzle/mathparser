@@ -13,8 +13,8 @@ public abstract class AngleUnit extends AbstractUnit<Measure.AngleMeasure, Angle
 
     @Override
     public double transform(double value, AngleUnit unit) {
-        double valueInRadians = toRadians(value);
-        return unit.fromRadians(valueInRadians);
+        double radians = toRadians(value);
+        return unit.fromRadians(radians);
     }
 
     protected abstract double toRadians(double value);

@@ -14,14 +14,14 @@ public class NamingContext<N extends Number> implements Context<N> {
     private Context<N> parent;
 
     public NamingContext() {
-
+        super();
     }
 
     public NamingContext(Context<N> parent) {
         registerParent(parent);
     }
 
-    public NamingContext(@NotNull MutableSymbolList<? extends MutableSymbol<N>, N> symbols) {
+    public NamingContext(@NotNull MutableSymbolList<? extends MutableSymbol<N>, ? extends N> symbols) {
         names.addAll(symbols.getNames());
         this.symbols.addAll(symbols);
     }
@@ -85,6 +85,9 @@ public class NamingContext<N extends Number> implements Context<N> {
         while (parent != null) {
             names.addAll(parent.getNames());
             parent = parent.getParent();
+            if (parent == this) {
+                return names;
+            }
         }
 
         return names;
@@ -112,6 +115,10 @@ public class NamingContext<N extends Number> implements Context<N> {
 
     @Override
     public boolean contains(CharSequence name) {
+        if (parent == this) {
+            return names.contains(name.toString());
+        }
+
         if (parent != null) {
             return parent.contains(name) || names.contains(name.toString());
         }

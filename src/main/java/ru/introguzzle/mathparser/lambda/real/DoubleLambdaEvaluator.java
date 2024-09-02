@@ -2,15 +2,15 @@ package ru.introguzzle.mathparser.lambda.real;
 
 import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.lambda.LambdaEvaluator;
-import ru.introguzzle.mathparser.parse.AbstractParser;
+import ru.introguzzle.mathparser.parse.Parser;
 
 public abstract class DoubleLambdaEvaluator implements LambdaEvaluator<Double> {
-    private final AbstractParser<Double> parser;
+    private final Parser<Double> parser;
 
     private final int requiredArguments;
     private final int requiredLambdaArguments;
 
-    public DoubleLambdaEvaluator(AbstractParser<Double> parser,
+    public DoubleLambdaEvaluator(Parser<Double> parser,
                                  int requiredArguments,
                                  int requiredLambdaArguments) {
         this.parser = parser;
@@ -29,7 +29,7 @@ public abstract class DoubleLambdaEvaluator implements LambdaEvaluator<Double> {
     }
 
     @Override
-    public @NotNull AbstractParser<Double> getParser() {
+    public @NotNull Parser<Double> getParser() {
         return parser;
     }
 }

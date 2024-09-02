@@ -47,7 +47,7 @@ public interface Function<T extends Number> extends
         return FunctionType.FUNCTION;
     }
 
-    default @NotNull Operator<T> toOperator() {
+    default @NotNull Operator<T> asOperator() {
         return new Operator<>() {
             @Override
             public int getRequiredOperands() {
@@ -65,7 +65,7 @@ public interface Function<T extends Number> extends
             }
 
             @Override
-            public Association getAssociation() {
+            public @NotNull Association getAssociation() {
                 return Association.LEFT;
             }
 

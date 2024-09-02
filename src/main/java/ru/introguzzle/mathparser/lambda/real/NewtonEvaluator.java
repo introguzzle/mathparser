@@ -3,7 +3,7 @@ package ru.introguzzle.mathparser.lambda.real;
 import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.common.SyntaxException;
 import ru.introguzzle.mathparser.common.naming.Context;
-import ru.introguzzle.mathparser.parse.AbstractParser;
+import ru.introguzzle.mathparser.parse.Parser;
 import ru.introguzzle.mathparser.symbol.LambdaArgument;
 import ru.introguzzle.mathparser.tokenize.token.Tokens;
 
@@ -13,7 +13,7 @@ public class NewtonEvaluator extends DoubleLambdaEvaluator {
     private static final int MAX_ITERATIONS = 1000;
     private static final double TOLERANCE = 1e-7;
 
-    public NewtonEvaluator(AbstractParser<Double> parser) {
+    public NewtonEvaluator(Parser<Double> parser) {
         super(parser, 2, 1);
     }
 

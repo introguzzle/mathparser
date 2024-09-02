@@ -26,6 +26,6 @@ public enum DelimiterType implements Type, Nameable {
 
     @Override
     public Category getCategory() {
-        return Category.COMMA;
+        return Category.DELIMITER;
     }
 }

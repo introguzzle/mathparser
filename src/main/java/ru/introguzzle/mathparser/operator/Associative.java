@@ -1,6 +1,9 @@
 package ru.introguzzle.mathparser.operator;
 
+import org.jetbrains.annotations.NotNull;
+
 public interface Associative {
+    @NotNull
     Association getAssociation();
 
     enum Association {

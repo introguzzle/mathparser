@@ -6,17 +6,9 @@ import ru.introguzzle.mathparser.tokenize.token.type.UnitType;
 
 public class UnitValidator implements Validator {
     @Override
-    public boolean validate(Token prev, Token token, Token next) throws ValidationException {
-        if (token.getType() == OperatorType.CONVERTER
-                && prev.getType() != UnitType.UNIT
-                && next.getType() != UnitType.UNIT) {
-            throw new ValidationException(
-                    "Invalid unit conversion syntax: ",
-                    Token.reduce(prev, token, next),
-                    prev.getOffset()
-            );
-        }
-
-        return true;
+    public boolean validate(Token prev, Token token, Token next) {
+        return token.getType() != OperatorType.CONVERTER
+                || prev.getType() == UnitType.UNIT
+                || next.getType() == UnitType.UNIT;
     }
 }

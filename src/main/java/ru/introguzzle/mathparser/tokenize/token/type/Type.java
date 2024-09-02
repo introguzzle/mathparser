@@ -48,7 +48,7 @@ public interface Type {
         DECLARATION,
         SYMBOL,
         TERMINAL,
-        COMMA,
+        DELIMITER,
         UNIT,
         SPECIAL;
 

@@ -79,12 +79,7 @@ public class CachedExpressionGenerator implements Generator<Expression> {
             return tokens.toExpression();
         } catch (SyntaxException e) {
             return expression;
-        }    }
-
-    public static void main(String[] args) {
-        CachedExpressionGenerator g = new CachedExpressionGenerator();
-
-        System.out.println(g.generate());
+        }
     }
 
     @Override

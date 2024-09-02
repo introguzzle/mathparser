@@ -36,7 +36,7 @@ public abstract class FunctionDefinitionTokenizer<T extends Number>
     }
 
     public FunctionDefinitionTokenizer() {
-
+        super();
     }
 
     public

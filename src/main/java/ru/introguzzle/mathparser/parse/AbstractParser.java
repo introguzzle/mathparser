@@ -3,6 +3,7 @@ package ru.introguzzle.mathparser.parse;
 import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.common.Nameable;
 import ru.introguzzle.mathparser.common.SyntaxException;
+import ru.introguzzle.mathparser.common.math.algebra.Algebra;
 import ru.introguzzle.mathparser.common.naming.Context;
 import ru.introguzzle.mathparser.common.naming.NamingContext;
 import ru.introguzzle.mathparser.expression.Expression;
@@ -22,6 +23,7 @@ import ru.introguzzle.mathparser.tokenize.token.Token;
 import ru.introguzzle.mathparser.tokenize.token.Tokens;
 import ru.introguzzle.mathparser.tokenize.token.type.*;
 import ru.introguzzle.mathparser.unit.Unit;
+import ru.introguzzle.mathparser.unit.measure.MeasureException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,68 +107,9 @@ public abstract class AbstractParser<T extends Number> implements Parser<T> {
         return this;
     }
 
-    // Standard operations such as negation and addition
+    public abstract Algebra<T> getAlgebra();
 
-    /**
-     * Compares two values.
-     *
-     * @param left The left operand.
-     * @param right The right operand.
-     * @return {@code true} if the left operand is greater than the right operand, {@code false} otherwise.
-     */
-    public abstract boolean compare(T left, T right);
-
-    /**
-     * Returns the value that represents the absence of a value in the parser's context.
-     * <br>
-     * This operation is optional and depends on whether the type {@code T} supports such an operation.
-     * <br>
-     * If the type {@code T} does not support this operation, calling this method may throw a {@code SyntaxException}.
-     *
-     * @return The absent value.
-     * @throws SyntaxException If the operation is not supported by {@code T} or if an error occurs during parsing.
-     */
-    public abstract T absentValue() throws SyntaxException;
-
-    /**
-     * Negates a given value.
-     * <br>
-     * This operation is optional and depends on whether the type {@code T} supports such an operation.
-     * <br>
-     * If the type {@code T} does not support this operation, calling this method may throw a {@code SyntaxException}.
-     *
-     * @param value The value to negate.
-     * @return The negated value.
-     * @throws SyntaxException If the operation is not supported by {@code T} or if an error occurs during parsing.
-     */
-    public abstract T negateValue(T value) throws SyntaxException;
-
-    /**
-     * Adds two values.
-     * <br>
-     * This operation is optional and depends on whether the type {@code T} supports such an operation.
-     * <br>
-     * If the type {@code T} does not support this operation, calling this method may throw a {@code SyntaxException}.
-     *
-     * @param left The left operand.
-     * @param right The right operand.
-     * @return The sum of the left and right operands.
-     * @throws SyntaxException If the operation is not supported by {@code T} or if an error occurs during parsing.
-     */
-    public abstract T add(T left, T right) throws SyntaxException;
-
-    /**
-     * Parses a unit expression from the given tokens and context.
-     *
-     * @param value The value to which the unit conversion applies.
-     * @param tokens The tokens representing the expression.
-     * @param context The context in which the expression is parsed.
-     * @return The value after applying the unit conversion.
-     * @throws SyntaxException If an error occurs during parsing.
-     */
-    public abstract T parseUnit(T value, Tokens tokens, Context<T> context) throws SyntaxException;
-
-    public AbstractParser(Tokenizer tokenizer) {
+    protected AbstractParser(Tokenizer tokenizer) {
         this.tokenizer = tokenizer;
     }
 
@@ -195,7 +138,7 @@ public abstract class AbstractParser<T extends Number> implements Parser<T> {
         Token token = tokens.next();
 
         if (token.getType().isTerminal()) {
-            return absentValue();
+            return getAlgebra().absentValue();
         }
 
         tokens.back();
@@ -218,7 +161,7 @@ public abstract class AbstractParser<T extends Number> implements Parser<T> {
                 break;
             }
 
-            Operator<T> operator = cast(getOperatorClass(), optional.get());
+            Operator<T> operator = getOperatorClass().cast(optional.get());
 
             int nextPriority = operator.isRightAssociative()
                     ? operator.getPriority() + 1
@@ -242,7 +185,7 @@ public abstract class AbstractParser<T extends Number> implements Parser<T> {
 
             case OperatorType.OPERATOR:
                 if (token.getData().equals(SPECIAL_UNARY_MINUS.getName())) {
-                    return negateValue(parseFactor(tokens, context));
+                    return getAlgebra().negateValue(parseFactor(tokens, context));
                 }
 
                 if (token.getData().equals(SPECIAL_UNARY_PLUS.getName())) {
@@ -259,23 +202,6 @@ public abstract class AbstractParser<T extends Number> implements Parser<T> {
                 String plain = numberToken.getNumber().getPlain();
                 return getConverter().convert(plain);
 
-            case SymbolType.CONSTANT:
-                Optional<ImmutableSymbol<?>> symbol = tokenizer.getOptions().findConstant(token.getData());
-                if (symbol.isPresent()) {
-                    return cast(getSymbolClass(), symbol.get()).getValue();
-                }
-
-                throw new UnexpectedTokenException(tokens, token);
-
-            case SymbolType.VARIABLE:
-            case SymbolType.COEFFICIENT:
-            case SymbolType.LAMBDA_ARGUMENT:
-                Token finalToken = token;
-                return context
-                        .getSymbol(token.getData())
-                        .orElseThrow(() -> new UnknownSymbolTokenizeException(finalToken.getData(), tokens.toExpression(), tokens.get(tokens.getPosition()).getOffset()))
-                        .getValue();
-
             case ParenthesisType.LEFT:
                 T value = parse(tokens, context);
                 token = tokens.next();
@@ -286,6 +212,25 @@ public abstract class AbstractParser<T extends Number> implements Parser<T> {
                 return value;
 
             default:
+                if (type.getCategory() == Type.Category.SYMBOL) {
+                    if (type instanceof SymbolType symbolType) {
+                        if (symbolType.isMutable()) {
+                            Token finalToken = token;
+                            return context
+                                    .getSymbol(token.getData())
+                                    .orElseThrow(() -> new UnknownSymbolTokenizeException(finalToken.getData(), tokens.toExpression(), tokens.get(tokens.getPosition()).getOffset()))
+                                    .getValue();
+                        }
+
+                        Optional<ImmutableSymbol<?>> symbol = tokenizer.getOptions().findConstant(token.getData());
+                        if (symbol.isPresent()) {
+                            return cast(getSymbolClass(), symbol.get()).getValue();
+                        }
+
+                        throw new UnexpectedTokenException(tokens, token);
+                    }
+                }
+
                 if (type.getCategory() == Type.Category.LAMBDA) {
                     if (token instanceof CompositeToken compositeToken) {
                         return parseLambdaFunction(compositeToken.getTokens(), context);
@@ -294,6 +239,68 @@ public abstract class AbstractParser<T extends Number> implements Parser<T> {
 
                 throw new UnexpectedTokenException(tokens, token);
         }
+    }
+
+    /**
+     * Parses a unit expression from the given tokens and context.
+     *
+     * @param value The value to which the unit conversion applies.
+     * @param tokens The tokens representing the expression.
+     * @param context The context in which the expression is parsed.
+     * @return The value after applying the unit conversion.
+     * @throws SyntaxException If an error occurs during parsing.
+     */
+    protected T parseUnit(T value, Tokens tokens, Context<T> context) throws SyntaxException {
+        tokens.back();
+        Token token = tokens.next();
+
+        Unit<?, ?> from = getTokenizer().getOptions()
+                .findUnit(token.getData())
+                .orElseThrow();
+
+        Token nextToken = tokens.next();
+        if (nextToken.getType() != OperatorType.CONVERTER) {
+            throw new UnexpectedTokenException(tokens, nextToken);
+        }
+
+        Unit<?, ?> to = getTokenizer().getOptions()
+                .findUnit(tokens.next().getData())
+                .orElseThrow();
+
+        if (!from.getMeasure().equals(to.getMeasure())) {
+            throw new MeasureException(from.getMeasure(), to.getMeasure());
+        }
+
+        try {
+            // Measures should be same type, but actual runtime classes are still unsafe
+            @SuppressWarnings({"unchecked", "rawtypes"})
+            double convertedValue = ((Unit) from).apply(value.doubleValue(), to);
+            return getConverter().convert(Double.toString(convertedValue));
+        } catch (ClassCastException e) {
+            throw getUnitException(e, value.doubleValue(), from, to);
+        }
+    }
+
+    protected RuntimeException getUnitException(Throwable cause,
+                                                double value,
+                                                Unit<?, ?> from,
+                                                Unit<?, ?> to) {
+        String format = """
+                    \s
+                    Failed to convert value %f from unit '%s' to unit '%s'.\s
+                    Incompatible types: cannot cast unit of type '%s' to unit of type '%s'.
+                    %s with name %s must inherit from the same parent with %s.\s""";
+
+        String target = to.getClass().isAnonymousClass()
+                ? "Anonymous class"
+                : to.describe();
+
+        String message = String.format(format, value, from.getName(), to.getName(),
+                from.describe(), target,
+                target, to.getName(), from.describe()
+        );
+
+        return new UnsupportedOperationException(message, cause);
     }
 
     protected T parseLambdaFunction(Tokens tokens, Context<T> context) throws SyntaxException {
@@ -321,7 +328,7 @@ public abstract class AbstractParser<T extends Number> implements Parser<T> {
         for (Token t: tokens) {
             if (t.getType() == SymbolType.LAMBDA_ARGUMENT) {
                 if (!context.contains(t.getData())) {
-                    LambdaArgument<T> lambdaArgument = new LambdaArgument<>(t.getData(), absentValue());
+                    LambdaArgument<T> lambdaArgument = new LambdaArgument<>(t.getData(), getAlgebra().absentValue());
                     context.addSymbol(lambdaArgument);
                     lambdaArguments.add(lambdaArgument);
                 }

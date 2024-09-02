@@ -21,7 +21,6 @@ import ru.introguzzle.mathparser.symbol.ImmutableSymbol;
 import ru.introguzzle.mathparser.tokenize.predicates.DigitPredicate;
 import ru.introguzzle.mathparser.tokenize.token.*;
 import ru.introguzzle.mathparser.tokenize.token.type.*;
-import ru.introguzzle.mathparser.tokenize.validation.ValidationException;
 import ru.introguzzle.mathparser.tokenize.validation.Validator;
 import ru.introguzzle.mathparser.unit.Unit;
 import ru.introguzzle.mathparser.unit.UnitReflector;
@@ -174,12 +173,9 @@ public class MathTokenizer implements Tokenizer, Serializable {
         }
 
         if (getOptions().isStrictMode()) {
-            try {
-                validate(tokens);
-            } catch (ValidationException e) {
-                TokenizeException te = new TokenizeException(e.getMessage(), expression, e.getOffset()) {};
-                te.initCause(e.getCause());
-                throw te;
+            Token cause = validate(tokens);
+            if (cause != null) {
+                throw new TokenizeException("Validation failed in expression: ", expression, cause.getOffset()) {};
             }
         }
 
@@ -187,8 +183,8 @@ public class MathTokenizer implements Tokenizer, Serializable {
         return tokens;
     }
 
-    protected boolean validate(Tokens tokens) throws ValidationException {
-        boolean result = true;
+    protected Token validate(Tokens tokens) {
+        Token cause = null;
 
         for (int i = 1; i < tokens.size() - 1; i++) {
             Token current = tokens.get(i);
@@ -196,15 +192,17 @@ public class MathTokenizer implements Tokenizer, Serializable {
             Token next = tokens.get(i + 1);
 
             for (Validator validator : getOptions().getValidators()) {
-                result &= validator.validate(previous, current, next);
+                if ((cause = validator.provide(previous, current, next)) != null) {
+                    return cause;
+                }
             }
 
             if (current instanceof CompositeToken compositeToken) {
-                result &= validate(compositeToken.getTokens());
+                validate(compositeToken.getTokens());
             }
         }
 
-        return result;
+        return cause;
     }
 
     protected @NotNull Token handleNumber(ExpressionIterator iterator) throws InvalidNumberFormatException {

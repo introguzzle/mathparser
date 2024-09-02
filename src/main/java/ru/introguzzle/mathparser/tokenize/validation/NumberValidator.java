@@ -8,25 +8,17 @@ import ru.introguzzle.mathparser.tokenize.token.type.UnitType;
 
 public class NumberValidator implements Validator {
     @Override
-    public boolean validate(Token prev, Token token, Token next) throws ValidationException {
+    public boolean validate(Token prev, Token token, Token next) {
         Type type = token.getType();
         Type nextType = next.getType();
 
         // After number there can be only operator, comma or right parenthesis
-        if (type.getCategory() == Type.Category.NUMBER
-                && nextType.getCategory() != Type.Category.OPERATOR
-                && nextType != DelimiterType.ARROW
-                && nextType != DelimiterType.COMMA
-                && nextType != DelimiterType.SEMICOLON
-                && nextType != UnitType.UNIT
-                && nextType != ParenthesisType.RIGHT) {
-
-            int start = token.getOffset();
-            String number = token.getData() + next.getData();
-
-            throw new ValidationException("Invalid number format: ", number, start);
-        }
-
-        return true;
+        return type.getCategory() != Type.Category.NUMBER
+                || nextType.getCategory() == Type.Category.OPERATOR
+                || nextType == DelimiterType.ARROW
+                || nextType == DelimiterType.COMMA
+                || nextType == DelimiterType.SEMICOLON
+                || nextType == UnitType.UNIT
+                || nextType == ParenthesisType.RIGHT;
     }
 }

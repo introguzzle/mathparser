@@ -18,7 +18,7 @@ public class DivisionOperator implements ComplexBinaryOperator {
     }
 
     @Override
-    public Association getAssociation() {
+    public @NotNull Association getAssociation() {
         return Association.LEFT;
     }
 

@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 public class Reflector<N extends Nameable> {
-
     private final Class<N> cls;
 
     public Reflector(Class<N> cls) {
@@ -22,13 +21,13 @@ public class Reflector<N extends Nameable> {
         Reflections reflections = new Reflections(packageName);
         Set<Class<? extends N>> classes = reflections.getSubTypesOf(cls);
 
-        for (Class<? extends N> _class : classes) {
+        for (Class<? extends N> c : classes) {
             try {
-                if (!ReflectionUtilities.isInstantiable(_class)) {
+                if (!ReflectionUtilities.isInstantiable(c)) {
                     continue;
                 }
 
-                N instance = _class.getDeclaredConstructor().newInstance();
+                N instance = c.getDeclaredConstructor().newInstance();
                 instances.put(instance.getName(), instance);
             } catch (Exception e) {
                 System.err.println("An error occurred while scanning classes: " + e.getMessage());

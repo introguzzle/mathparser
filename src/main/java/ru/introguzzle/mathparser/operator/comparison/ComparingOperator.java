@@ -1,5 +1,6 @@
 package ru.introguzzle.mathparser.operator.comparison;
 
+import org.jetbrains.annotations.NotNull;
 import ru.introguzzle.mathparser.operator.DoubleBinaryOperator;
 import ru.introguzzle.mathparser.operator.Priorities;
 
@@ -12,7 +13,7 @@ public abstract class ComparingOperator implements DoubleBinaryOperator {
     }
 
     @Override
-    public Association getAssociation() {
+    public @NotNull Association getAssociation() {
         return Association.LEFT;
     }
 

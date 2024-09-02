@@ -18,6 +18,12 @@ public abstract class AbstractUnit<M extends Measure, U extends AbstractUnit<M, 
     }
 
     @Override
+    public abstract double transform(double value, U unit);
+
+    @Override
+    public abstract @NotNull M getMeasure();
+
+    @Override
     public @NotNull String getName() {
         return main;
     }
@@ -44,6 +50,6 @@ public abstract class AbstractUnit<M extends Measure, U extends AbstractUnit<M, 
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(main);
+        return Objects.hash(names, main);
     }
 }

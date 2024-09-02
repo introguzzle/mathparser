@@ -98,7 +98,7 @@ public class PrefixNotationParser implements Parser<Double>, Serializable {
                     throw new RuntimeException("Variadic functions are not supported in this parser. Try MathParser instead.");
                 }
 
-                processOperator(stack, function.toOperator(), tokens, position);
+                processOperator(stack, function.asOperator(), tokens, position);
                 position++;
                 continue;
             }
